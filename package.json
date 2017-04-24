@@ -1,0 +1,20 @@
+{
+  "name": "summvs",
+  "version": "1.0.0",
+  "description": "summvs",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hectorcoronado/summvs.git"
+  },
+  "author": "Hector Coronado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hectorcoronado/summvs/issues"
+  },
+  "homepage": "https://github.com/hectorcoronado/summvs#readme"
+}
