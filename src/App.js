@@ -15,6 +15,23 @@ const reducer = (state = { products: [] }, action) => {
         ]
       }
       break
+    case 'UPDATE_PRODUCT':
+      const currentProductToUpdate = [...state.products]
+      const indexToUpdate = currentProductToUpdate.findIndex(
+        (product) => { return product.id === action.payload.id })
+      const updatedProduct = {
+        ...currentProductToUpdate[indexToUpdate],
+        name: action.payload.name
+      }
+      console.log('What is updatedProduct: ', updatedProduct)
+      return {
+        products: [
+          ...currentProductToUpdate.slice(0, indexToUpdate),
+          updatedProduct,
+          ...currentProductToUpdate.slice(indexToUpdate + 1)
+        ]
+      }
+      break
     default:
       return state
   }
@@ -66,5 +83,14 @@ store.dispatch({
   type: 'DELETE_PRODUCT',
   payload: {
     id: 3
+  }
+})
+
+// update:
+store.dispatch({
+  type: 'UPDATE_PRODUCT',
+  payload: {
+    id: 2,
+    name: 'Soap2'
   }
 })

@@ -1313,6 +1313,8 @@ module.exports = function(module) {
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _redux = __webpack_require__(7);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -1332,6 +1334,19 @@ var reducer = function reducer() {
       });
       return {
         products: [].concat(_toConsumableArray(currentProductToDelete.slice(0, indexToDelete)), _toConsumableArray(currentProductToDelete.slice(indexToDelete + 1)))
+      };
+      break;
+    case 'UPDATE_PRODUCT':
+      var currentProductToUpdate = [].concat(_toConsumableArray(state.products));
+      var indexToUpdate = currentProductToUpdate.findIndex(function (product) {
+        return product.id === action.payload.id;
+      });
+      var updatedProduct = _extends({}, currentProductToUpdate[indexToUpdate], {
+        name: action.payload.name
+      });
+      console.log('What is updatedProduct: ', updatedProduct);
+      return {
+        products: [].concat(_toConsumableArray(currentProductToUpdate.slice(0, indexToUpdate)), [updatedProduct], _toConsumableArray(currentProductToUpdate.slice(indexToUpdate + 1)))
       };
       break;
     default:
@@ -1384,6 +1399,15 @@ store.dispatch({
   type: 'DELETE_PRODUCT',
   payload: {
     id: 3
+  }
+}
+
+// update:
+);store.dispatch({
+  type: 'UPDATE_PRODUCT',
+  payload: {
+    id: 2,
+    name: 'Soap2'
   }
 });
 
