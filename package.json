@@ -19,6 +19,7 @@
   "homepage": "https://github.com/hectorcoronado/summvs#readme",
   "devDependencies": {
     "nodemon": "^1.11.0",
+    "standard": "^10.0.2",
     "webpack": "^2.2.1"
   },
   "dependencies": {
