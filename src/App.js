@@ -5,6 +5,16 @@ const reducer = (state = { products: [] }, action) => {
     case 'POST_PRODUCT':
       return { products: [...state.products, ...action.payload] }
       break
+    case 'DELETE_PRODUCT':
+      const currentProductToDelete = [...state.products]
+      const indexToDelete = currentProductToDelete.findIndex(
+        (product) => { return product.id === action.payload.id })
+      return {
+        products: [
+          ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
+        ]
+      }
+      break
     default:
       return state
   }
@@ -49,4 +59,12 @@ store.dispatch({
     ingredients: ['Soap3'],
     inventory: 1
   }]
+})
+
+// delete:
+store.dispatch({
+  type: 'DELETE_PRODUCT',
+  payload: {
+    id: 3
+  }
 })

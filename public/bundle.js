@@ -1325,6 +1325,15 @@ var reducer = function reducer() {
     case 'POST_PRODUCT':
       return { products: [].concat(_toConsumableArray(state.products), _toConsumableArray(action.payload)) };
       break;
+    case 'DELETE_PRODUCT':
+      var currentProductToDelete = [].concat(_toConsumableArray(state.products));
+      var indexToDelete = currentProductToDelete.findIndex(function (product) {
+        return product.id === action.payload.id;
+      });
+      return {
+        products: [].concat(_toConsumableArray(currentProductToDelete.slice(0, indexToDelete)), _toConsumableArray(currentProductToDelete.slice(indexToDelete + 1)))
+      };
+      break;
     default:
       return state;
   }
@@ -1368,6 +1377,14 @@ store.dispatch({
     ingredients: ['Soap3'],
     inventory: 1
   }]
+}
+
+// delete:
+);store.dispatch({
+  type: 'DELETE_PRODUCT',
+  payload: {
+    id: 3
+  }
 });
 
 /***/ })
