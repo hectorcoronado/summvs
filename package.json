@@ -19,6 +19,7 @@
   "homepage": "https://github.com/hectorcoronado/summvs#readme",
   "devDependencies": {
     "nodemon": "^1.11.0",
+    "redux-logger": "^3.0.6",
     "standard": "^10.0.2",
     "webpack": "^2.2.1"
   },
@@ -29,6 +30,9 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "express": "^4.15.3",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.2",
     "redux": "^3.6.0"
   }
 }

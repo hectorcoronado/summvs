@@ -1,7 +1,12 @@
-import { createStore } from 'redux'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { applyMiddleware, createStore } from 'redux'
+import logger from 'redux-logger'
 
+// REDUCERS:
 import reducers from './reducers/index'
 
+// ACTIONS:
 import { addToCart } from './actions/cartActions'
 import {
   postProducts,
@@ -9,11 +14,22 @@ import {
   deleteProduct
 } from './actions/productsActions'
 
-const store = createStore(reducers)
+// COMPONENTS:
+import ProductsList from './components/ProductsList'
 
-store.subscribe(() => {
-  console.log('Current state is: ', store.getState())
-})
+// CREATE REDUX STORE:
+const createStoreWithMiddleware = applyMiddleware(logger)(createStore)
+
+const store = createStoreWithMiddleware(
+  reducers,
+  window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__()
+)
+
+ReactDOM.render(
+  <ProductsList />,
+  document.getElementById('app')
+)
 
 store.dispatch(postProducts(
   [{
