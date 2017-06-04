@@ -1,0 +1,7 @@
+// PRODUCT TYPES:
+export const POST_PRODUCT = 'POST_PRODUCT'
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
+export const DELETE_PRODUCT = 'DELETE_PRODUCT'
+
+// CART TYPES:
+export const ADD_TO_CART = 'ADD_TO_CART'

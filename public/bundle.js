@@ -1313,21 +1313,120 @@ module.exports = function(module) {
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _redux = __webpack_require__(7);
+
+var _index = __webpack_require__(24);
+
+var _index2 = _interopRequireDefault(_index);
+
+var _cartActions = __webpack_require__(28);
+
+var _productsActions = __webpack_require__(29);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var store = (0, _redux.createStore)(_index2.default);
+
+store.subscribe(function () {
+  console.log('Current state is: ', store.getState());
+});
+
+store.dispatch((0, _productsActions.postProducts)([{
+  id: 1,
+  name: 'Soap',
+  image: 'Image',
+  price: 10,
+  description: 'Soap',
+  ingredients: ['Soap'],
+  inventory: 1
+}, {
+  id: 2,
+  name: 'SoapTwo',
+  image: 'ImageTwo',
+  price: 15,
+  description: 'SoapTwo',
+  ingredients: ['SoapTwo'],
+  inventory: 1
+}, {
+  id: 3,
+  name: 'Soap3',
+  image: 'Image3',
+  price: 12,
+  description: 'Soap3',
+  ingredients: ['Soap3'],
+  inventory: 1
+}]));
+
+store.dispatch((0, _productsActions.deleteProduct)({ id: 1 }));
+
+store.dispatch((0, _productsActions.updateProduct)({
+  id: 2,
+  name: 'Soap2'
+})
+
+// CART ACTIONS:
+);store.dispatch((0, _cartActions.addToCart)([{ id: 1 }]));
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _redux = __webpack_require__(7);
 
+var _cartReducers = __webpack_require__(27);
+
+var _cartReducers2 = _interopRequireDefault(_cartReducers);
+
+var _productsReducers = __webpack_require__(25);
+
+var _productsReducers2 = _interopRequireDefault(_productsReducers);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _redux.combineReducers)({
+  cart: _cartReducers2.default,
+  products: _productsReducers2.default
+});
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.default = productsReducers;
+
+var _types = __webpack_require__(26);
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var reducer = function reducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { products: [] };
+var INITIAL_STATE = {
+  products: []
+};
+
+function productsReducers() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
   var action = arguments[1];
 
   switch (action.type) {
-    case 'POST_PRODUCT':
+    case _types.POST_PRODUCT:
       return { products: [].concat(_toConsumableArray(state.products), _toConsumableArray(action.payload)) };
       break;
-    case 'DELETE_PRODUCT':
+    case _types.DELETE_PRODUCT:
       var currentProductToDelete = [].concat(_toConsumableArray(state.products));
       var indexToDelete = currentProductToDelete.findIndex(function (product) {
         return product.id === action.payload.id;
@@ -1336,7 +1435,7 @@ var reducer = function reducer() {
         products: [].concat(_toConsumableArray(currentProductToDelete.slice(0, indexToDelete)), _toConsumableArray(currentProductToDelete.slice(indexToDelete + 1)))
       };
       break;
-    case 'UPDATE_PRODUCT':
+    case _types.UPDATE_PRODUCT:
       var currentProductToUpdate = [].concat(_toConsumableArray(state.products));
       var indexToUpdate = currentProductToUpdate.findIndex(function (product) {
         return product.id === action.payload.id;
@@ -1344,7 +1443,6 @@ var reducer = function reducer() {
       var updatedProduct = _extends({}, currentProductToUpdate[indexToUpdate], {
         name: action.payload.name
       });
-      console.log('What is updatedProduct: ', updatedProduct);
       return {
         products: [].concat(_toConsumableArray(currentProductToUpdate.slice(0, indexToUpdate)), [updatedProduct], _toConsumableArray(currentProductToUpdate.slice(indexToUpdate + 1)))
       };
@@ -1352,64 +1450,118 @@ var reducer = function reducer() {
     default:
       return state;
   }
+}
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// PRODUCT TYPES:
+var POST_PRODUCT = exports.POST_PRODUCT = 'POST_PRODUCT';
+var UPDATE_PRODUCT = exports.UPDATE_PRODUCT = 'UPDATE_PRODUCT';
+var DELETE_PRODUCT = exports.DELETE_PRODUCT = 'DELETE_PRODUCT';
+
+// CART TYPES:
+var ADD_TO_CART = exports.ADD_TO_CART = 'ADD_TO_CART';
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = cartReducers;
+
+var _types = __webpack_require__(26);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var INITIAL_STATE = {
+  cart: []
 };
 
-var store = (0, _redux.createStore)(reducer);
+function cartReducers() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+  var action = arguments[1];
 
-store.subscribe(function () {
-  console.log('Current state is: ', store.getState());
-});
-
-store.dispatch({
-  type: 'POST_PRODUCT',
-  payload: [{
-    id: 1,
-    name: 'Soap',
-    image: 'Image',
-    price: 10,
-    description: 'Soap',
-    ingredients: ['Soap'],
-    inventory: 1
-  }, {
-    id: 2,
-    name: 'SoapTwo',
-    image: 'ImageTwo',
-    price: 15,
-    description: 'SoapTwo',
-    ingredients: ['SoapTwo'],
-    inventory: 1
-  }]
-});
-
-store.dispatch({
-  type: 'POST_PRODUCT',
-  payload: [{
-    id: 3,
-    name: 'Soap3',
-    image: 'Image3',
-    price: 12,
-    description: 'Soap3',
-    ingredients: ['Soap3'],
-    inventory: 1
-  }]
-}
-
-// delete:
-);store.dispatch({
-  type: 'DELETE_PRODUCT',
-  payload: {
-    id: 3
+  switch (action.type) {
+    case _types.ADD_TO_CART:
+      return {
+        cart: [].concat(_toConsumableArray(state.cart), _toConsumableArray(action.payload))
+      };
+      break;
+    default:
+      return state;
   }
 }
 
-// update:
-);store.dispatch({
-  type: 'UPDATE_PRODUCT',
-  payload: {
-    id: 2,
-    name: 'Soap2'
-  }
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+exports.addToCart = addToCart;
+
+var _types = __webpack_require__(26);
+
+function addToCart(product) {
+  return {
+    type: _types.ADD_TO_CART,
+    payload: product
+  };
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.postProducts = postProducts;
+exports.deleteProduct = deleteProduct;
+exports.updateProduct = updateProduct;
+
+var _types = __webpack_require__(26);
+
+function postProducts(product) {
+  return {
+    type: _types.POST_PRODUCT,
+    payload: product
+  };
+}
+
+function deleteProduct(id) {
+  return {
+    type: _types.DELETE_PRODUCT,
+    payload: id
+  };
+}
+
+function updateProduct(product) {
+  return {
+    type: _types.UPDATE_PRODUCT,
+    payload: product
+  };
+}
 
 /***/ })
 /******/ ]);
