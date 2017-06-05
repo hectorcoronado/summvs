@@ -3,10 +3,8 @@ font-family: 'Rubik Mono One', sans-serif;
 font-family: 'Oxygen', sans-serif;
 */
 
-h1 {
-  font-family: 'Rubik Mono One', sans-serif;
-}
-
-p {
+body {
   font-family: 'Oxygen', sans-serif;
+  margin-bottom: 75px;
+  margin-top: 75px;
 }

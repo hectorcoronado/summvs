@@ -8,6 +8,8 @@ import logger from 'redux-logger'
 import reducers from './reducers/index'
 
 // COMPONENTS:
+import Footer from './components/Footer'
+import Menu from './components/Menu'
 import ProductsList from './components/ProductsList'
 
 // CREATE REDUX STORE:
@@ -21,7 +23,11 @@ const store = createStoreWithMiddleware(
 
 ReactDOM.render(
   <Provider store={store}>
-    <ProductsList />
+    <div>
+      <Menu />
+      <ProductsList />
+      <Footer />
+    </div>
   </Provider>,
   document.getElementById('app')
 )
