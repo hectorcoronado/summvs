@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import logger from 'redux-logger'
 
@@ -27,7 +28,9 @@ const store = createStoreWithMiddleware(
 )
 
 ReactDOM.render(
-  <ProductsList />,
+  <Provider store={store}>
+    <ProductsList />
+  </Provider>,
   document.getElementById('app')
 )
 
@@ -37,7 +40,7 @@ store.dispatch(postProducts(
     name: 'Soap',
     image: 'Image',
     price: 10,
-    description: 'Soap',
+    description: 'Simple Soap',
     ingredients: ['Soap'],
     inventory: 1
   },
@@ -46,7 +49,7 @@ store.dispatch(postProducts(
     name: 'SoapTwo',
     image: 'ImageTwo',
     price: 15,
-    description: 'SoapTwo',
+    description: 'Complex Soap',
     ingredients: ['SoapTwo'],
     inventory: 1
   },
@@ -60,13 +63,3 @@ store.dispatch(postProducts(
     inventory: 1
   }]
 ))
-
-store.dispatch(deleteProduct({ id: 1 }))
-
-store.dispatch(updateProduct({
-  id: 2,
-  name: 'Soap2'
-}))
-
-// CART ACTIONS:
-store.dispatch(addToCart([{id: 1}]))
