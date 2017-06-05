@@ -4,7 +4,7 @@ import {
   Button, ButtonGroup, Col, Label, Panel, Row
 } from 'react-bootstrap'
 
-import { deleteCartItem } from '../actions/cartActions'
+import { deleteCartItem, updateCart } from '../actions/cartActions'
 
 class Cart extends Component {
   renderEmpty () {
@@ -28,6 +28,17 @@ class Cart extends Component {
     this.props.deleteCartItem(cartAfterDelete)
   }
 
+  onIncrement (_id) {
+    // TODO: check against inventory!!! (but only remove from inv upon purchase)
+    this.props.updateCart(_id, 1)
+  }
+
+  onDecrement (_id, quantity) {
+    if (quantity > 1) {
+      this.props.updateCart(_id, -1)
+    }
+  }
+
   renderCart () {
     const cartItemsList = this.props.cart.map(
       (cartArr) => {
@@ -41,12 +52,26 @@ class Cart extends Component {
                 <h6>USD {cartArr.price}</h6>
               </Col>
               <Col xs={6} sm={2}>
-                <h6>Qty: <Label bsStyle='success'></Label></h6>
+                <h6>Qty:
+                  <Label bsStyle='success'>{cartArr.quantity}</Label>
+                </h6>
               </Col>
               <Col xs={6} sm={2}>
                 <ButtonGroup style={{minWidth: '300px'}}>
-                  <Button bsStyle='default' bsSize='xsmall'>-</Button>
-                  <Button bsStyle='default' bsSize='xsmall'>+</Button>
+                  <Button
+                    bsStyle='default'
+                    bsSize='xsmall'
+                    onClick={this.onDecrement.bind(this, cartArr._id, cartArr.quantity)}
+                  >
+                    -
+                  </Button>
+                  <Button
+                    bsStyle='default'
+                    bsSize='xsmall'
+                    onClick={this.onIncrement.bind(this, cartArr._id)}
+                  >
+                    +
+                  </Button>
                 </ButtonGroup>
                 <Button
                   bsStyle='link'
@@ -84,4 +109,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { deleteCartItem })(Cart)
+export default connect(mapStateToProps, { deleteCartItem, updateCart })(Cart)

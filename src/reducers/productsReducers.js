@@ -13,7 +13,7 @@ const INITIAL_STATE = {
     price: 10,
     description: 'Simple Soap',
     ingredients: ['Soap'],
-    inventory: 1
+    inventory: 10
   },
   {
     _id: 2,
@@ -22,7 +22,7 @@ const INITIAL_STATE = {
     price: 15,
     description: 'Complex Soap',
     ingredients: ['SoapTwo'],
-    inventory: 1
+    inventory: 10
   },
   {
     _id: 3,
@@ -31,7 +31,7 @@ const INITIAL_STATE = {
     price: 12,
     description: 'Soap3',
     ingredients: ['Soap3'],
-    inventory: 1
+    inventory: 10
   }]
 }
 

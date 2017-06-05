@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Col, Row, Well } from 'react-bootstrap'
 import { connect } from 'react-redux'
 
-import { addToCart } from '../actions/cartActions'
+import { addToCart, updateCart } from '../actions/cartActions'
 
 import IngredientList from './IngredientList'
 
@@ -31,11 +31,29 @@ class ProductItem extends Component {
         price,
         description,
         ingredients,
-        inventory
+        inventory,
+        quantity: 1
       }
     ]
 
-    this.props.addToCart(product)
+    // check if cart is empty:
+    if (this.props.cart.length > 0) {
+      // cart is not empty:
+      let cartIndex = this.props.cart.findIndex(
+        (cart) => { return cart._id === _id }
+      )
+      // TODO: check against product inventory when adding/updating
+      // if cartIndex returns -1, there are no items w/same id:
+      if (cartIndex === -1) {
+        this.props.addToCart(product)
+      } else {
+        // otherwise, update quantity:
+        this.props.updateCart(_id, 1)
+      }
+    } else {
+      // cart is empty:
+      this.props.addToCart(product)
+    }
   }
 
   render () {
@@ -66,4 +84,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { addToCart })(ProductItem)
+export default connect(mapStateToProps, { addToCart, updateCart })(ProductItem)
