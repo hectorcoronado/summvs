@@ -7,7 +7,7 @@ class Menu extends Component {
       <Navbar fixedTop>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href='/'>SUMMVS</a>
+            <a className='header-text' href='/'>SUMMVS</a>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -15,8 +15,7 @@ class Menu extends Component {
           <Nav pullRight>
             <NavItem eventKey={1} href='#'>Sign In/Register</NavItem>
             <NavItem eventKey={2} href='/about'>About</NavItem>
-            <NavItem eventKey={3} href='/buy'>Buy</NavItem>
-            <NavItem eventKey={4} href='/cart'>
+            <NavItem eventKey={3} href='/cart'>
               Cart
               <Badge className='badge'>
                 1

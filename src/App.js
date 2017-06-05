@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 import { applyMiddleware, createStore } from 'redux'
 import logger from 'redux-logger'
 
@@ -8,8 +9,9 @@ import logger from 'redux-logger'
 import reducers from './reducers/index'
 
 // COMPONENTS:
-import Footer from './components/Footer'
-import Menu from './components/Menu'
+import Cart from './components/Cart'
+import Main from './components/Main'
+import ProductsForm from './components/ProductsForm'
 import ProductsList from './components/ProductsList'
 
 // CREATE REDUX STORE:
@@ -21,13 +23,20 @@ const store = createStoreWithMiddleware(
   window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-ReactDOM.render(
+// DEFINE ROUTES:
+const ROUTES = (
   <Provider store={store}>
-    <div>
-      <Menu />
-      <ProductsList />
-      <Footer />
-    </div>
-  </Provider>,
+    <Router history={browserHistory}>
+      <Route path='/' component={Main}>
+        <IndexRoute component={ProductsList} />
+        <Route path='/admin' component={ProductsForm} />
+        <Route path='/cart' component={Cart} />
+      </Route>
+    </Router>
+  </Provider>
+)
+
+ReactDOM.render(
+  ROUTES,
   document.getElementById('app')
 )
