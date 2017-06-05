@@ -18065,13 +18065,15 @@ var _reactRedux = __webpack_require__(133);
 
 var _reactBootstrap = __webpack_require__(177);
 
-var _redux = __webpack_require__(81);
-
 var _productsActions = __webpack_require__(218);
 
 var _ProductItem = __webpack_require__(483);
 
 var _ProductItem2 = _interopRequireDefault(_ProductItem);
+
+var _ProductsForm = __webpack_require__(485);
+
+var _ProductsForm2 = _interopRequireDefault(_ProductsForm);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18118,6 +18120,11 @@ var ProductsList = function (_Component) {
         _react2.default.createElement(
           _reactBootstrap.Row,
           null,
+          _react2.default.createElement(
+            _reactBootstrap.Col,
+            { xs: 12, sm: 6 },
+            _react2.default.createElement(_ProductsForm2.default, null)
+          ),
           productsList
         )
       );
@@ -43347,6 +43354,161 @@ var IngredientList = function IngredientList(props) {
 };
 
 exports.default = IngredientList;
+
+/***/ }),
+/* 485 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(177);
+
+var _reactDom = __webpack_require__(19);
+
+var _reactRedux = __webpack_require__(133);
+
+var _productsActions = __webpack_require__(218);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ProductsForm = function (_Component) {
+  _inherits(ProductsForm, _Component);
+
+  function ProductsForm() {
+    _classCallCheck(this, ProductsForm);
+
+    return _possibleConstructorReturn(this, (ProductsForm.__proto__ || Object.getPrototypeOf(ProductsForm)).apply(this, arguments));
+  }
+
+  _createClass(ProductsForm, [{
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var product = [{
+        name: (0, _reactDom.findDOMNode)(this.refs.name).value,
+        description: (0, _reactDom.findDOMNode)(this.refs.description).value,
+        price: (0, _reactDom.findDOMNode)(this.refs.price).value,
+        inventory: (0, _reactDom.findDOMNode)(this.refs.inventory).value,
+        ingredients: (0, _reactDom.findDOMNode)(this.refs.ingredients).value.split(' ')
+      }];
+
+      this.props.postProducts(product);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _reactBootstrap.Well,
+        null,
+        _react2.default.createElement(
+          _reactBootstrap.Panel,
+          null,
+          _react2.default.createElement(
+            _reactBootstrap.FormGroup,
+            { controlId: 'name' },
+            _react2.default.createElement(
+              _reactBootstrap.ControlLabel,
+              null,
+              'Name:'
+            ),
+            _react2.default.createElement(_reactBootstrap.FormControl, {
+              type: 'text',
+              placeholder: 'Enter Product Name',
+              ref: 'name'
+            })
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.FormGroup,
+            { controlId: 'description' },
+            _react2.default.createElement(
+              _reactBootstrap.ControlLabel,
+              null,
+              'Description:'
+            ),
+            _react2.default.createElement(_reactBootstrap.FormControl, {
+              type: 'text',
+              placeholder: 'Enter Description',
+              ref: 'description'
+            })
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.FormGroup,
+            { controlId: 'price' },
+            _react2.default.createElement(
+              _reactBootstrap.ControlLabel,
+              null,
+              'Price:'
+            ),
+            _react2.default.createElement(_reactBootstrap.FormControl, {
+              type: 'number',
+              min: '1',
+              placeholder: '1.0',
+              step: '0.10',
+              ref: 'price'
+            })
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.FormGroup,
+            { controlId: 'inventory' },
+            _react2.default.createElement(
+              _reactBootstrap.ControlLabel,
+              null,
+              'Inventory Quantity:'
+            ),
+            _react2.default.createElement(_reactBootstrap.FormControl, {
+              type: 'number',
+              min: '0',
+              placeholder: '0',
+              ref: 'inventory'
+            })
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.FormGroup,
+            { controlId: 'ingredients' },
+            _react2.default.createElement(
+              _reactBootstrap.ControlLabel,
+              null,
+              'List Ingredients:'
+            ),
+            _react2.default.createElement(_reactBootstrap.FormControl, {
+              type: 'text',
+              placeholder: 'List ingredients separated by a space',
+              ref: 'ingredients'
+            })
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.Button,
+            {
+              bsStyle: 'primary',
+              onClick: this.handleSubmit.bind(this)
+            },
+            'Save Product'
+          )
+        )
+      );
+    }
+  }]);
+
+  return ProductsForm;
+}(_react.Component);
+
+exports.default = (0, _reactRedux.connect)(null, { postProducts: _productsActions.postProducts })(ProductsForm);
 
 /***/ })
 /******/ ]);

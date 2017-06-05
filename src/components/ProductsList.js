@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Col, Grid, Row } from 'react-bootstrap'
-import { bindActionCreators } from 'redux'
+import { Col, Grid, Row } from 'react-bootstrap'
 
 import { getProducts } from '../actions/productsActions'
 
 import ProductItem from './ProductItem'
+import ProductsForm from './ProductsForm'
 
 class ProductsList extends Component {
   componentDidMount () {
@@ -31,6 +31,9 @@ class ProductsList extends Component {
     return (
       <Grid>
         <Row>
+          <Col xs={12} sm={6}>
+            <ProductsForm />
+          </Col>
           {productsList}
         </Row>
       </Grid>
