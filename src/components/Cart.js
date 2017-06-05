@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Button, ButtonGroup, Col, Label, Panel, Row, Well
+  Button, ButtonGroup, Col, Label, Panel, Row
 } from 'react-bootstrap'
+
+import { deleteCartItem } from '../actions/cartActions'
 
 class Cart extends Component {
   renderEmpty () {
@@ -11,6 +13,19 @@ class Cart extends Component {
         Your cart is empty.
       </div>
     )
+  }
+
+  onDelete (_id) {
+    const currentProductToDelete = this.props.cart
+
+    const indexToDelete = currentProductToDelete.findIndex(
+      (cart) => { return cart._id === _id })
+
+    let cartAfterDelete = [
+      ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
+    ]
+
+    this.props.deleteCartItem(cartAfterDelete)
   }
 
   renderCart () {
@@ -33,19 +48,27 @@ class Cart extends Component {
                   <Button bsStyle='default' bsSize='xsmall'>-</Button>
                   <Button bsStyle='default' bsSize='xsmall'>+</Button>
                 </ButtonGroup>
-                <Button bsStyle='link' bsSize='small'>Remove</Button>
+                <Button
+                  bsStyle='link'
+                  bsSize='small'
+                  onClick={this.onDelete.bind(this, cartArr._id)}
+                >
+                  Remove
+                </Button>
               </Col>
             </Row>
           </Panel>
         )
-      }
+      }, this
     )
+
     return (
       <Panel header='Cart'>
         {cartItemsList}
       </Panel>
     )
   }
+
   render () {
     if (this.props.cart[0]) {
       return this.renderCart()
@@ -61,4 +84,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Cart)
+export default connect(mapStateToProps, { deleteCartItem })(Cart)
