@@ -5,7 +5,7 @@ import {
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 
-import { postProducts } from '../actions/productsActions'
+import { postProducts, deleteProduct } from '../actions/productsActions'
 
 class ProductsForm extends Component {
   handleSubmit () {
@@ -19,7 +19,22 @@ class ProductsForm extends Component {
 
     this.props.postProducts(product)
   }
+
+  onDelete () {
+    let productId = findDOMNode(this.refs.delete).value
+
+    this.props.deleteProduct(productId)
+  }
+
   render () {
+    const productsList = this.props.products.map(
+      (productsArr) => {
+        return (
+          <option key={productsArr._id}>{productsArr._id}</option>
+        )
+      }
+    )
+
     return (
       <Well>
         <Panel>
@@ -73,9 +88,31 @@ class ProductsForm extends Component {
             Save Product
           </Button>
         </Panel>
+        <Panel style={{marginTop: '25px'}}>
+          <FormGroup controlId='formControlsSelect'>
+            <ControlLabel>Select a Product to Delete:</ControlLabel>
+            <FormControl ref='delete' componentClass='select' placeholder='select'>
+              <option value='select'>select</option>
+              {productsList}
+            </FormControl>
+          </FormGroup>
+          <Button
+            bsStyle='danger'
+            bsSize='xsmall'
+            onClick={this.onDelete.bind(this)}
+          >
+            Delete Product
+          </Button>
+        </Panel>
       </Well>
     )
   }
 }
 
-export default connect(null, { postProducts })(ProductsForm)
+const mapStateToProps = (state) => {
+  return {
+    products: state.products.products
+  }
+}
+
+export default connect(mapStateToProps, { postProducts, deleteProduct })(ProductsForm)

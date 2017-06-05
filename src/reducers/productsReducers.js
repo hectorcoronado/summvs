@@ -40,9 +40,11 @@ export default function productsReducers (state = INITIAL_STATE, action) {
     case POST_PRODUCT:
       return { products: [...state.products, ...action.payload] }
       break
+
     case GET_PRODUCTS:
       return { ...state, products: [...state.products] }
       break
+
     case UPDATE_PRODUCT:
       const currentProductToUpdate = [...state.products]
       const indexToUpdate = currentProductToUpdate.findIndex(
@@ -59,16 +61,18 @@ export default function productsReducers (state = INITIAL_STATE, action) {
         ]
       }
       break
+
     case DELETE_PRODUCT:
       const currentProductToDelete = [...state.products]
       const indexToDelete = currentProductToDelete.findIndex(
-        (product) => { return product._id === action.payload._id })
+        (product) => { return product._id.toString() === action.payload })
       return {
         products: [
           ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
         ]
       }
       break
+
     default:
       return state
   }
