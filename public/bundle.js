@@ -3461,6 +3461,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 // PRODUCT TYPES:
 var POST_PRODUCT = exports.POST_PRODUCT = 'POST_PRODUCT';
+var GET_PRODUCTS = exports.GET_PRODUCTS = 'GET_PRODUCTS';
 var UPDATE_PRODUCT = exports.UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 var DELETE_PRODUCT = exports.DELETE_PRODUCT = 'DELETE_PRODUCT';
 
@@ -10368,27 +10369,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.addToCart = addToCart;
-
-var _types = __webpack_require__(26);
-
-function addToCart(product) {
-  return {
-    type: _types.ADD_TO_CART,
-    payload: product
-  };
-}
-
-/***/ }),
+/* 94 */,
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10399,8 +10380,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.postProducts = postProducts;
-exports.deleteProduct = deleteProduct;
+exports.getProducts = getProducts;
 exports.updateProduct = updateProduct;
+exports.deleteProduct = deleteProduct;
 
 var _types = __webpack_require__(26);
 
@@ -10411,10 +10393,9 @@ function postProducts(product) {
   };
 }
 
-function deleteProduct(id) {
+function getProducts() {
   return {
-    type: _types.DELETE_PRODUCT,
-    payload: id
+    type: _types.GET_PRODUCTS
   };
 }
 
@@ -10422,6 +10403,13 @@ function updateProduct(product) {
   return {
     type: _types.UPDATE_PRODUCT,
     payload: product
+  };
+}
+
+function deleteProduct(id) {
+  return {
+    type: _types.DELETE_PRODUCT,
+    payload: id
   };
 }
 
@@ -10444,6 +10432,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(58);
 
+var _productsActions = __webpack_require__(95);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -10462,6 +10452,11 @@ var ProductsList = function (_Component) {
   }
 
   _createClass(ProductsList, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.getProducts();
+    }
+  }, {
     key: 'render',
     value: function render() {
       // NOTE though MVP/POC offers single product, this allows for extensibility:
@@ -10508,7 +10503,7 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(ProductsList);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, { getProducts: _productsActions.getProducts })(ProductsList);
 
 /***/ }),
 /* 97 */
@@ -10611,7 +10606,31 @@ var _types = __webpack_require__(26);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var INITIAL_STATE = {
-  products: []
+  products: [{
+    id: 1,
+    name: 'Soap',
+    image: 'Image',
+    price: 10,
+    description: 'Simple Soap',
+    ingredients: ['Soap'],
+    inventory: 1
+  }, {
+    id: 2,
+    name: 'SoapTwo',
+    image: 'ImageTwo',
+    price: 15,
+    description: 'Complex Soap',
+    ingredients: ['SoapTwo'],
+    inventory: 1
+  }, {
+    id: 3,
+    name: 'Soap3',
+    image: 'Image3',
+    price: 12,
+    description: 'Soap3',
+    ingredients: ['Soap3'],
+    inventory: 1
+  }]
 };
 
 function productsReducers() {
@@ -10622,14 +10641,8 @@ function productsReducers() {
     case _types.POST_PRODUCT:
       return { products: [].concat(_toConsumableArray(state.products), _toConsumableArray(action.payload)) };
       break;
-    case _types.DELETE_PRODUCT:
-      var currentProductToDelete = [].concat(_toConsumableArray(state.products));
-      var indexToDelete = currentProductToDelete.findIndex(function (product) {
-        return product.id === action.payload.id;
-      });
-      return {
-        products: [].concat(_toConsumableArray(currentProductToDelete.slice(0, indexToDelete)), _toConsumableArray(currentProductToDelete.slice(indexToDelete + 1)))
-      };
+    case _types.GET_PRODUCTS:
+      return _extends({}, state, { products: [].concat(_toConsumableArray(state.products)) });
       break;
     case _types.UPDATE_PRODUCT:
       var currentProductToUpdate = [].concat(_toConsumableArray(state.products));
@@ -10641,6 +10654,15 @@ function productsReducers() {
       });
       return {
         products: [].concat(_toConsumableArray(currentProductToUpdate.slice(0, indexToUpdate)), [updatedProduct], _toConsumableArray(currentProductToUpdate.slice(indexToUpdate + 1)))
+      };
+      break;
+    case _types.DELETE_PRODUCT:
+      var currentProductToDelete = [].concat(_toConsumableArray(state.products));
+      var indexToDelete = currentProductToDelete.findIndex(function (product) {
+        return product.id === action.payload.id;
+      });
+      return {
+        products: [].concat(_toConsumableArray(currentProductToDelete.slice(0, indexToDelete)), _toConsumableArray(currentProductToDelete.slice(indexToDelete + 1)))
       };
       break;
     default:
@@ -24159,10 +24181,6 @@ var _index = __webpack_require__(97);
 
 var _index2 = _interopRequireDefault(_index);
 
-var _cartActions = __webpack_require__(94);
-
-var _productsActions = __webpack_require__(95);
-
 var _ProductsList = __webpack_require__(96);
 
 var _ProductsList2 = _interopRequireDefault(_ProductsList);
@@ -24178,9 +24196,6 @@ var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxLogger2.defaul
 // COMPONENTS:
 
 
-// ACTIONS:
-
-
 var store = createStoreWithMiddleware(_index2.default, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 _reactDom2.default.render(_react2.default.createElement(
@@ -24188,32 +24203,6 @@ _reactDom2.default.render(_react2.default.createElement(
   { store: store },
   _react2.default.createElement(_ProductsList2.default, null)
 ), document.getElementById('app'));
-
-store.dispatch((0, _productsActions.postProducts)([{
-  id: 1,
-  name: 'Soap',
-  image: 'Image',
-  price: 10,
-  description: 'Simple Soap',
-  ingredients: ['Soap'],
-  inventory: 1
-}, {
-  id: 2,
-  name: 'SoapTwo',
-  image: 'ImageTwo',
-  price: 15,
-  description: 'Complex Soap',
-  ingredients: ['SoapTwo'],
-  inventory: 1
-}, {
-  id: 3,
-  name: 'Soap3',
-  image: 'Image3',
-  price: 12,
-  description: 'Soap3',
-  ingredients: ['Soap3'],
-  inventory: 1
-}]));
 
 /***/ })
 /******/ ]);

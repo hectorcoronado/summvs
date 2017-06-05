@@ -1,11 +1,38 @@
 import {
   POST_PRODUCT,
+  GET_PRODUCTS,
   UPDATE_PRODUCT,
   DELETE_PRODUCT
 } from '../actions/types'
 
 const INITIAL_STATE = {
-  products: []
+  products: [{
+    id: 1,
+    name: 'Soap',
+    image: 'Image',
+    price: 10,
+    description: 'Simple Soap',
+    ingredients: ['Soap'],
+    inventory: 1
+  },
+  {
+    id: 2,
+    name: 'SoapTwo',
+    image: 'ImageTwo',
+    price: 15,
+    description: 'Complex Soap',
+    ingredients: ['SoapTwo'],
+    inventory: 1
+  },
+  {
+    id: 3,
+    name: 'Soap3',
+    image: 'Image3',
+    price: 12,
+    description: 'Soap3',
+    ingredients: ['Soap3'],
+    inventory: 1
+  }]
 }
 
 export default function productsReducers (state = INITIAL_STATE, action) {
@@ -13,15 +40,8 @@ export default function productsReducers (state = INITIAL_STATE, action) {
     case POST_PRODUCT:
       return { products: [...state.products, ...action.payload] }
       break
-    case DELETE_PRODUCT:
-      const currentProductToDelete = [...state.products]
-      const indexToDelete = currentProductToDelete.findIndex(
-        (product) => { return product.id === action.payload.id })
-      return {
-        products: [
-          ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
-        ]
-      }
+    case GET_PRODUCTS:
+      return { ...state, products: [...state.products] }
       break
     case UPDATE_PRODUCT:
       const currentProductToUpdate = [...state.products]
@@ -36,6 +56,16 @@ export default function productsReducers (state = INITIAL_STATE, action) {
           ...currentProductToUpdate.slice(0, indexToUpdate),
           updatedProduct,
           ...currentProductToUpdate.slice(indexToUpdate + 1)
+        ]
+      }
+      break
+    case DELETE_PRODUCT:
+      const currentProductToDelete = [...state.products]
+      const indexToDelete = currentProductToDelete.findIndex(
+        (product) => { return product.id === action.payload.id })
+      return {
+        products: [
+          ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
         ]
       }
       break

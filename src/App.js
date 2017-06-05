@@ -7,14 +7,6 @@ import logger from 'redux-logger'
 // REDUCERS:
 import reducers from './reducers/index'
 
-// ACTIONS:
-import { addToCart } from './actions/cartActions'
-import {
-  postProducts,
-  updateProduct,
-  deleteProduct
-} from './actions/productsActions'
-
 // COMPONENTS:
 import ProductsList from './components/ProductsList'
 
@@ -33,33 +25,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('app')
 )
-
-store.dispatch(postProducts(
-  [{
-    id: 1,
-    name: 'Soap',
-    image: 'Image',
-    price: 10,
-    description: 'Simple Soap',
-    ingredients: ['Soap'],
-    inventory: 1
-  },
-  {
-    id: 2,
-    name: 'SoapTwo',
-    image: 'ImageTwo',
-    price: 15,
-    description: 'Complex Soap',
-    ingredients: ['SoapTwo'],
-    inventory: 1
-  },
-  {
-    id: 3,
-    name: 'Soap3',
-    image: 'Image3',
-    price: 12,
-    description: 'Soap3',
-    ingredients: ['Soap3'],
-    inventory: 1
-  }]
-))

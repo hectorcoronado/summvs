@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { getProducts } from '../actions/productsActions'
+
 class ProductsList extends Component {
+  componentDidMount () {
+    this.props.getProducts()
+  }
+
   render () {
     // NOTE though MVP/POC offers single product, this allows for extensibility:
     const productsList = this.props.products.map(
@@ -29,4 +35,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(ProductsList)
+export default connect(mapStateToProps, { getProducts })(ProductsList)
