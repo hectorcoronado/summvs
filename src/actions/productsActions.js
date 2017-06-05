@@ -25,9 +25,9 @@ export function updateProduct (product) {
   }
 }
 
-export function deleteProduct (id) {
+export function deleteProduct (_id) {
   return {
     type: DELETE_PRODUCT,
-    payload: id
+    payload: _id
   }
 }

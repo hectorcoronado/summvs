@@ -4,8 +4,9 @@ import { Col, Grid, Row } from 'react-bootstrap'
 
 import { getProducts } from '../actions/productsActions'
 
-import ProductItem from './ProductItem'
+import Cart from './Cart'
 import ProductsForm from './ProductsForm'
+import ProductItem from './ProductItem'
 
 class ProductsList extends Component {
   componentDidMount () {
@@ -17,9 +18,9 @@ class ProductsList extends Component {
     const productsList = this.props.products.map(
       (productsArr) => {
         return (
-          <Col xs={12} sm={6} md={4} key={productsArr.id}>
+          <Col xs={12} sm={6} md={4} key={productsArr._id}>
             <ProductItem
-              id={productsArr.id}
+              _id={productsArr._id}
               name={productsArr.name}
               description={productsArr.description}
               ingredients={productsArr.ingredients}
@@ -30,6 +31,9 @@ class ProductsList extends Component {
       })
     return (
       <Grid>
+        <Row>
+          <Cart />
+        </Row>
         <Row>
           <Col xs={12} sm={6}>
             <ProductsForm />
