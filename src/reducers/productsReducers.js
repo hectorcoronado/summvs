@@ -6,33 +6,7 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-  products: [{
-    _id: 1,
-    name: 'Soap',
-    image: 'Image',
-    price: 10,
-    description: 'Simple Soap',
-    ingredients: ['Soap'],
-    inventory: 10
-  },
-  {
-    _id: 2,
-    name: 'SoapTwo',
-    image: 'ImageTwo',
-    price: 15,
-    description: 'Complex Soap',
-    ingredients: ['SoapTwo'],
-    inventory: 10
-  },
-  {
-    _id: 3,
-    name: 'Soap3',
-    image: 'Image3',
-    price: 12,
-    description: 'Soap3',
-    ingredients: ['Soap3'],
-    inventory: 10
-  }]
+  products: []
 }
 
 export default function productsReducers (state = INITIAL_STATE, action) {
@@ -42,7 +16,7 @@ export default function productsReducers (state = INITIAL_STATE, action) {
       break
 
     case GET_PRODUCTS:
-      return { ...state, products: [...state.products] }
+      return { ...state, products: [...action.payload] }
       break
 
     case UPDATE_PRODUCT:

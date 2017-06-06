@@ -4,8 +4,11 @@ import {
   POST_PRODUCT,
   POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
+  GET_PRODUCTS_REJECTED,
   UPDATE_PRODUCT,
-  DELETE_PRODUCT
+  UPDATE_PRODUCT_REJECTED,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_REJECTED
 } from './types'
 
 export function postProducts (product) {
@@ -20,15 +23,27 @@ export function postProducts (product) {
       .catch((err) => {
         dispatch({
           type: POST_PRODUCT_REJECTED,
-          payload: 'There was an error with postProducts'
+          payload: err
         })
       })
   }
 }
 
 export function getProducts () {
-  return {
-    type: GET_PRODUCTS
+  return (dispatch) => {
+    axios.get('/products')
+      .then((response) => {
+        dispatch({
+          type: GET_PRODUCTS,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: GET_PRODUCTS_REJECTED,
+          payload: err
+        })
+      })
   }
 }
 
@@ -40,8 +55,19 @@ export function updateProduct (product) {
 }
 
 export function deleteProduct (_id) {
-  return {
-    type: DELETE_PRODUCT,
-    payload: _id
+  return (dispatch) => {
+    axios.delete(`/products/${_id}`)
+      .then((response) => {
+        dispatch({
+          type: DELETE_PRODUCT,
+          payload: _id
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: DELETE_PRODUCT_REJECTED,
+          payload: err
+        })
+      })
   }
 }
