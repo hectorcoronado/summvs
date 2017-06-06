@@ -84,6 +84,18 @@ app.put('/products/:_id', function (req, res) {
   })
 })
 
+// --->>> DELETE PRODUCT <<<---
+app.delete('/products/:_id', function (req, res) {
+  var query = { _id: req.params._id }
+
+  Product.remove(query, function (err, products) {
+    if (err) {
+      console.log(err)
+    }
+    res.json(products)
+  })
+})
+
 // ////////////////////// //
 // --->>> END APIs <<<--- //
 // ////////////////////// //
