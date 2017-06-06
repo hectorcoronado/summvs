@@ -18,7 +18,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-
 // ////////////////// //
 // --->>> APIs <<<--- //
 // ////////////////// //
@@ -50,10 +49,45 @@ app.get('/products', function (req, res) {
     res.json(products)
   })
 })
+/*
+_id: 1,
+name: 'Soap',
+image: 'Image',
+price: 10,
+description: 'Simple Soap',
+ingredients: ['Soap'],
+inventory: 10
+*/
+// --->>> UPDATE PRODUCT <<<---
+app.put('/products/:_id', function (req, res) {
+  var product = req.body
+  var query = req.params._id
+
+  var update = {
+    '$set': {
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      description: product.description,
+      ingredients: product.ingredients,
+      inventory: product.inventory
+    }
+  }
+
+  var options = { new: true }
+
+  Product.findOneAndUpdate(query, update, options, function (err, products) {
+    if (err) {
+      throw err
+    }
+    res.json(products)
+  })
+})
 
 // ////////////////////// //
 // --->>> END APIs <<<--- //
 // ////////////////////// //
+
 app.get('*', function (req, res) {
   console.log('***')
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
