@@ -13,7 +13,7 @@ import {
 
 export function postProducts (product) {
   return (dispatch) => {
-    axios.post('/products', product)
+    axios.post('/api/products', product)
       .then((response) => {
         dispatch({
           type: POST_PRODUCT,
@@ -31,7 +31,7 @@ export function postProducts (product) {
 
 export function getProducts () {
   return (dispatch) => {
-    axios.get('/products')
+    axios.get('/api/products')
       .then((response) => {
         dispatch({
           type: GET_PRODUCTS,
@@ -56,7 +56,7 @@ export function updateProduct (product) {
 
 export function deleteProduct (_id) {
   return (dispatch) => {
-    axios.delete(`/products/${_id}`)
+    axios.delete(`/api/products/${_id}`)
       .then((response) => {
         dispatch({
           type: DELETE_PRODUCT,
