@@ -1,14 +1,28 @@
+import axios from 'axios'
+
 import {
   POST_PRODUCT,
+  POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
   UPDATE_PRODUCT,
   DELETE_PRODUCT
 } from './types'
 
 export function postProducts (product) {
-  return {
-    type: POST_PRODUCT,
-    payload: product
+  return (dispatch) => {
+    axios.post('/products', product)
+      .then((response) => {
+        dispatch({
+          type: POST_PRODUCT,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: POST_PRODUCT_REJECTED,
+          payload: 'There was an error with postProducts'
+        })
+      })
   }
 }
 

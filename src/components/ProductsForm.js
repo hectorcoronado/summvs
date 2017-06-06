@@ -79,6 +79,7 @@ class ProductsForm extends Component {
               type='text'
               placeholder='List ingredients separated by a space'
               ref='ingredients'
+              key={performance.now()}
             />
           </FormGroup>
           <Button

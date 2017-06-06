@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 import { applyMiddleware, createStore } from 'redux'
 import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
 // REDUCERS:
 import reducers from './reducers/index'
@@ -15,7 +16,7 @@ import ProductsForm from './components/ProductsForm'
 import ProductsList from './components/ProductsList'
 
 // CREATE REDUX STORE:
-const createStoreWithMiddleware = applyMiddleware(logger)(createStore)
+const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore)
 
 const store = createStoreWithMiddleware(
   reducers,

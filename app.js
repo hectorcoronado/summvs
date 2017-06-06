@@ -49,15 +49,7 @@ app.get('/products', function (req, res) {
     res.json(products)
   })
 })
-/*
-_id: 1,
-name: 'Soap',
-image: 'Image',
-price: 10,
-description: 'Simple Soap',
-ingredients: ['Soap'],
-inventory: 10
-*/
+
 // --->>> UPDATE PRODUCT <<<---
 app.put('/products/:_id', function (req, res) {
   var product = req.body
@@ -74,6 +66,7 @@ app.put('/products/:_id', function (req, res) {
     }
   }
 
+  // this option returns the updated document:
   var options = { new: true }
 
   Product.findOneAndUpdate(query, update, options, function (err, products) {
