@@ -67,7 +67,7 @@ class Cart extends Component {
           <Panel key={cartArr._id}>
             <Row>
               <Col xs={12} sm={4}>
-                <h6>{cartArr.name}</h6><span>     </span>
+                <h6>{cartArr.name}</h6><span />
               </Col>
               <Col xs={12} sm={2}>
                 <h6>USD {cartArr.price}</h6>

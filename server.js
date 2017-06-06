@@ -10,6 +10,6 @@ app.get('*', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
-app.listen(process.env.PORT || 8080, function () {
-  console.log('App is listening on http://localhost:8080/')
+app.listen(process.env.PORT || 3000, function () {
+  console.log('App is listening on http://localhost:3000/')
 })
