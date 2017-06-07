@@ -6,16 +6,6 @@ import { addToCart, updateCart } from '../actions/cartActions'
 
 import IngredientList from './IngredientList'
 
-/*
-_id: 1,
-name: 'Soap',
-image: 'Image',
-price: 10,
-description: 'Simple Soap',
-ingredients: ['Soap'],
-inventory: 1
-*/
-
 class ProductItem extends Component {
   handleCart () {
     const {
@@ -48,7 +38,7 @@ class ProductItem extends Component {
         this.props.addToCart(product)
       } else {
         // otherwise, update quantity:
-        this.props.updateCart(_id, 1)
+        this.props.updateCart(_id, 1, this.props.cart)
       }
     } else {
       // cart is empty:

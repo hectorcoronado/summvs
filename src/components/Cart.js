@@ -50,13 +50,12 @@ class Cart extends Component {
   }
 
   onIncrement (_id) {
-    // TODO: check against inventory!!! (but only remove from inv upon purchase)
-    this.props.updateCart(_id, 1)
+    this.props.updateCart(_id, 1, this.props.cart)
   }
 
   onDecrement (_id, quantity) {
     if (quantity > 1) {
-      this.props.updateCart(_id, -1)
+      this.props.updateCart(_id, -1, this.props.cart)
     }
   }
 

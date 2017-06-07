@@ -20,27 +20,11 @@ export default function cartReducers (state = INITIAL_STATE, action) {
       break
 
     case UPDATE_CART:
-      const currentProductToUpdate = [...state.cart]
-
-      const indexToUpdate = currentProductToUpdate.findIndex(
-        (product) => { return product._id === action._id })
-
-      const updatedProduct = {
-        ...currentProductToUpdate[indexToUpdate],
-        quantity: currentProductToUpdate[indexToUpdate].quantity + action.unit
-      }
-
-      let cartUpdate = [
-        ...currentProductToUpdate.slice(0, indexToUpdate),
-        updatedProduct,
-        ...currentProductToUpdate.slice(indexToUpdate + 1)
-      ]
-
       return {
         ...state,
-        cart: cartUpdate,
-        totalAmount: totals(cartUpdate).amount,
-        totalQty: totals(cartUpdate).qty
+        cart: action.payload,
+        totalAmount: totals(action.payload).amount,
+        totalQty: totals(action.payload).qty
       }
       break
 

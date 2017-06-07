@@ -11,11 +11,26 @@ export function addToCart (product) {
   }
 }
 
-export function updateCart (_id, unit) {
+export function updateCart (_id, unit, cart) {
+  const currentProductToUpdate = cart
+
+  const indexToUpdate = currentProductToUpdate.findIndex(
+    (product) => { return product._id === _id })
+
+  const updatedProduct = {
+    ...currentProductToUpdate[indexToUpdate],
+    quantity: currentProductToUpdate[indexToUpdate].quantity + unit
+  }
+
+  let cartUpdate = [
+    ...currentProductToUpdate.slice(0, indexToUpdate),
+    updatedProduct,
+    ...currentProductToUpdate.slice(indexToUpdate + 1)
+  ]
+
   return {
     type: UPDATE_CART,
-    _id,
-    unit
+    payload: cartUpdate
   }
 }
 
