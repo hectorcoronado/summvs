@@ -1,14 +1,32 @@
+import axios from 'axios'
+
 import {
   ADD_TO_CART,
+  ADD_TO_CART_REJECTED,
   UPDATE_CART,
   DELETE_CART_ITEM
 } from './types'
 
-export function addToCart (product) {
-  return {
-    type: ADD_TO_CART,
-    payload: product
+export function addToCart (cart) {
+  return (dispatch) => {
+    axios.post('/api/cart', cart)
+      .then((response) => {
+        dispatch({
+          type: ADD_TO_CART,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: ADD_TO_CART_REJECTED,
+          msg: `Error adding to cart: ${err}`
+        })
+      })
   }
+  // return {
+  //   type: ADD_TO_CART,
+  //   payload: product
+  // }
 }
 
 export function updateCart (_id, unit, cart) {
