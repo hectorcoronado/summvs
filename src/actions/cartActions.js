@@ -7,7 +7,8 @@ import {
   GET_CART_REJECTED,
   UPDATE_CART,
   UPDATE_CART_REJECTED,
-  DELETE_CART_ITEM
+  DELETE_CART_ITEM,
+  DELETE_CART_ITEM_REJECTED
 } from './types'
 
 export function addToCart (cart) {
@@ -22,7 +23,7 @@ export function addToCart (cart) {
       .catch((err) => {
         dispatch({
           type: ADD_TO_CART_REJECTED,
-          msg: `Error adding to cart: ${err}`
+          msg: `Error POSTING to cart: ${err}`
         })
       })
   }
@@ -40,7 +41,7 @@ export function getCart () {
       .catch((err) => {
         dispatch({
           type: GET_CART_REJECTED,
-          msg: `Error getting cart from session: ${err}`
+          msg: `Error GETTING cart from session: ${err}`
         })
       })
   }
@@ -64,7 +65,7 @@ export function updateCart (_id, unit, cart) {
   ]
 
   return (dispatch) => {
-    axios.post('/api/cart', cartUpdate)
+    axios.put('/api/cart', cartUpdate)
       .then((response) => {
         dispatch({
           type: UPDATE_CART,
@@ -74,15 +75,26 @@ export function updateCart (_id, unit, cart) {
       .catch((err) => {
         dispatch({
           type: UPDATE_CART_REJECTED,
-          msg: `Error updating cart: ${err}`
+          msg: `Error UPDATING cart: ${err}`
         })
       })
   }
 }
 
 export function deleteCartItem (cart) {
-  return {
-    type: DELETE_CART_ITEM,
-    payload: cart
+  return (dispatch) => {
+    axios.post('/api/cart', cart)
+      .then((response) => {
+        dispatch({
+          type: DELETE_CART_ITEM,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: DELETE_CART_ITEM_REJECTED,
+          msg: `Error DELETING item from cart: ${err}`
+        })
+      })
   }
 }

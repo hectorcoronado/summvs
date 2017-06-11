@@ -51,7 +51,7 @@ export default function cartReducers (state = INITIAL_STATE, action) {
   }
 }
 
-// same func used to calc totals for all cart reducers:
+// func used to calc totals for all cart reducers:
 export function totals (payloadArr) {
   const totalAmount = payloadArr.map(
     (cartArr) => { return cartArr.price * cartArr.quantity }

@@ -4,9 +4,9 @@ var dotenv = require('dotenv').config()
 var express = require('express')
 var logger = require('morgan')
 var mongoose = require('mongoose')
-var session = require('express-session');
+var session = require('express-session')
 
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo')(session)
 
 var app = express()
 
@@ -21,6 +21,7 @@ app.use(cookieParser())
 mongoose.connect('mongodb://localhost:27017/summvs')
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
+
 // ==========================
 // --->>> SESSIONS API <<<---
 app.use(session({
@@ -53,7 +54,21 @@ app.get('/cart', function (req, res) {
     res.json(req.session.cart)
   }
 })
+
+// --->>> UPDATE CART SESSION <<<---
+app.put('/cart', function (req, res) {
+  var cart = req.body
+  req.session.cart = cart
+  req.session.save(function (err) {
+    if (err) {
+      throw err
+    }
+    res.json(req.session.cart)
+  })
+})
 // --->>> END SESSIONS <<<---
+// ==========================
+
 // ==========================
 // --->>> PRODUCTS API <<<---
 var Product = require('./models/product.js')
