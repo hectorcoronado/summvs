@@ -43,7 +43,7 @@ app.post('/cart', function (req, res) {
   req.session.cart = cart
   req.session.save(function (err) {
     if (err) {
-      throw err
+      console.log(`Error POSTING to cart: ${err}`)
     }
     res.json(req.session.cart)
   })
@@ -80,7 +80,7 @@ app.post('/products', function (req, res) {
 
   Product.create(product, function (err, products) {
     if (err) {
-      throw err
+      console.log(`Error POSTING product: ${err}`)
     }
     res.json(products)
   })
@@ -90,7 +90,7 @@ app.post('/products', function (req, res) {
 app.get('/products', function (req, res) {
   Product.find(function (err, products) {
     if (err) {
-      throw err
+      console.log(`Error GETTING products: ${err}`)
     }
     res.json(products)
   })
@@ -117,7 +117,7 @@ app.put('/products/:_id', function (req, res) {
 
   Product.findOneAndUpdate(query, update, options, function (err, products) {
     if (err) {
-      throw err
+      console.log(`Error UPDATING product: ${err}`)
     }
     res.json(products)
   })
@@ -129,7 +129,7 @@ app.delete('/products/:_id', function (req, res) {
 
   Product.remove(query, function (err, products) {
     if (err) {
-      console.log(err)
+      console.log(`Error DELETING product: ${err}`)
     }
     res.json(products)
   })
@@ -146,7 +146,7 @@ app.get('/images', function (req, res) {
   var fs = require('fs')
   fs.readdir(imgFolder, function (err, files) {
     if (err) {
-      return console.log(err)
+      return console.log(`Error READING images folder: ${err}`)
     }
 
     var filesArr = []
