@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap'
 import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
+import uniqid from 'uniqid'
 
 import { postProducts, deleteProduct } from '../actions/productsActions'
 
@@ -79,6 +80,7 @@ class ProductsForm extends Component {
               type='text'
               placeholder='List ingredients separated by a space'
               ref='ingredients'
+              key={uniqid()}
             />
           </FormGroup>
           <Button

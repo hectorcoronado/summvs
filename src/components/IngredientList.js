@@ -1,9 +1,10 @@
-import React from 'react';
+import React from 'react'
+import uniqid from 'uniqid'
 
 const IngredientList = (props) => {
   const { ingredients } = props
   const listItems = ingredients.map((ingredient) =>
-    <li key={performance.now()}>{ingredient}</li>
+    <li key={uniqid()}>{ingredient}</li>
   )
   return (
     <div>

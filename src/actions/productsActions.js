@@ -1,20 +1,49 @@
+import axios from 'axios'
+
 import {
   POST_PRODUCT,
+  POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
+  GET_PRODUCTS_REJECTED,
   UPDATE_PRODUCT,
-  DELETE_PRODUCT
+  UPDATE_PRODUCT_REJECTED,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_REJECTED
 } from './types'
 
 export function postProducts (product) {
-  return {
-    type: POST_PRODUCT,
-    payload: product
+  return (dispatch) => {
+    axios.post('/api/products', product)
+      .then((response) => {
+        dispatch({
+          type: POST_PRODUCT,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: POST_PRODUCT_REJECTED,
+          payload: err
+        })
+      })
   }
 }
 
 export function getProducts () {
-  return {
-    type: GET_PRODUCTS
+  return (dispatch) => {
+    axios.get('/api/products')
+      .then((response) => {
+        dispatch({
+          type: GET_PRODUCTS,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: GET_PRODUCTS_REJECTED,
+          payload: err
+        })
+      })
   }
 }
 
@@ -26,8 +55,19 @@ export function updateProduct (product) {
 }
 
 export function deleteProduct (_id) {
-  return {
-    type: DELETE_PRODUCT,
-    payload: _id
+  return (dispatch) => {
+    axios.delete(`/api/products/${_id}`)
+      .then((response) => {
+        dispatch({
+          type: DELETE_PRODUCT,
+          payload: _id
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: DELETE_PRODUCT_REJECTED,
+          payload: err
+        })
+      })
   }
 }
