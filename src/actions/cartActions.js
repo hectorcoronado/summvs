@@ -3,7 +3,10 @@ import axios from 'axios'
 import {
   ADD_TO_CART,
   ADD_TO_CART_REJECTED,
+  GET_CART,
+  GET_CART_REJECTED,
   UPDATE_CART,
+  UPDATE_CART_REJECTED,
   DELETE_CART_ITEM
 } from './types'
 
@@ -23,10 +26,24 @@ export function addToCart (cart) {
         })
       })
   }
-  // return {
-  //   type: ADD_TO_CART,
-  //   payload: product
-  // }
+}
+
+export function getCart () {
+  return (dispatch) => {
+    axios.get('/api/cart')
+      .then((response) => {
+        dispatch({
+          type: GET_CART,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: GET_CART_REJECTED,
+          msg: `Error getting cart from session: ${err}`
+        })
+      })
+  }
 }
 
 export function updateCart (_id, unit, cart) {
@@ -46,9 +63,20 @@ export function updateCart (_id, unit, cart) {
     ...currentProductToUpdate.slice(indexToUpdate + 1)
   ]
 
-  return {
-    type: UPDATE_CART,
-    payload: cartUpdate
+  return (dispatch) => {
+    axios.post('/api/cart', cartUpdate)
+      .then((response) => {
+        dispatch({
+          type: UPDATE_CART,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        dispatch({
+          type: UPDATE_CART_REJECTED,
+          msg: `Error updating cart: ${err}`
+        })
+      })
   }
 }
 

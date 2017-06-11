@@ -37,6 +37,7 @@ app.use(session({
 // --->>> POST CART SESSION <<<---
 app.post('/cart', function (req, res) {
   var cart = req.body
+  // store cart data in session:
   req.session.cart = cart
   req.session.save(function (err) {
     if (err) {
@@ -58,11 +59,8 @@ app.get('/cart', function (req, res) {
 var Product = require('./models/product.js')
 
 // --->>> POST PRODUCTS <<<---
-// TODO: figure out why ingredients array isn't posting!!!
 app.post('/products', function (req, res) {
   var product = req.body
-  var ingredients = req.body.ingredients
-  console.log(ingredients)
 
   Product.create(product, function (err, products) {
     if (err) {
