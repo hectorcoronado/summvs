@@ -22,6 +22,7 @@ class ProductsList extends Component {
             <ProductItem
               _id={productsArr._id}
               name={productsArr.name}
+              image={productsArr.image}
               description={productsArr.description}
               ingredients={productsArr.ingredients}
               price={productsArr.price}
@@ -29,15 +30,13 @@ class ProductsList extends Component {
           </Col>
         )
       })
+
     return (
       <Grid>
         <Row>
           <Cart />
         </Row>
         <Row>
-          <Col xs={12} sm={6}>
-            <ProductsForm />
-          </Col>
           {productsList}
         </Row>
       </Grid>
