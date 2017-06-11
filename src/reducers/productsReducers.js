@@ -1,8 +1,10 @@
 import {
   POST_PRODUCT,
+  POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
   UPDATE_PRODUCT,
-  DELETE_PRODUCT
+  DELETE_PRODUCT,
+  RESET_BUTTON
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -12,7 +14,20 @@ const INITIAL_STATE = {
 export default function productsReducers (state = INITIAL_STATE, action) {
   switch (action.type) {
     case POST_PRODUCT:
-      return { products: [...state.products, ...action.payload] }
+      return {
+        ...state,
+        products: [...state.products, ...action.payload],
+        msg: 'Saved! Click to continue.',
+        style: 'success'
+      }
+      break
+
+    case POST_PRODUCT_REJECTED:
+      return {
+        ...state,
+        msg: 'Please try again',
+        style: 'danger'
+      }
       break
 
     case GET_PRODUCTS:
@@ -45,6 +60,10 @@ export default function productsReducers (state = INITIAL_STATE, action) {
           ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
         ]
       }
+      break
+
+    case RESET_BUTTON:
+      return { ...state, msg: null, style: 'primary' }
       break
 
     default:

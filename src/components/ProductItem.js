@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Col, Row, Well } from 'react-bootstrap'
+import { Button, Col, Image, Row, Well } from 'react-bootstrap'
 import { connect } from 'react-redux'
 
 import { addToCart, updateCart } from '../actions/cartActions'
@@ -50,7 +50,10 @@ class ProductItem extends Component {
     return (
       <Well>
         <Row>
-          <Col xs={12}>
+          <Col xs={12} sm={4}>
+            <Image src={this.props.image} responsive />
+          </Col>
+          <Col xs={6} sm={8}>
             <h6>{this.props.name}</h6>
             <p>{this.props.description}</p>
             <IngredientList ingredients={this.props.ingredients} />

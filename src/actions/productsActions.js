@@ -8,7 +8,8 @@ import {
   UPDATE_PRODUCT,
   UPDATE_PRODUCT_REJECTED,
   DELETE_PRODUCT,
-  DELETE_PRODUCT_REJECTED
+  DELETE_PRODUCT_REJECTED,
+  RESET_BUTTON
 } from './types'
 
 export function postProducts (product) {
@@ -69,5 +70,12 @@ export function deleteProduct (_id) {
           payload: err
         })
       })
+  }
+}
+
+// reset form button:
+export function resetButton () {
+  return {
+    type: RESET_BUTTON
   }
 }
