@@ -4,7 +4,7 @@ import {
   Button, ButtonGroup, Col, Label, Modal, Panel, Row
 } from 'react-bootstrap'
 
-import { deleteCartItem, updateCart } from '../actions/cartActions'
+import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
 
 class Cart extends Component {
   constructor (props) {
@@ -15,7 +15,10 @@ class Cart extends Component {
     }
   }
 
-  // modal functions
+  componentDidMount () {
+    this.props.getCart()
+  }
+
   open () {
     this.setState({
       showModal: true
@@ -50,13 +53,12 @@ class Cart extends Component {
   }
 
   onIncrement (_id) {
-    // TODO: check against inventory!!! (but only remove from inv upon purchase)
-    this.props.updateCart(_id, 1)
+    this.props.updateCart(_id, 1, this.props.cart)
   }
 
   onDecrement (_id, quantity) {
     if (quantity > 1) {
-      this.props.updateCart(_id, -1)
+      this.props.updateCart(_id, -1, this.props.cart)
     }
   }
 
@@ -158,4 +160,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { deleteCartItem, updateCart })(Cart)
+export default connect(mapStateToProps, { deleteCartItem, getCart, updateCart })(Cart)

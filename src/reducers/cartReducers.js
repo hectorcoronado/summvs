@@ -1,5 +1,6 @@
 import {
   ADD_TO_CART,
+  GET_CART,
   UPDATE_CART,
   DELETE_CART_ITEM
 } from '../actions/types'
@@ -19,28 +20,20 @@ export default function cartReducers (state = INITIAL_STATE, action) {
       }
       break
 
-    case UPDATE_CART:
-      const currentProductToUpdate = [...state.cart]
-
-      const indexToUpdate = currentProductToUpdate.findIndex(
-        (product) => { return product._id === action._id })
-
-      const updatedProduct = {
-        ...currentProductToUpdate[indexToUpdate],
-        quantity: currentProductToUpdate[indexToUpdate].quantity + action.unit
-      }
-
-      let cartUpdate = [
-        ...currentProductToUpdate.slice(0, indexToUpdate),
-        updatedProduct,
-        ...currentProductToUpdate.slice(indexToUpdate + 1)
-      ]
-
+    case GET_CART:
       return {
         ...state,
-        cart: cartUpdate,
-        totalAmount: totals(cartUpdate).amount,
-        totalQty: totals(cartUpdate).qty
+        cart: action.payload,
+        totalAmount: totals(action.payload).amount,
+        totalQty: totals(action.payload).qty
+      }
+
+    case UPDATE_CART:
+      return {
+        ...state,
+        cart: action.payload,
+        totalAmount: totals(action.payload).amount,
+        totalQty: totals(action.payload).qty
       }
       break
 
@@ -58,7 +51,7 @@ export default function cartReducers (state = INITIAL_STATE, action) {
   }
 }
 
-// same func used to calc totals for all cart reducers:
+// func used to calc totals for all cart reducers:
 export function totals (payloadArr) {
   const totalAmount = payloadArr.map(
     (cartArr) => { return cartArr.price * cartArr.quantity }

@@ -10,9 +10,9 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
 
-// //////////// //
-// PROXY TO API //
-// //////////// //
+// ///////// //
+// PROXY API //
+// ///////// //
 var apiProxy = httpProxy.createProxyServer({
   target: 'http://localhost:3001'
 })

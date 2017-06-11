@@ -1,8 +1,12 @@
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
+var dotenv = require('dotenv').config()
 var express = require('express')
 var logger = require('morgan')
 var mongoose = require('mongoose')
+var session = require('express-session')
+
+var MongoStore = require('connect-mongo')(session)
 
 var app = express()
 
@@ -15,15 +19,63 @@ app.use(cookieParser())
 // --->>> APIs <<<--- //
 // ////////////////// //
 mongoose.connect('mongodb://localhost:27017/summvs')
+var db = mongoose.connection
+db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
 
+// ==========================
+// --->>> SESSIONS API <<<---
+app.use(session({
+  secret: process.env.SECRET_STRING,
+  saveUninitialized: false,
+  resave: false,
+  store: new MongoStore({
+    mongooseConnection: db,
+    ttl: 28 * 24 * 60 * 60
+  })
+  // ttl (time-to-leave) = 28 days
+}))
+
+// --->>> POST CART SESSION <<<---
+app.post('/cart', function (req, res) {
+  var cart = req.body
+  // store cart data in session:
+  req.session.cart = cart
+  req.session.save(function (err) {
+    if (err) {
+      throw err
+    }
+    res.json(req.session.cart)
+  })
+})
+
+//  --->>> GET CART SESSION <<<---
+app.get('/cart', function (req, res) {
+  if (typeof req.session.cart !== 'undefined') {
+    res.json(req.session.cart)
+  }
+})
+
+// --->>> UPDATE CART SESSION <<<---
+app.put('/cart', function (req, res) {
+  var cart = req.body
+  req.session.cart = cart
+  req.session.save(function (err) {
+    if (err) {
+      throw err
+    }
+    res.json(req.session.cart)
+  })
+})
+// --->>> END SESSIONS <<<---
+// ==========================
+
+// ==========================
+// --->>> PRODUCTS API <<<---
 var Product = require('./models/product.js')
 
 // --->>> POST PRODUCTS <<<---
-// TODO: figure out why ingredients array isn't posting!!!
 app.post('/products', function (req, res) {
   var product = req.body
-  var ingredients = req.body.ingredients
-  console.log(ingredients)
 
   Product.create(product, function (err, products) {
     if (err) {
@@ -59,7 +111,7 @@ app.put('/products/:_id', function (req, res) {
     }
   }
 
-  // this option returns the updated document:
+  // return the updated document:
   var options = { new: true }
 
   Product.findOneAndUpdate(query, update, options, function (err, products) {
@@ -81,6 +133,8 @@ app.delete('/products/:_id', function (req, res) {
     res.json(products)
   })
 })
+// --->>> END PRODUCTS API <<<---
+// ==============================
 
 // ////////////////////// //
 // --->>> END APIs <<<--- //
