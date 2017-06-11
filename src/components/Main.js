@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { getCart } from '../actions/cartActions'
+
 import Footer from './Footer'
 import Menu from './Menu'
 
 class Main extends Component {
+  componentDidMount () {
+    this.props.getCart()
+  }
   render () {
     return (
       <div>
@@ -22,4 +27,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Main)
+export default connect(mapStateToProps, { getCart })(Main)
