@@ -4,6 +4,7 @@ var dotenv = require('dotenv').config()
 var express = require('express')
 var logger = require('morgan')
 var mongoose = require('mongoose')
+var path = require('path')
 var session = require('express-session')
 
 var MongoStore = require('connect-mongo')(session)
@@ -135,6 +136,31 @@ app.delete('/products/:_id', function (req, res) {
 })
 // --->>> END PRODUCTS API <<<---
 // ==============================
+
+// ================================
+// --->>> PRODUCT IMAGES API <<<---
+app.get('/images', function (req, res) {
+  var imgFolder = path.join(__dirname, '/public/images/')
+
+  // require file system & read all files in img folder:
+  var fs = require('fs')
+  fs.readdir(imgFolder, function (err, files) {
+    if (err) {
+      return console.log(err)
+    }
+
+    var filesArr = []
+
+    // iterate over imgs & add to filesArr:
+    files.forEach(function (file) {
+      filesArr.push({ name: file })
+    })
+
+    res.json(filesArr)
+  })
+})
+// --->>> END PRODUCT IMAGES API <<<---
+// ====================================
 
 // ////////////////////// //
 // --->>> END APIs <<<--- //

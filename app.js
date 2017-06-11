@@ -25,7 +25,6 @@ app.use('/api', function (req, res) {
 // ///////// //
 
 app.get('*', function (req, res) {
-  console.log('***')
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
