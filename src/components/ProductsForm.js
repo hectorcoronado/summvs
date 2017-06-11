@@ -7,7 +7,9 @@ import { findDOMNode } from 'react-dom'
 import { connect } from 'react-redux'
 import uniqid from 'uniqid'
 
-import { postProducts, getProducts, deleteProduct } from '../actions/productsActions'
+import {
+  postProducts, getProducts, deleteProduct, resetButton
+} from '../actions/productsActions'
 
 class ProductsForm extends Component {
   constructor (props) {
@@ -40,7 +42,7 @@ class ProductsForm extends Component {
       image: findDOMNode(this.refs.image).value,
       price: findDOMNode(this.refs.price).value,
       description: findDOMNode(this.refs.description).value,
-      ingredients: findDOMNode(this.refs.ingredients).value.split(' '),
+      ingredients: findDOMNode(this.refs.ingredients).value.split('&'),
       inventory: findDOMNode(this.refs.inventory).value
     }]
 
@@ -57,6 +59,16 @@ class ProductsForm extends Component {
     this.setState({
       img: `/images/${img}`
     })
+  }
+
+  resetForm () {
+    this.props.resetButton()
+    findDOMNode(this.refs.name).value = ''
+    findDOMNode(this.refs.price).value = ''
+    findDOMNode(this.refs.description).value = ''
+    findDOMNode(this.refs.ingredients).value = ''
+    findDOMNode(this.refs.inventory).value = ''
+    this.setState({ image: [{}], img: '' })
   }
 
   render () {
@@ -145,16 +157,18 @@ class ProductsForm extends Component {
                 <ControlLabel>List Ingredients:</ControlLabel>
                 <FormControl
                   type='text'
-                  placeholder='List ingredients separated by a space'
+                  placeholder="List ingredients separated by a '&'"
                   ref='ingredients'
                   key={uniqid()}
                 />
               </FormGroup>
               <Button
-                bsStyle='primary'
-                onClick={this.handleSubmit.bind(this)}
+                bsStyle={(!this.props.style) ? ('primary') : (this.props.style)}
+                onClick={(!this.props.msg) ? (this.handleSubmit.bind(this)) : (this.resetForm.bind(this))}
               >
-                Save Product
+                {
+                  (!this.props.msg) ? ('Save Product') : (this.props.msg)
+                }
               </Button>
             </Panel>
             <Panel style={{marginTop: '25px'}}>
@@ -182,8 +196,13 @@ class ProductsForm extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    products: state.products.products
+    products: state.products.products,
+    msg: state.products.msg,
+    style: state.products.style
   }
 }
 
-export default connect(mapStateToProps, { postProducts, getProducts, deleteProduct })(ProductsForm)
+export default connect(
+  mapStateToProps,
+  { postProducts, getProducts, deleteProduct, resetButton }
+)(ProductsForm)
