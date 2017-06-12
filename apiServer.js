@@ -1,18 +1,18 @@
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
-var dotenv = require('dotenv').config()
 var express = require('express')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 var path = require('path')
 var session = require('express-session')
+require('dotenv').config()
 
 var MongoStore = require('connect-mongo')(session)
 
 var app = express()
 
-app.use(logger('dev'))
-app.use(bodyParser.json())
+app.use(logger('combined'))
+app.use(bodyParser.json({ type: '*/*' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
