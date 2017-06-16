@@ -16,6 +16,10 @@ app.use(bodyParser.json({ type: '*/*' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
+// MODELS //
+var Product = require('./models/product')
+var User = require('./models/user')
+
 // ////////////////// //
 // --->>> APIs <<<--- //
 // ////////////////// //
@@ -70,9 +74,37 @@ app.put('/cart', function (req, res) {
 // --->>> END SESSIONS <<<---
 // ==========================
 
+// AUTH //
+app.post('/signup', function (req, res, next) {
+  var email = req.body.email
+  var password = req.body.password
+
+  // see if user w/given email exists:
+  User.findOne({ email: email }, function (err, existingUser) {
+    if (err) { return next(err) }
+
+    // if user w/email does exist, return 'unprocessable entity' err:
+    if (existingUser) {
+      return res.status(422).send({
+        error: 'Email is in use.'
+      })
+    }
+
+    // if NO user w/email exists, create & save user:
+    var user = new User({
+      email: email,
+      password: password
+    })
+
+    user.save(function (err) {
+      if (err) { return next(err) }
+      // res indicating user creation:
+      res.json(user)
+    })
+  })
+})
 // ==========================
 // --->>> PRODUCTS API <<<---
-var Product = require('./models/product.js')
 
 // --->>> POST PRODUCTS <<<---
 app.post('/products', function (req, res) {

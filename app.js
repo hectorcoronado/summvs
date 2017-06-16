@@ -5,8 +5,6 @@ var path = require('path')
 
 var app = express()
 
-var router = require('./router')
-
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -25,6 +23,10 @@ app.use('/api', function (req, res) {
 // END PROXY //
 // ///////// //
 
-router(app)
+// router(app)
+
+app.get('*', function (req, res) {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
 
 module.exports = app
