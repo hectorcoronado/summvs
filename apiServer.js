@@ -33,11 +33,14 @@ app.use(session({
   secret: process.env.SECRET_STRING,
   saveUninitialized: false,
   resave: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 28
+  },
   store: new MongoStore({
     mongooseConnection: db,
     ttl: 28 * 24 * 60 * 60
   })
-  // ttl (time-to-leave) = 28 days
+  // ttl (time-to-leave) & cookie maxAge = 28 days
 }))
 
 // --->>> POST CART SESSION <<<---
@@ -76,8 +79,17 @@ app.put('/cart', function (req, res) {
 
 // AUTH //
 app.post('/signup', function (req, res, next) {
+  var firstName = req.body.firstName
+  var lastName = req.body.lastName
+  var addresses = req.body.addresses
   var email = req.body.email
   var password = req.body.password
+
+  if (!firstName || !lastName || !addresses || !password || !email) {
+    return res.status(422).send({
+      error: 'Please provide all required information.'
+    })
+  }
 
   // see if user w/given email exists:
   User.findOne({ email: email }, function (err, existingUser) {
@@ -90,16 +102,19 @@ app.post('/signup', function (req, res, next) {
       })
     }
 
-    // if NO user w/email exists, create & save user:
+    // if NO user w/email exists, create user:
     var user = new User({
-      email: email,
-      password: password
+      firstName: firstName,
+      lastName: lastName,
+      addresses: addresses,
+      password: password,
+      email: email
     })
-
+    // ... & save user
     user.save(function (err) {
       if (err) { return next(err) }
       // res indicating user creation:
-      res.json(user)
+      res.json({ success: true })
     })
   })
 })
