@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+var bcrypt = require('bcrypt-nodejs')
 
 // TODO: add paymentMethod to schema once you figure out how Stripe (or other payment thing) works, and add orderHistory.
 
@@ -19,6 +20,26 @@ var UserSchema = mongoose.Schema({
     lowercase: true
   },
   password: String
+})
+
+// On save hook, encrypt password:
+UserSchema.pre('save', function (next) {
+  // context here is user model ('user' is an instance of user model):
+  var user = this
+
+  // generate salt, then run cb:
+  bcrypt.genSalt(10, function (err, salt) {
+    if (err) { return next(err) }
+
+    // hash (encrypt) pw using the salt:
+    bcrypt.hash(user.password, salt, null, function (err, hash) {
+      if (err) { return next(err) }
+
+      // overwrite plain text pw w/encrypted one:
+      user.password = hash
+      next()
+    })
+  })
 })
 
 var User = mongoose.model('User', UserSchema)

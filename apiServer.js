@@ -74,10 +74,11 @@ app.put('/cart', function (req, res) {
     res.json(req.session.cart)
   })
 })
-// --->>> END SESSIONS <<<---
-// ==========================
+// --->>> END SESSIONS API <<<---
+// ==============================
 
-// AUTH //
+// ======================
+// --->>> AUTH API <<<---
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName
   var lastName = req.body.lastName
@@ -118,6 +119,9 @@ app.post('/signup', function (req, res, next) {
     })
   })
 })
+// ==========================
+// --->>> END AUTH API <<<---
+
 // ==========================
 // --->>> PRODUCTS API <<<---
 
