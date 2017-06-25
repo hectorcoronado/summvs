@@ -23,8 +23,6 @@ app.use('/api', function (req, res) {
 // END PROXY //
 // ///////// //
 
-// router(app)
-
 app.get('*', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })

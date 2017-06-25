@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var express = require('express')
+var jwt = require('jwt-simple')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 var path = require('path')
@@ -79,6 +80,16 @@ app.put('/cart', function (req, res) {
 
 // ======================
 // --->>> AUTH API <<<---
+function tokenForUser (user) {
+  var timestamp = new Date().getTime()
+
+  // when we create a user, they should always have same id; use it to encode. sub = subject (who this JWT belongs to), iat = issued at time.
+  return jwt.encode({
+    sub: user.id,
+    iat: timestamp },
+    process.env.SECRET_STRING)
+}
+
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName
   var lastName = req.body.lastName
@@ -115,7 +126,7 @@ app.post('/signup', function (req, res, next) {
     user.save(function (err) {
       if (err) { return next(err) }
       // res indicating user creation:
-      res.json({ success: true })
+      res.json({ token: tokenForUser(user) })
     })
   })
 })
