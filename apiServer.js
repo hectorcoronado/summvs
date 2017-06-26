@@ -4,10 +4,15 @@ var express = require('express')
 var jwt = require('jwt-simple')
 var logger = require('morgan')
 var mongoose = require('mongoose')
+var passport = require('passport')
 var path = require('path')
 var session = require('express-session')
 require('dotenv').config()
 
+var passportService = require('./services/passport')
+var requireAuth = passport.authenticate('jwt', { session: false })
+
+// MongoStore needs to be required *after* session:
 var MongoStore = require('connect-mongo')(session)
 
 var app = express()
@@ -89,6 +94,10 @@ function tokenForUser (user) {
     iat: timestamp },
     process.env.SECRET_STRING)
 }
+
+app.get('/testauth', requireAuth, function (req, res) {
+  res.send({ hi: 'there' })
+})
 
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName

@@ -12,10 +12,10 @@ var jwtOptions = {
   secretOrKey: process.env.SECRET_STRING
 }
 
-// create JWT strategy. func's payload is decoded JWT token, done is cb. does user.id in payload exist in db? if user exists call 'done' w/that user, else call 'done' w/o user obj
+// create JWT strategy. fn's 'payload' is decoded JWT token, 'done' is cb. does user.id in payload exist in db? if so, call 'done' w/that user, else call 'done' w/o user obj
 var jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   User.findById(payload.sub, function (err, user) {
-    // if our search fails outright:
+    // ...& if search fails:
     if (err) { return done(err, false) }
     if (user) {
       done(null, user)
