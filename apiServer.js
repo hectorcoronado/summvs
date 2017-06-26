@@ -83,7 +83,7 @@ app.put('/cart', function (req, res) {
 function tokenForUser (user) {
   var timestamp = new Date().getTime()
 
-  // when we create a user, they should always have same id; use it to encode. sub = subject (who this JWT belongs to), iat = issued at time.
+  // when we create a user, they'll always have same id, we can use it to encode. sub = subject (who this JWT belongs to), iat = issued at time.
   return jwt.encode({
     sub: user.id,
     iat: timestamp },
