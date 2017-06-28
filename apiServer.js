@@ -9,8 +9,9 @@ var path = require('path')
 var session = require('express-session')
 require('dotenv').config()
 
-var passportService = require('./services/passport')
+require('./services/passport')
 var requireAuth = passport.authenticate('jwt', { session: false })
+var requireSignin = passport.authenticate('local', { session: false })
 
 // MongoStore needs to be required *after* session:
 var MongoStore = require('connect-mongo')(session)
@@ -99,6 +100,12 @@ app.get('/testauth', requireAuth, function (req, res) {
   res.send({ hi: 'there' })
 })
 
+app.post('/signin', requireSignin, function (req, res, next) {
+  // user has already had email & pw auth'd
+  // we just need to give them a token
+  res.send({ token: tokenForUser(req.user) })
+})
+
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName
   var lastName = req.body.lastName
@@ -139,8 +146,8 @@ app.post('/signup', function (req, res, next) {
     })
   })
 })
-// ==========================
 // --->>> END AUTH API <<<---
+// ==========================
 
 // ==========================
 // --->>> PRODUCTS API <<<---

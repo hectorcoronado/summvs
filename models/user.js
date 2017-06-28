@@ -42,6 +42,17 @@ UserSchema.pre('save', function (next) {
   })
 })
 
+UserSchema.methods.comparePassword = function (candidatePassword, callback) {
+  var user = this
+
+  // user.password is the hashed + salted password; bcrypt will internally salt/hash candidatePassword & compare for us (if they're equal, isMatch === true):
+  bcrypt.compare(candidatePassword, user.password, function (err, isMatch) {
+    if (err) { return callback(err) }
+
+    callback(null, isMatch)
+  })
+}
+
 var User = mongoose.model('User', UserSchema)
 
 module.exports = User

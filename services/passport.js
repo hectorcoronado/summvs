@@ -1,10 +1,31 @@
 // Passport authenticates user when they visit a protected route:
 var passport = require('passport')
-var JwtStrategy = require('passport-jwt').Strategy
 var ExtractJwt = require('passport-jwt').ExtractJwt
+var JwtStrategy = require('passport-jwt').Strategy
+var LocalStrategy = require('passport-local')
 require('dotenv').config()
 
 var User = require('../models/user')
+
+// create local strategy:
+var localOptions = { usernameField: 'email' }
+var localLogin = new LocalStrategy(localOptions, function (email, password, done) {
+  // verify user's email & pw, call 'done' w/user if correct
+  // else, call 'done' w/false
+  User.findOne({ email: email }, function (err, user) {
+    if (err) { return done(err) }
+    if (!user) { return done(null, false) }
+
+    // use comparePassword method (from user.js) to see if submitted password === saved (ie hashed) user.password:
+    user.comparePassword(password, function (err, isMatch) {
+      if (err) { return done(err) }
+      if (!isMatch) { return done(null, false) }
+
+      // after return, we'll have access to user via req.user
+      return done(null, user)
+    })
+  })
+})
 
 // set options for JWT strategy:
 var jwtOptions = {
@@ -25,5 +46,6 @@ var jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   })
 })
 
-// pass strategy to Passport:
+// pass strategies to Passport:
 passport.use(jwtLogin)
+passport.use(localLogin)
