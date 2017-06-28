@@ -68,7 +68,7 @@ class ProductsForm extends Component {
     findDOMNode(this.refs.description).value = ''
     findDOMNode(this.refs.ingredients).value = ''
     findDOMNode(this.refs.inventory).value = ''
-    this.setState({ image: [{}], img: '' })
+    this.setState({ img: '' })
   }
 
   render () {

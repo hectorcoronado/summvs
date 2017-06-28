@@ -76,7 +76,12 @@ class Cart extends Component {
               </Col>
               <Col xs={6} sm={2}>
                 <h6>Qty:
-                  <Label bsStyle='success'>{cartArr.quantity}</Label>
+                  <Label
+                    bsStyle='success'
+                    style={{marginLeft: '4px'}}
+                  >
+                    {cartArr.quantity}
+                  </Label>
                 </h6>
               </Col>
               <Col xs={6} sm={2}>
@@ -130,8 +135,8 @@ class Cart extends Component {
             <Modal.Title>Thank You!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h6>Your order has been saved.</h6>
-            <p>You will receive an email confirmation.</p>
+            <h6>Your order has been saved, sorta.</h6>
+            <p>You will receive an email confirmation when our developer gets 'round to implementing that part of this project...</p>
           </Modal.Body>
           <Modal.Footer>
             <Col xs={6}>
