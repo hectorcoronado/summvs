@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Badge, Nav, Navbar, NavItem } from 'react-bootstrap'
 
-class Menu extends Component {
+class Header extends Component {
   render () {
     return (
       <Navbar fixedTop>
@@ -28,4 +28,4 @@ class Menu extends Component {
   }
 }
 
-export default Menu
+export default Header
