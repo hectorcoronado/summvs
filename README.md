@@ -7,3 +7,5 @@ TO-DO:
 - solve curl issue raised by LV
 - break up apiServer.js into smaller modules?
 - check against inventory quantity when adding to cart
+- https (let's encrypt)
+  - rate limiting signup/signin

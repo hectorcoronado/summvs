@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import reducers from './reducers/index'
 
 // COMPONENTS:
+import Signin from './components/auth/Signin'
 import About from './components/About'
 import Cart from './components/Cart'
 import Main from './components/Main'
@@ -31,9 +32,10 @@ const ROUTES = (
     <Router history={browserHistory}>
       <Route path='/' component={Main}>
         <IndexRoute component={ProductsList} />
-        <Route path='/admin' component={ProductsForm} />
         <Route path='/about' component={About} />
+        <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
+        <Route path='/signin' component={Signin} />
       </Route>
     </Router>
   </Provider>

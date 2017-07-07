@@ -114,7 +114,7 @@ app.post('/signup', function (req, res, next) {
   var password = req.body.password
 
   if (!firstName || !lastName || !addresses || !password || !email) {
-    return res.status(422).send({
+    return res.status(412).send({
       error: 'Please provide all required information.'
     })
   }
@@ -125,7 +125,7 @@ app.post('/signup', function (req, res, next) {
 
     // if user w/email does exist, return 'unprocessable entity' err:
     if (existingUser) {
-      return res.status(422).send({
+      return res.status(412).send({
         error: 'Email is in use.'
       })
     }
