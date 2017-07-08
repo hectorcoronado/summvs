@@ -9,3 +9,4 @@ TO-DO:
 - check against inventory quantity when adding to cart
 - https (let's encrypt)
   - rate limiting signup/signin
+  - SNYK
