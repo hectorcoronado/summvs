@@ -18,7 +18,6 @@ export default function cartReducers (state = INITIAL_STATE, action) {
         totalAmount: totals(action.payload).amount,
         totalQty: totals(action.payload).qty
       }
-      break
 
     case GET_CART:
       return {
@@ -35,7 +34,6 @@ export default function cartReducers (state = INITIAL_STATE, action) {
         totalAmount: totals(action.payload).amount,
         totalQty: totals(action.payload).qty
       }
-      break
 
     case DELETE_CART_ITEM:
       return {
@@ -44,7 +42,6 @@ export default function cartReducers (state = INITIAL_STATE, action) {
         totalAmount: totals(action.payload).amount,
         totalQty: totals(action.payload).qty
       }
-      break
 
     default:
       return state

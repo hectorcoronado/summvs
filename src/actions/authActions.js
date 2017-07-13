@@ -2,6 +2,7 @@ import axios from 'axios'
 import { browserHistory } from 'react-router'
 
 import {
+  AUTH_ERROR,
   AUTH_USER
 } from './types'
 
@@ -18,8 +19,17 @@ export function signinUser ({ email, password }) {
         // - redirect:
         browserHistory.push('/cart')
       })
-      .catch()
-      // req bad?
-      // - show error:
+      .catch(() => {
+        // req bad?
+        // - show error:
+        dispatch(authError('Incorrect email or password'))
+      })
+  }
+}
+
+export function authError (error) {
+  return {
+    type: AUTH_ERROR,
+    payload: error
   }
 }
