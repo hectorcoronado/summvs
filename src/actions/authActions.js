@@ -3,7 +3,8 @@ import { browserHistory } from 'react-router'
 
 import {
   AUTH_ERROR,
-  AUTH_USER
+  AUTH_USER,
+  UNAUTH_USER
 } from './types'
 
 export function signinUser ({ email, password }) {
@@ -25,6 +26,11 @@ export function signinUser ({ email, password }) {
         dispatch(authError('Incorrect email or password'))
       })
   }
+}
+
+export function signoutUser () {
+  localStorage.removeItem('token')
+  return { type: UNAUTH_USER }
 }
 
 export function authError (error) {
