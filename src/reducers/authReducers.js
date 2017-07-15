@@ -1,11 +1,12 @@
 import {
   AUTH_ERROR,
   AUTH_USER,
-  GET_AUTH,
   UNAUTH_USER
 } from '../actions/types'
 
-const INITIAL_STATE = {}
+const INITIAL_STATE = {
+  authenticated: isAuthenticated()
+}
 
 export default function authReducers (state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -15,9 +16,6 @@ export default function authReducers (state = INITIAL_STATE, action) {
     case AUTH_USER:
       return { ...state, authenticated: true }
 
-    case GET_AUTH:
-      return { ...state, authenticated: isAuthenticated(action.payload) }
-
     case UNAUTH_USER:
       return { ...state, authenticated: false }
 
@@ -26,6 +24,6 @@ export default function authReducers (state = INITIAL_STATE, action) {
   }
 }
 
-function isAuthenticated (token) {
-  return token !== undefined
+function isAuthenticated () {
+  return localStorage.getItem('token') !== undefined
 }
