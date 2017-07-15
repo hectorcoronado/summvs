@@ -3,8 +3,16 @@ import { browserHistory } from 'react-router'
 
 import {
   AUTH_ERROR,
-  AUTH_USER
+  AUTH_USER,
+  GET_AUTH
 } from './types'
+
+export function getAuth () {
+  return {
+    type: GET_AUTH,
+    payload: localStorage.getItem('token')
+  }
+}
 
 export function signinUser ({ email, password }) {
   return (dispatch) => {

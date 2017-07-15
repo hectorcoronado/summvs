@@ -100,6 +100,10 @@ app.get('/testauth', requireAuth, function (req, res) {
   res.send({ hi: 'there' })
 })
 
+app.get('/signin', function (req, res, next) {
+  res.send({ hi: 'there' })
+})
+
 app.post('/signin', requireSignin, function (req, res, next) {
   // user has already had email & pw auth'd
   // we just need to give them a token
