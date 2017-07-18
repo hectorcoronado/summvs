@@ -11,12 +11,14 @@ import reducers from './reducers/index'
 
 // COMPONENTS:
 import About from './components/About'
+import Account from './components/Account'
 import Cart from './components/Cart'
 import Main from './components/Main'
 import ProductsForm from './components/ProductsForm'
 import ProductsList from './components/ProductsList'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
+import Signup from './components/auth/Signup'
 
 // CREATE REDUX STORE:
 const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore)
@@ -34,10 +36,12 @@ const ROUTES = (
       <Route path='/' component={Main}>
         <IndexRoute component={ProductsList} />
         <Route path='/about' component={About} />
+        <Route path='/account' component={Account} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
+        <Route path='/signup' component={Signup} />
       </Route>
     </Router>
   </Provider>

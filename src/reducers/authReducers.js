@@ -25,5 +25,5 @@ export default function authReducers (state = INITIAL_STATE, action) {
 }
 
 function isAuthenticated () {
-  return localStorage.getItem('token') !== undefined
+  return localStorage.getItem('token') !== null
 }
