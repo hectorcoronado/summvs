@@ -9,6 +9,10 @@ body {
   margin-top: 75px;
 }
 
+.error {
+  color: red
+}
+
 .header-text {
   font-family: 'Space Mono', sans-serif;
 }
