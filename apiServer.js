@@ -113,9 +113,15 @@ app.post('/signin', requireSignin, function (req, res, next) {
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName
   var lastName = req.body.lastName
-  var addresses = req.body.addresses
   var email = req.body.email
   var password = req.body.password
+  var addresses = {
+    street: req.body.address,
+    city: req.body.city,
+    state: req.body.state,
+    zip: req.body.zip,
+    country: req.body.country
+  }
 
   if (!firstName || !lastName || !addresses || !password || !email) {
     return res.status(412).send({

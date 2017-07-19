@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 
-import { } from '../../actions/authActions'
+import { signupUser } from '../../actions/authActions'
 
 class Signup extends Component {
-  handleSubmit (formProps) {}
-  
+  handleFormSubmit (formProps) {
+    this.props.signupUser(formProps)
+  }
+
   render () {
     const {
       handleSubmit,
@@ -122,4 +124,4 @@ export default reduxForm({
     'country'
   ],
   validate
-})(Signup)
+}, null, { signupUser })(Signup)

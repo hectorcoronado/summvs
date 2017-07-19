@@ -11,8 +11,8 @@ var UserSchema = mongoose.Schema({
     city: String,
     state: String,
     zip: String,
-    country: String,
-    default: String
+    country: String
+    // default: String
   }],
   email: {
     type: String,

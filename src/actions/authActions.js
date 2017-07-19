@@ -33,6 +33,14 @@ export function signoutUser () {
   return { type: UNAUTH_USER }
 }
 
+export function signupUser ({firstName, lastName, password, email, address, city, state, zip, country}) {
+  console.log('First Name is:')
+  console.log(firstName)
+  return (dispatch) => {
+    axios.post('/api/signup', {firstName, lastName, password, email, address, city, state, zip, country})
+  }
+}
+
 export function authError (error) {
   return {
     type: AUTH_ERROR,
