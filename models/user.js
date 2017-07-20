@@ -1,5 +1,7 @@
-var mongoose = require('mongoose')
+var aws = require('aws-sdk')
 var bcrypt = require('bcrypt-nodejs')
+var mongoose = require('mongoose')
+require('dotenv').config()
 
 // TODO: add paymentMethod to schema once you figure out how Stripe (or other payment thing) works, and add orderHistory.
 
@@ -11,8 +13,9 @@ var UserSchema = mongoose.Schema({
     city: String,
     state: String,
     zip: String,
-    country: String
+    country: String,
     // default: String
+    verified: false
   }],
   email: {
     type: String,
@@ -41,6 +44,45 @@ UserSchema.pre('save', function (next) {
     })
   })
 })
+
+UserSchema.methods.sendEmail = function (email, callback) {
+  aws.config = new aws.Config({
+    accessKeyId: process.env.AWSAccessKeyId, secretAccessKey: process.env.AWSSecretKey, region: 'us-west-2'
+  })
+
+  var user = this
+  // TODO: this is where we send email.
+  // load AWS SES
+  var ses = new aws.SES({apiVersion: '2010-12-01'})
+
+  // send to list
+  var to = [user.email]
+
+  // this must relate to a verified SES account
+  var from = 'coronado.hector@gmail.com'
+
+  // this sends the email
+  // @todo - add HTML version
+  ses.sendEmail({
+    Source: from,
+    Destination: { ToAddresses: to },
+    Message: {
+      Subject: {
+        Data: 'WELCOME TO SUMMVS'
+      },
+      Body: {
+        Text: {
+          Data: 'Soap'
+        }
+      }
+    }
+  },
+  function (err, data) {
+    if (err) { throw err }
+    console.log('Email sent:')
+    console.log(data)
+  })
+}
 
 UserSchema.methods.comparePassword = function (candidatePassword, callback) {
   var user = this
