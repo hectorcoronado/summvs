@@ -8,6 +8,16 @@ class Signup extends Component {
     this.props.signupUser(formProps)
   }
 
+  renderAlert () {
+    if (this.props.errorMessage) {
+      return (
+        <div className='error'>
+          {this.props.errorMessage}
+        </div>
+      )
+    }
+  }
+
   render () {
     const {
       handleSubmit,
@@ -21,27 +31,22 @@ class Signup extends Component {
             <fieldset className='form-group'>
               <label>First Name:</label>
               <input className='form-control' {...firstName} />
-              {firstName.touched && firstName.error && <div className='error'>{firstName.error}</div>}
             </fieldset>
             <fieldset className='form-group'>
               <label>Last Name:</label>
               <input className='form-control' {...lastName} />
-              {lastName.touched && lastName.error && <div className='error'>{lastName.error}</div>}
             </fieldset>
             <fieldset className='form-group'>
               <label>Email:</label>
-              <input className='form-control' {...email} />
-              {email.touched && email.error && <div className='error'>{email.error}</div>}
+              <input className='form-control' type='email' {...email} />
             </fieldset>
             <fieldset className='form-group'>
               <label>Password:</label>
               <input className='form-control' type='password' {...password} />
-              {password.touched && password.error && <div className='error'>{password.error}</div>}
             </fieldset>
             <fieldset className='form-group'>
               <label>Confirm Password:</label>
               <input className='form-control' type='password' {...passwordConfirm} />
-              {passwordConfirm.touched && passwordConfirm.error && <div className='error'>{passwordConfirm.error}</div>}
             </fieldset>
           </div>
           <div className='row col-sm-6'>
@@ -64,10 +69,18 @@ class Signup extends Component {
             <fieldset className='form-group'>
               <label>Country:</label>
               <input className='form-control' {...country} />
-              {country.touched && country.error && <div className='error'>{country.error}</div>}
             </fieldset>
           </div>
-          <button action='submit' className='btn btn-primary'>Sign Up</button>
+          <div>
+            <button action='submit' className='btn btn-primary'>Sign Up</button>
+            {firstName.touched && firstName.error && <div className='error'>{firstName.error}</div>}
+            {lastName.touched && lastName.error && <div className='error'>{lastName.error}</div>}
+            {email.touched && email.error && <div className='error'>{email.error}</div>}
+            {password.touched && password.error && <div className='error'>{password.error}</div>}
+            {passwordConfirm.touched && passwordConfirm.error && <div className='error'>{passwordConfirm.error}</div>}
+            {country.touched && country.error && <div className='error'>{country.error}</div>}
+            {this.renderAlert()}
+          </div>
         </form>
       </div>
     )
@@ -94,12 +107,8 @@ function validate (formProps) {
     errors.password = 'Please enter a password.'
   }
 
-  if (!formProps.passwordConfirm) {
-    errors.passwordConfirm = 'Please confirm your password.'
-  }
-
   if (formProps.password !== formProps.passwordConfirm) {
-    errors.password = 'Password and Confirm Password fields must match.'
+    errors.passwordConfirm = 'Password and Confirm Password fields must match.'
   }
 
   if (!formProps.address || !formProps.city || !formProps.state || !formProps.zip || !formProps.country) {
@@ -107,6 +116,10 @@ function validate (formProps) {
   }
 
   return errors
+}
+
+function mapStateToProps (state) {
+  return { errorMessage: state.auth.error }
 }
 
 export default reduxForm({
@@ -124,4 +137,4 @@ export default reduxForm({
     'country'
   ],
   validate
-}, null, { signupUser })(Signup)
+}, mapStateToProps, { signupUser })(Signup)

@@ -136,7 +136,7 @@ app.post('/signup', function (req, res, next) {
     // if user w/email does exist, return 'unprocessable entity' err:
     if (existingUser) {
       return res.status(412).send({
-        error: 'Email is in use.'
+        error: 'This email is already in use!'
       })
     }
 
@@ -151,9 +151,9 @@ app.post('/signup', function (req, res, next) {
     // ... & save user
     user.save(function (err) {
       if (err) { return next(err) }
-      user.sendEmail(user.email, function (err) {
-        if (err) { console.log(err) }
-      })
+      // user.sendEmail(user.email, function (err) {
+        // if (err) { console.log(err) }
+      // })
       // res indicating user creation:
       res.json({ token: tokenForUser(user) })
     })

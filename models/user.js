@@ -47,11 +47,12 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.methods.sendEmail = function (email, callback) {
   aws.config = new aws.Config({
-    accessKeyId: process.env.AWSAccessKeyId, secretAccessKey: process.env.AWSSecretKey, region: 'us-west-2'
+    accessKeyId: process.env.AWSAccessKeyId,
+    secretAccessKey: process.env.AWSSecretKey,
+    region: 'us-west-2'
   })
 
   var user = this
-  // TODO: this is where we send email.
   // load AWS SES
   var ses = new aws.SES({apiVersion: '2010-12-01'})
 
@@ -59,10 +60,8 @@ UserSchema.methods.sendEmail = function (email, callback) {
   var to = [user.email]
 
   // this must relate to a verified SES account
-  var from = 'coronado.hector@gmail.com'
+  var from = 'summvs@summvs.com'
 
-  // this sends the email
-  // @todo - add HTML version
   ses.sendEmail({
     Source: from,
     Destination: { ToAddresses: to },
@@ -71,8 +70,9 @@ UserSchema.methods.sendEmail = function (email, callback) {
         Data: 'WELCOME TO SUMMVS'
       },
       Body: {
-        Text: {
-          Data: 'Soap'
+        Html: {
+          Data:
+            '<h4>Thank you.</h4><h6>To confirm your account, click below.</h6><button>Confirm</button>'
         }
       }
     }

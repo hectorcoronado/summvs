@@ -5,7 +5,8 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-  authenticated: isAuthenticated()
+  authenticated: isAuthenticated(),
+  error: null
 }
 
 export default function authReducers (state = INITIAL_STATE, action) {

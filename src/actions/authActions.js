@@ -34,10 +34,15 @@ export function signoutUser () {
 }
 
 export function signupUser ({firstName, lastName, password, email, address, city, state, zip, country}) {
-  console.log('First Name is:')
-  console.log(firstName)
   return (dispatch) => {
     axios.post('/api/signup', {firstName, lastName, password, email, address, city, state, zip, country})
+    .then(response => {
+      dispatch({ type: AUTH_USER })
+      localStorage.setItem('token', response.data.token)
+      browserHistory.push('/cart')
+    })
+    .catch(error =>
+      dispatch(authError(error.response.data.error)))
   }
 }
 

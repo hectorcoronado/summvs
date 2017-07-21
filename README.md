@@ -10,3 +10,4 @@ TO-DO:
 - https (let's encrypt)
   - rate limiting signup/signin
   - SNYK
+- http://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html
