@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 
-import { signupUser } from '../../actions/authActions'
+import { resetErrors, signupUser } from '../../actions/authActions'
 
 class Signup extends Component {
+  componentWillMount () {
+    this.props.resetErrors()
+  }
+
   handleFormSubmit (formProps) {
     this.props.signupUser(formProps)
   }
@@ -137,4 +141,4 @@ export default reduxForm({
     'country'
   ],
   validate
-}, mapStateToProps, { signupUser })(Signup)
+}, mapStateToProps, { resetErrors, signupUser })(Signup)

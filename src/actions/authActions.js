@@ -46,6 +46,10 @@ export function signupUser ({firstName, lastName, password, email, address, city
   }
 }
 
+export function resetErrors () {
+  return dispatch => dispatch(authError(null))
+}
+
 export function authError (error) {
   return {
     type: AUTH_ERROR,

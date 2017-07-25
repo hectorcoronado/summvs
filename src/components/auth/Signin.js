@@ -2,9 +2,13 @@ import React, { Component } from 'react'
 import { Panel, Well } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
-import { signinUser } from '../../actions/authActions'
+import { resetErrors, signinUser } from '../../actions/authActions'
 
 class Signin extends Component {
+  componentWillMount () {
+    this.props.resetErrors()
+  }
+
   handleFormSubmit ({ email, password }) {
     console.log(email, password)
     this.props.signinUser({ email, password })
@@ -55,4 +59,4 @@ export default reduxForm({
     'email',
     'password'
   ]
-}, mapStateToProps, { signinUser })(Signin)
+}, mapStateToProps, { resetErrors, signinUser })(Signin)

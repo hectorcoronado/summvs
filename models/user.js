@@ -72,7 +72,7 @@ UserSchema.methods.sendEmail = function (email, callback) {
       Body: {
         Html: {
           Data:
-            '<h4>Thank you.</h4><h6>To confirm your account, click below.</h6><button>Confirm</button>'
+            '<h4>Thank you.</h4><h6>To confirm your account, click below.</h6><a href="http://localhost:3000/cart" target="_blank" rel="noopener noreferrer">SUMMVS</a>'
         }
       }
     }

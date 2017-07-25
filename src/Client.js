@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { browserHistory, IndexRoute, Route, Router } from 'react-router'
+import { browserHistory, IndexRoute, Redirect, Route, Router } from 'react-router'
 import { applyMiddleware, createStore } from 'redux'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
@@ -19,6 +19,7 @@ import ProductsList from './components/ProductsList'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
+import NotFound from './components/NotFound'
 
 // CREATE REDUX STORE:
 const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore)
@@ -42,6 +43,8 @@ const ROUTES = (
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />
+        <Route path='/404' component={NotFound} />
+        <Redirect from='*' to='/404' />
       </Route>
     </Router>
   </Provider>
