@@ -12,7 +12,6 @@ class Main extends Component {
   }
 
   render () {
-    console.log(`Authenticated state: ${this.props.authenticated}`)
     return (
       <div>
         <Header cartItemsNumber={this.props.totalQty} />

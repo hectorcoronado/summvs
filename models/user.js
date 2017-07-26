@@ -13,16 +13,17 @@ var UserSchema = mongoose.Schema({
     city: String,
     state: String,
     zip: String,
-    country: String,
+    country: String
     // default: String
-    verified: false
   }],
   email: {
     type: String,
     unique: true,
     lowercase: true
   },
-  password: String
+  verified: false,
+  password: String,
+  validationString: String
 })
 
 // On save hook, encrypt password:
@@ -47,8 +48,8 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.methods.sendEmail = function (email, callback) {
   aws.config = new aws.Config({
-    accessKeyId: process.env.AWSAccessKeyId,
-    secretAccessKey: process.env.AWSSecretKey,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
     region: 'us-west-2'
   })
 
@@ -62,6 +63,9 @@ UserSchema.methods.sendEmail = function (email, callback) {
   // this must relate to a verified SES account
   var from = 'summvs@summvs.com'
 
+  // create html string to send in mail:
+  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="http://localhost:3000/verify/' + user.validationString + '">SUMMVS</a></h4>'
+
   ses.sendEmail({
     Source: from,
     Destination: { ToAddresses: to },
@@ -71,8 +75,7 @@ UserSchema.methods.sendEmail = function (email, callback) {
       },
       Body: {
         Html: {
-          Data:
-            '<h4>Thank you.</h4><h6>To confirm your account, click below.</h6><a href="http://localhost:3000/cart" target="_blank" rel="noopener noreferrer">SUMMVS</a>'
+          Data: htmlData
         }
       }
     }

@@ -6,6 +6,7 @@ var logger = require('morgan')
 var mongoose = require('mongoose')
 var passport = require('passport')
 var path = require('path')
+var randomstring = require('randomstring')
 var session = require('express-session')
 require('dotenv').config()
 
@@ -146,7 +147,12 @@ app.post('/signup', function (req, res, next) {
       lastName: lastName,
       addresses: addresses,
       password: password,
-      email: email
+      email: email,
+      validationString: randomstring.generate({
+        length: 12,
+        charset: 'alphanumeric',
+        capitalization: 'lowercase'
+      })
     })
     // ... & save user
     user.save(function (err) {

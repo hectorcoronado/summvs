@@ -6,7 +6,7 @@ class NotFound extends Component {
     return (
       <div>
         <h6>404... Sorry, couldn't find what you're looking for!</h6>
-        <p>Go back to <Link className='nav-link' to='/'>SUMMVS</Link></p>
+        <p>Go back to <Link className='nav-link' to='/'>summvs</Link></p>
       </div>
     )
   }

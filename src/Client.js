@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Redirect, Route, Router } from 'react-router'
 import { applyMiddleware, createStore } from 'redux'
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 // REDUCERS:
@@ -16,13 +16,15 @@ import Cart from './components/Cart'
 import Main from './components/Main'
 import ProductsForm from './components/ProductsForm'
 import ProductsList from './components/ProductsList'
+import NotFound from './components/NotFound'
+// AUTH COMPONENTS:
+import EmailVerify from './components/auth/EmailVerify'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
-import NotFound from './components/NotFound'
 
 // CREATE REDUX STORE:
-const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore)
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
 
 const store = createStoreWithMiddleware(
   reducers,
@@ -40,6 +42,7 @@ const ROUTES = (
         <Route path='/account' component={Account} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
+        <Route path='/verify/:validationString' component={EmailVerify} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />

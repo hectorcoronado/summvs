@@ -34,7 +34,7 @@ class Header extends Component {
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href='/'>|s|u|m|m|v|s|</a>
+              <a href='/'>s u m m v s</a>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
