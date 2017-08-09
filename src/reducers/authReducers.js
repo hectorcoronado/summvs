@@ -15,7 +15,7 @@ export default function authReducers (state = INITIAL_STATE, action) {
       return { ...state, error: action.payload }
 
     case AUTH_USER:
-      return { ...state, authenticated: true }
+      return { ...state, error: '', authenticated: true }
 
     case UNAUTH_USER:
       return { ...state, authenticated: false }

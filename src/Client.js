@@ -19,6 +19,7 @@ import ProductsList from './components/ProductsList'
 import NotFound from './components/NotFound'
 // AUTH COMPONENTS:
 import EmailVerify from './components/auth/EmailVerify'
+import RequireAuth from './components/auth/RequireAuth'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
@@ -39,7 +40,7 @@ const ROUTES = (
       <Route path='/' component={Main}>
         <IndexRoute component={ProductsList} />
         <Route path='/about' component={About} />
-        <Route path='/account' component={Account} />
+        <Route path='/account' component={RequireAuth(Account)} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
         <Route path='/verify/:validationString' component={EmailVerify} />
