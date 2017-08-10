@@ -5,7 +5,6 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-  authenticated: isAuthenticated(),
   error: null
 }
 
@@ -23,8 +22,4 @@ export default function authReducers (state = INITIAL_STATE, action) {
     default:
       return state
   }
-}
-
-function isAuthenticated () {
-  return localStorage.getItem('token') !== null
 }

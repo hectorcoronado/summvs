@@ -7,7 +7,9 @@ import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 // REDUCERS:
-import reducers from './reducers/index'
+import reducers from './reducers'
+// ACTIONS:
+import { AUTH_USER } from './actions/types'
 
 // COMPONENTS:
 import About from './components/About'
@@ -19,10 +21,11 @@ import ProductsList from './components/ProductsList'
 import NotFound from './components/NotFound'
 // AUTH COMPONENTS:
 import EmailVerify from './components/auth/EmailVerify'
-import RequireAuth from './components/auth/RequireAuth'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
+// HOC TO PROTECT ROUTES:
+import RequireAuth from './components/auth/RequireAuth'
 
 // CREATE REDUX STORE:
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
@@ -32,6 +35,12 @@ const store = createStoreWithMiddleware(
   window.__REDUX_DEVTOOLS_EXTENSION__ &&
   window.__REDUX_DEVTOOLS_EXTENSION__()
 )
+
+const token = localStorage.getItem('token')
+
+if (token) {
+  store.dispatch({ type: AUTH_USER })
+}
 
 // DEFINE ROUTES:
 const ROUTES = (
