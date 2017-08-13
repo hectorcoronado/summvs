@@ -12,8 +12,8 @@ class EmailVerify extends Component {
   render () {
     return (
       <div>
-        <h6>This is the Email Verification page...</h6>
-        <h2>{this.props.params.validationString}</h2>
+        <h5>Thank you, your email is now verified.</h5>
+        <h6>You will automatically be taken to your Account page very briefly...</h6>
       </div>
     )
   }

@@ -54,7 +54,9 @@ export function verifyUserEmail ({validationString}) {
   return (dispatch) => {
     axios.patch(`/api/signup/${validationString}`, {validationString})
       .then(response => {
-        console.log(response)
+        window.setTimeout(() => {
+          browserHistory.push('/account')
+        }, 3500)
       })
   }
 }
