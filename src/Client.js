@@ -52,10 +52,10 @@ const ROUTES = (
         <Route path='/account' component={RequireAuth(Account)} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
-        <Route path='/verify/:validationString' component={EmailVerify} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />
+        <Route path='/signup/:validationString' component={EmailVerify} />
         <Route path='/404' component={NotFound} />
         <Redirect from='*' to='/404' />
       </Route>

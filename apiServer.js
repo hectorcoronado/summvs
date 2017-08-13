@@ -152,7 +152,8 @@ app.post('/signup', function (req, res, next) {
         length: 12,
         charset: 'alphanumeric',
         capitalization: 'lowercase'
-      })
+      }),
+      verified: false
     })
     // ... & save user
     user.save(function (err) {
@@ -164,6 +165,23 @@ app.post('/signup', function (req, res, next) {
       res.json({ token: tokenForUser(user) })
     })
   })
+})
+
+app.patch('/signup/:_validationString', function (req, res, next) {
+  var validationString = req.params._validationString
+
+  User.findOneAndUpdate(
+    { validationString: validationString },
+    { verified: true },
+    { new: true },
+    function (err, doc) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.send(doc)
+      }
+    }
+  )
 })
 // --->>> END AUTH API <<<---
 // ==========================

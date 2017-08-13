@@ -21,10 +21,12 @@ var UserSchema = mongoose.Schema({
     unique: true,
     lowercase: true
   },
-  verified: false,
+  verified: Boolean,
   password: String,
   validationString: String
 })
+
+// HELPER METHODS:
 
 // On save hook, encrypt password:
 UserSchema.pre('save', function (next) {
@@ -64,7 +66,7 @@ UserSchema.methods.sendEmail = function (email, callback) {
   var from = 'summvs@summvs.com'
 
   // create html string to send in mail:
-  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="http://localhost:3000/verify/' + user.validationString + '">SUMMVS</a></h4>'
+  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="http://localhost:3000/signup/' + user.validationString + '">SUMMVS</a></h4>'
 
   ses.sendEmail({
     Source: from,

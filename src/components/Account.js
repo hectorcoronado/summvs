@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { fetchMessage } from '../actions/authActions'
 
 class Account extends Component {
+  componentWillMount () {
+    this.props.fetchMessage()
+  }
+
   render () {
     return (
       <h6>This is the account page...</h6>
@@ -8,4 +15,4 @@ class Account extends Component {
   }
 }
 
-export default Account
+export default connect(null, { fetchMessage })(Account)

@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { verifyUserEmail } from '../../actions/authActions'
 
 class EmailVerify extends Component {
+  componentDidMount () {
+    let validationString = this.props.params.validationString
+    this.props.verifyUserEmail({validationString: validationString})
+  }
+
   render () {
     return (
       <div>
@@ -11,4 +19,4 @@ class EmailVerify extends Component {
   }
 }
 
-export default EmailVerify
+export default connect(null, { verifyUserEmail })(EmailVerify)

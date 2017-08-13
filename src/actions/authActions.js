@@ -7,6 +7,8 @@ import {
   UNAUTH_USER
 } from './types'
 
+const localStorage = window.localStorage
+
 export function signinUser ({ email, password }) {
   return (dispatch) => {
     // submit email/pw to server:
@@ -46,6 +48,17 @@ export function signupUser ({firstName, lastName, password, email, address, city
   }
 }
 
+export function verifyUserEmail ({validationString}) {
+  console.log('this is validation string at actions:')
+  console.log(validationString)
+  return (dispatch) => {
+    axios.patch(`/api/signup/${validationString}`, {validationString})
+      .then(response => {
+        console.log(response)
+      })
+  }
+}
+
 export function resetErrors () {
   return dispatch => dispatch(authError(null))
 }
@@ -54,5 +67,17 @@ export function authError (error) {
   return {
     type: AUTH_ERROR,
     payload: error
+  }
+}
+
+// trivial ex to use backend auth:
+export function fetchMessage () {
+  return (dispatch) => {
+    axios.get('/api/testauth', {
+      headers: { authorization: localStorage.getItem('token') }
+    })
+      .then(response => {
+        console.log(response)
+      })
   }
 }
