@@ -21,6 +21,7 @@ import ProductsList from './components/ProductsList'
 import NotFound from './components/NotFound'
 // AUTH COMPONENTS:
 import EmailVerify from './components/auth/EmailVerify'
+import UnauthRedirect from './components/auth/UnauthRedirect'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
@@ -56,6 +57,7 @@ const ROUTES = (
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />
         <Route path='/signup/:validationString' component={EmailVerify} />
+        <Route path='/unauthredirect' component={UnauthRedirect} />
         <Route path='/404' component={NotFound} />
         <Redirect from='*' to='/404' />
       </Route>
