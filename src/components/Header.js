@@ -30,10 +30,10 @@ class Header extends Component {
 
   render () {
     return (
-      <div className='header-text'>
+      <div>
         <Navbar fixedTop>
           <Navbar.Header>
-            <Navbar.Brand>
+            <Navbar.Brand className='header-text'>
               <a href='/'>s u m m v s</a>
             </Navbar.Brand>
             <Navbar.Toggle />

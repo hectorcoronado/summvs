@@ -1,10 +1,9 @@
 /*
-font-family: 'Space Mono', monospace;
-font-family: 'Work Sans', sans-serif;
+font-family: 'Cutive Mono', monospace;
 */
 
 body {
-  font-family: 'Work Sans', sans-serif;
+  font-family: 'Cutive Mono', monospace;
   margin-bottom: 75px;
   margin-top: 75px;
 }
@@ -13,6 +12,7 @@ body {
   color: red
 }
 
-.header-text {
-  font-family: 'Space Mono', sans-serif;
-}
+/* logo text: */
+/*.header-text {
+  font-family: 'Cutive Mono', monospace;
+}*/
