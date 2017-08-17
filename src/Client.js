@@ -21,6 +21,7 @@ import ProductsList from './components/ProductsList'
 import NotFound from './components/NotFound'
 // AUTH COMPONENTS:
 import EmailVerify from './components/auth/EmailVerify'
+import ForgotPassword from './components/auth/ForgotPassword'
 import UnauthRedirect from './components/auth/UnauthRedirect'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
@@ -36,6 +37,8 @@ const store = createStoreWithMiddleware(
   window.__REDUX_DEVTOOLS_EXTENSION__ &&
   window.__REDUX_DEVTOOLS_EXTENSION__()
 )
+
+let localStorage = window.localStorage
 
 const token = localStorage.getItem('token')
 
@@ -53,6 +56,7 @@ const ROUTES = (
         <Route path='/account' component={RequireAuth(Account)} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
+        <Route path='/forgot' component={ForgotPassword} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />

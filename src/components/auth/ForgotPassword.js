@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { Panel, Well } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
-import { Link } from 'react-router'
 
-import { resetErrors, signinUser } from '../../actions/authActions'
+import { resetErrors, forgotPassword } from '../../actions/authActions'
 
-class Signin extends Component {
+class ForgotPassword extends Component {
   componentWillMount () {
     this.props.resetErrors()
   }
 
-  handleFormSubmit ({ email, password }) {
-    this.props.signinUser({ email, password })
+  handleFormSubmit ({ email }) {
+    console.log(`email at component is:`)
+    console.log(email)
+    this.props.forgotPassword({ email })
   }
 
   renderAlert () {
@@ -26,7 +27,7 @@ class Signin extends Component {
 
   render () {
     // handleSubmit comes from reduxForm, as do the fields (def'd below)
-    const { handleSubmit, fields: { email, password } } = this.props
+    const { handleSubmit, fields: { email } } = this.props
 
     return (
       <Well>
@@ -36,14 +37,9 @@ class Signin extends Component {
               <label>Email:</label>
               <input {...email} className='form-control' />
             </fieldset>
-            <fieldset className='form-group'>
-              <label>Password:</label>
-              <input {...password} type='password' className='form-control' />
-            </fieldset>
             {this.renderAlert()}
-            <button action='submit' className='btn btn-primary'>Sign In</button>
+            <button action='submit' className='btn btn-primary'>Reset Password</button>
           </form>
-          <Link to='/forgot'>Forgot Password...?</Link>
         </Panel>
       </Well>
     )
@@ -55,9 +51,8 @@ function mapStateToProps (state) {
 }
 
 export default reduxForm({
-  form: 'signin',
+  form: 'forgotPassword',
   fields: [
-    'email',
-    'password'
+    'email'
   ]
-}, mapStateToProps, { resetErrors, signinUser })(Signin)
+}, mapStateToProps, { resetErrors, forgotPassword })(ForgotPassword)

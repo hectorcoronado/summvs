@@ -23,8 +23,7 @@ export function signinUser ({ email, password }) {
         browserHistory.push('/cart')
       })
       .catch(() => {
-        // req bad?
-        // - show error:
+        // req bad? show error:
         dispatch(authError('Incorrect email or password'))
       })
   }
@@ -49,8 +48,6 @@ export function signupUser ({firstName, lastName, password, email, address, city
 }
 
 export function verifyUserEmail ({validationString}) {
-  console.log('this is validation string at actions:')
-  console.log(validationString)
   return (dispatch) => {
     axios.patch(`/api/signup/${validationString}`, {validationString})
       .then(response => {
@@ -58,6 +55,13 @@ export function verifyUserEmail ({validationString}) {
           browserHistory.push('/account')
         }, 3500)
       })
+  }
+}
+
+export function forgotPassword (email) {
+  return (dispatch) => {
+    console.log(`email at authActions is:`)
+    console.log(email)
   }
 }
 
