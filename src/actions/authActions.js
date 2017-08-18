@@ -37,13 +37,13 @@ export function signoutUser () {
 export function signupUser ({firstName, lastName, password, email, address, city, state, zip, country}) {
   return (dispatch) => {
     axios.post('/api/signup', {firstName, lastName, password, email, address, city, state, zip, country})
-    .then(response => {
-      dispatch({ type: AUTH_USER })
-      localStorage.setItem('token', response.data.token)
-      browserHistory.push('/cart')
-    })
-    .catch(error =>
-      dispatch(authError(error.response.data.error)))
+      .then(response => {
+        dispatch({ type: AUTH_USER })
+        localStorage.setItem('token', response.data.token)
+        browserHistory.push('/cart')
+      })
+      .catch(error =>
+        dispatch(authError(error.response.data.error)))
   }
 }
 
@@ -60,8 +60,11 @@ export function verifyUserEmail ({validationString}) {
 
 export function forgotPassword (email) {
   return (dispatch) => {
-    console.log(`email at authActions is:`)
-    console.log(email)
+    axios.post('/api/forgot', email)
+      .then(response => {
+        console.log(`email at authActions is:`)
+        console.log(email)
+      })
   }
 }
 

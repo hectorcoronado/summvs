@@ -23,7 +23,9 @@ var UserSchema = mongoose.Schema({
   },
   verified: Boolean,
   password: String,
-  validationString: String
+  validationString: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 })
 
 // HELPER METHODS:
@@ -83,9 +85,46 @@ UserSchema.methods.sendEmail = function (email, callback) {
     }
   },
   function (err, data) {
-    if (err) { throw err }
-    console.log('Email sent:')
-    console.log(data)
+    if (err) { console.log(err) }
+  })
+}
+
+UserSchema.methods.forgotPasswordEmail = function (req, callback, token) {
+  aws.config = new aws.Config({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+    region: 'us-west-2'
+  })
+
+  var user = this
+  // load AWS SES
+  var ses = new aws.SES({apiVersion: '2010-12-01'})
+
+  // send to list
+  var to = [user.email]
+
+  // this must relate to a verified SES account
+  var from = 'summvs@summvs.com'
+
+  // create html string to send in mail:
+  var htmlData = '<h4>You are receiving this because you have requested the reset of the password for your account.<h4>' + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'http://' + req.headers.host + '/reset/' + token + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>'
+
+  ses.sendEmail({
+    Source: from,
+    Destination: { ToAddresses: to },
+    Message: {
+      Subject: {
+        Data: 'SUMMVS Password Reset'
+      },
+      Body: {
+        Html: {
+          Data: htmlData
+        }
+      }
+    }
+  },
+  function (err, data) {
+    if (err) { console.log(err) }
   })
 }
 
