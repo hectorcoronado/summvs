@@ -23,6 +23,7 @@ import NotFound from './components/NotFound'
 import EmailVerify from './components/auth/EmailVerify'
 import ForgotPassword from './components/auth/ForgotPassword'
 import UnauthRedirect from './components/auth/UnauthRedirect'
+import ResetPassword from './components/auth/ResetPassword'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
@@ -57,6 +58,7 @@ const ROUTES = (
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
         <Route path='/forgot' component={ForgotPassword} />
+        <Route path='/reset/:token' component={ResetPassword} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />
