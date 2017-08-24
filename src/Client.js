@@ -58,7 +58,7 @@ const ROUTES = (
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
         <Route path='/forgot' component={ForgotPassword} />
-        <Route path='/reset/:token' component={ResetPassword} />
+        <Route path='/reset/:resetPasswordToken' component={ResetPassword} />
         <Route path='/signin' component={Signin} />
         <Route path='/signout' component={Signout} />
         <Route path='/signup' component={Signup} />

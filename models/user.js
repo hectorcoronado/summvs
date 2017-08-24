@@ -50,7 +50,7 @@ UserSchema.pre('save', function (next) {
   })
 })
 
-UserSchema.methods.sendEmail = function (email, callback) {
+UserSchema.methods.sendEmail = function (req, callback) {
   aws.config = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -68,7 +68,7 @@ UserSchema.methods.sendEmail = function (email, callback) {
   var from = 'summvs@summvs.com'
 
   // create html string to send in mail:
-  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="http://localhost:3000/signup/' + user.validationString + '">SUMMVS</a></h4>'
+  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="http://localhost:3000/signup/' + user.validationString + '">Verify Email</a></h4>' + '<h4>-SUMMVS</h4>'
 
   ses.sendEmail({
     Source: from,
@@ -89,7 +89,7 @@ UserSchema.methods.sendEmail = function (email, callback) {
   })
 }
 
-UserSchema.methods.forgotPasswordEmail = function (req, callback, token) {
+UserSchema.methods.forgotPasswordEmail = function (req, callback, resetPasswordToken) {
   aws.config = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -97,17 +97,14 @@ UserSchema.methods.forgotPasswordEmail = function (req, callback, token) {
   })
 
   var user = this
-  // load AWS SES
+
   var ses = new aws.SES({apiVersion: '2010-12-01'})
 
-  // send to list
   var to = [user.email]
 
-  // this must relate to a verified SES account
   var from = 'summvs@summvs.com'
 
-  // create html string to send in mail:
-  var htmlData = '<h4>You are receiving this because you have requested the reset of the password for your account.<h4>' + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'http://' + req.headers.host + '/reset/' + token + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>'
+  var htmlData = '<h4>You are receiving this because you have requested the reset of the password for your account.<h4>' + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'http://' + req.headers.host + '/reset/' + resetPasswordToken + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>' + '<h4>-SUMMVS</h4>'
 
   ses.sendEmail({
     Source: from,
@@ -115,6 +112,42 @@ UserSchema.methods.forgotPasswordEmail = function (req, callback, token) {
     Message: {
       Subject: {
         Data: 'SUMMVS Password Reset'
+      },
+      Body: {
+        Html: {
+          Data: htmlData
+        }
+      }
+    }
+  },
+  function (err, data) {
+    if (err) { console.log(err) }
+  })
+}
+
+UserSchema.methods.resetPasswordSuccessEmail = function (req, callback) {
+  aws.config = new aws.Config({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+    region: 'us-west-2'
+  })
+
+  var user = this
+
+  var ses = new aws.SES({apiVersion: '2010-12-01'})
+
+  var to = [user.email]
+
+  var from = 'summvs@summvs.com'
+
+  var htmlData = '<h4>Hello,<h4>' + '<h4>This is a confirmation that the password for your account ' + user.email + ' has just been changed.</h4>' + '<h4>-SUMMVS</h4>'
+
+  ses.sendEmail({
+    Source: from,
+    Destination: { ToAddresses: to },
+    Message: {
+      Subject: {
+        Data: 'Your SUMMVS password has been changed.'
       },
       Body: {
         Html: {

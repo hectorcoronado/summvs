@@ -61,10 +61,19 @@ export function verifyUserEmail ({validationString}) {
 export function forgotPassword (email) {
   return (dispatch) => {
     axios.post('/api/forgot', email)
+  }
+}
+
+export function resetPassword ({ password, resetPasswordToken }) {
+  return (dispatch) => {
+    axios.patch(`/api/reset/${resetPasswordToken}`)
       .then(response => {
-        console.log(`email at authActions is:`)
-        console.log(email)
+        dispatch({ type: AUTH_USER })
+        localStorage.setItem('token', response.data.token)
+        browserHistory.push('/cart')
       })
+      .catch(error =>
+        dispatch(authError(error.response.data.error)))
   }
 }
 

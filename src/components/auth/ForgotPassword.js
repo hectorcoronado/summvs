@@ -10,8 +10,6 @@ class ForgotPassword extends Component {
   }
 
   handleFormSubmit ({ email }) {
-    console.log(`email at component is:`)
-    console.log(email)
     this.props.forgotPassword({ email })
   }
 

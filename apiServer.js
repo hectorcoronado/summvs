@@ -186,34 +186,71 @@ app.patch('/signup/:_validationString', function (req, res, next) {
   )
 })
 
+app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
+  var resetPasswordToken = req.params._resetPasswordToken
+
+  async.waterfall([
+    function (done) {
+      User.findOne({
+        resetPasswordToken: resetPasswordToken,
+        resetPasswordExpires: { $gt: Date.now() }},
+        function (err, user) {
+          if (!user || err) {
+            return res.redirect('/forgot')
+          }
+
+          user.password = req.body.password
+          user.resetPasswordToken = undefined
+          user.resetPasswordExpires = undefined
+
+          user.save(function (err) {
+            if (err) { return next(err) }
+            user.resetPasswordSuccessEmail(user.email, function (err) {
+              if (err) { console.log(err) }
+            })
+            // res indicating user creation:
+            res.json({ token: tokenForUser(user) })
+          })
+        }
+      )
+    },
+
+    function (user, done) {
+      user.resetPasswordEmail(req)
+    }
+  ], function (err) {
+    if (err) { return next(err) }
+  })
+})
+
 app.post('/forgot', function (req, res, next) {
   var email = req.body.email
 
   async.waterfall([
     function (done) {
       crypto.randomBytes(20, function (err, buf) {
-        var token = buf.toString('hex')
-        done(err, token)
+        var resetPasswordToken = buf.toString('hex')
+        done(err, resetPasswordToken)
       })
     },
 
-    function (token, done) {
+    function (resetPasswordToken, done) {
       User.findOne({ email: email }, function (err, user) {
         if (!user || err) {
           return res.redirect('/forgot')
         }
 
-        user.resetPasswordToken = token
+        user.resetPasswordToken = resetPasswordToken
         user.resetPasswordExpires = Date.now() + 3600000 // 1 hour expiration
 
         user.save(function (err) {
-          done(err, token, user)
+          done(err, resetPasswordToken, user)
         })
       })
     },
 
-    function (token, user, done) {
-      user.forgotPasswordEmail(req, email, token)
+    function (resetPasswordToken, user, done) {
+      user.forgotPasswordEmail(req, email, resetPasswordToken)
     }
   ], function (err) {
     if (err) { return next(err) }
