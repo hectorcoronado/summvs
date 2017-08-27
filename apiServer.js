@@ -187,6 +187,8 @@ app.patch('/signup/:_validationString', function (req, res, next) {
 })
 
 app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
+  console.log('This is req.body:')
+  console.log(req.body)
   var resetPasswordToken = req.params._resetPasswordToken
 
   async.waterfall([
@@ -196,15 +198,18 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
         resetPasswordExpires: { $gt: Date.now() }},
         function (err, user) {
           if (!user || err) {
-            return res.redirect('/forgot')
+            console.log('Thar be errors: ()(!)(!!!) (!!!!!!!*****!!!!!)')
+            console.log(err)
           }
 
-          user.password = req.body.password
+          user.password = req.body.resetPassword
+          console.log('This is user.password:')
+          console.log(user.password)
           user.resetPasswordToken = undefined
           user.resetPasswordExpires = undefined
 
           user.save(function (err) {
-            if (err) { return next(err) }
+            if (err) { console.log(err) }
             user.resetPasswordSuccessEmail(user.email, function (err) {
               if (err) { console.log(err) }
             })
@@ -213,12 +218,9 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
           })
         }
       )
-    },
-
-    function (user, done) {
-      user.resetPasswordEmail(req)
     }
-  ], function (err) {
+  ],
+  function (err) {
     if (err) { return next(err) }
   })
 })
@@ -237,24 +239,29 @@ app.post('/forgot', function (req, res, next) {
     function (resetPasswordToken, done) {
       User.findOne({ email: email }, function (err, user) {
         if (!user || err) {
-          return res.redirect('/forgot')
+          console.log('Error in /forgot post callback:')
+          console.log(err)
         }
 
-        user.resetPasswordToken = resetPasswordToken
-        user.resetPasswordExpires = Date.now() + 3600000 // 1 hour expiration
+        var tokenAndExpiration = {
+          resetPasswordToken: resetPasswordToken,
+          resetPasswordExpires: Date.now() + 3600000 // 1 hour expiration
+        }
 
-        user.save(function (err) {
-          done(err, resetPasswordToken, user)
+        user.update(tokenAndExpiration, function (err, user) {
+          if (err) {
+            console.log('Error in /forgot update:')
+            console.log(err)
+          }
+          res.send(user)
         })
-      })
-    },
 
-    function (resetPasswordToken, user, done) {
-      user.forgotPasswordEmail(req, email, resetPasswordToken)
+        user.forgotPasswordEmail(req, email, resetPasswordToken)
+      })
     }
-  ], function (err) {
-    if (err) { return next(err) }
-    res.redirect('/forgot')
+  ],
+  function (err) {
+    if (err) { console.log(err) }
   })
 })
 // --->>> END AUTH API <<<---

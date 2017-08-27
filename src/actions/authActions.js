@@ -64,9 +64,9 @@ export function forgotPassword (email) {
   }
 }
 
-export function resetPassword ({ password, resetPasswordToken }) {
+export function resetPassword ({ resetPassword, resetPasswordToken }) {
   return (dispatch) => {
-    axios.patch(`/api/reset/${resetPasswordToken}`)
+    axios.patch(`/api/reset/${resetPasswordToken}`, resetPassword)
       .then(response => {
         dispatch({ type: AUTH_USER })
         localStorage.setItem('token', response.data.token)

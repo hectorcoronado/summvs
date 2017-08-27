@@ -104,7 +104,7 @@ UserSchema.methods.forgotPasswordEmail = function (req, callback, resetPasswordT
 
   var from = 'summvs@summvs.com'
 
-  var htmlData = '<h4>You are receiving this because you have requested the reset of the password for your account.<h4>' + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'http://' + req.headers.host + '/reset/' + resetPasswordToken + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>' + '<h4>-SUMMVS</h4>'
+  var htmlData = "<h4>You are receiving this because you have requested to reset your account's password.<h4>" + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'http://' + req.headers.host + '/reset/' + resetPasswordToken + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>' + '<h4>-SUMMVS</h4>'
 
   ses.sendEmail({
     Source: from,

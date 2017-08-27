@@ -9,9 +9,11 @@ class ResetPassword extends Component {
     this.props.resetErrors()
   }
 
-  handleFormSubmit (password) {
+  handleFormSubmit (resetPassword) {
     let resetPasswordToken = this.props.params.resetPasswordToken
-    this.props.resetPassword({ password, resetPasswordToken })
+    console.log('this is resetPassword:')
+    console.log(resetPassword)
+    this.props.resetPassword({ resetPassword, resetPasswordToken })
   }
 
   renderAlert () {
@@ -26,7 +28,7 @@ class ResetPassword extends Component {
 
   render () {
     // handleSubmit comes from reduxForm, as do the fields (def'd below)
-    const { handleSubmit, fields: { password, confirmPassword } } = this.props
+    const { handleSubmit, fields: { resetPassword, confirmPassword } } = this.props
 
     return (
       <Well>
@@ -34,7 +36,7 @@ class ResetPassword extends Component {
           <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
             <fieldset className='form-group'>
               <label>New Password:</label>
-              <input {...password} className='form-control' />
+              <input {...resetPassword} className='form-control' />
             </fieldset>
             <fieldset className='form-group'>
               <label>Confirm Password:</label>
@@ -49,6 +51,17 @@ class ResetPassword extends Component {
   }
 }
 
+function validate (formProps) {
+  // will contain any errors found in form fields:
+  const errors = {}
+
+  if (formProps.resetPassword !== formProps.confirmPassword) {
+    errors.confirmPassword = 'New Password and Confirm Password fields must match.'
+  }
+
+  return errors
+}
+
 function mapStateToProps (state) {
   return { errorMessage: state.auth.error }
 }
@@ -56,7 +69,8 @@ function mapStateToProps (state) {
 export default reduxForm({
   form: 'resetPassword',
   fields: [
-    'password',
+    'resetPassword',
     'confirmPassword'
-  ]
+  ],
+  validate
 }, mapStateToProps, { resetErrors, resetPassword })(ResetPassword)
