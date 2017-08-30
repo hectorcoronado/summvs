@@ -11,8 +11,6 @@ class ResetPassword extends Component {
 
   handleFormSubmit (resetPassword) {
     let resetPasswordToken = this.props.params.resetPasswordToken
-    console.log('this is resetPassword:')
-    console.log(resetPassword)
     this.props.resetPassword({ resetPassword, resetPasswordToken })
   }
 
@@ -42,8 +40,11 @@ class ResetPassword extends Component {
               <label>Confirm Password:</label>
               <input {...confirmPassword} className='form-control' />
             </fieldset>
-            {this.renderAlert()}
-            <button action='submit' className='btn btn-primary'>Update Password</button>
+            <div>
+              <button action='submit' className='btn btn-primary'>Update Password</button>
+              {confirmPassword.touched && confirmPassword.error && <div className='error'>{confirmPassword.error}</div>}
+              {this.renderAlert()}
+            </div>
           </form>
         </Panel>
       </Well>
@@ -58,7 +59,6 @@ function validate (formProps) {
   if (formProps.resetPassword !== formProps.confirmPassword) {
     errors.confirmPassword = 'New Password and Confirm Password fields must match.'
   }
-
   return errors
 }
 

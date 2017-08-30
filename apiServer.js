@@ -198,13 +198,10 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
         resetPasswordExpires: { $gt: Date.now() }},
         function (err, user) {
           if (!user || err) {
-            console.log('Thar be errors: ()(!)(!!!) (!!!!!!!*****!!!!!)')
             console.log(err)
           }
 
           user.password = req.body.resetPassword
-          console.log('This is user.password:')
-          console.log(user.password)
           user.resetPasswordToken = undefined
           user.resetPasswordExpires = undefined
 
