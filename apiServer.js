@@ -219,7 +219,10 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
               if (err) { console.log(err) }
             })
             // res indicating user creation:
-            res.json({ token: tokenForUser(user) })
+            res.status(200).json({
+              token: tokenForUser(user),
+              success: 'Your password has been reset, you will be redirected to your account page shortly.'
+            })
           })
         }
       )

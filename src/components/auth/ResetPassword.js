@@ -10,21 +10,26 @@ class ResetPassword extends Component {
   }
 
   handleFormSubmit (resetPassword) {
+    this.props.resetErrors()
     let resetPasswordToken = this.props.params.resetPasswordToken
     this.props.resetPassword({ resetPassword, resetPasswordToken })
-
-    return (
-      <div>
-        Thank you, your password has been reset. You will be redirected to your account page shortly.
-      </div>
-    )
   }
 
   renderAlert () {
-    if (this.props.errorMessage) {
+    const { errorMessage, successMessage } = this.props
+
+    if (errorMessage) {
       return (
         <div className='error'>
-          {this.props.errorMessage}
+          {errorMessage}
+        </div>
+      )
+    }
+
+    if (successMessage) {
+      return (
+        <div className='success'>
+          {successMessage}
         </div>
       )
     }
@@ -69,7 +74,10 @@ function validate (formProps) {
 }
 
 function mapStateToProps (state) {
-  return { errorMessage: state.auth.error }
+  return {
+    errorMessage: state.auth.error,
+    successMessage: state.auth.success
+  }
 }
 
 export default reduxForm({

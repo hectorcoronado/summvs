@@ -75,6 +75,7 @@ export function resetPassword ({ resetPassword, resetPasswordToken }) {
   return (dispatch) => {
     axios.patch(`/api/reset/${resetPasswordToken}`, resetPassword)
       .then(response => {
+        dispatch(authSuccess(response.data.success))
         dispatch({ type: AUTH_USER })
         localStorage.setItem('token', response.data.token)
         window.setTimeout(() => {
