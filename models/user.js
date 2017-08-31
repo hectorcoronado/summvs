@@ -51,8 +51,6 @@ UserSchema.pre('save', function (next) {
 })
 
 UserSchema.methods.sendEmail = function (req, callback) {
-  console.log("This IIIIIS sendEmail's req:")
-  console.log(req)
   aws.config = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -70,7 +68,7 @@ UserSchema.methods.sendEmail = function (req, callback) {
   var from = 'summvs@summvs.com'
 
   // create html string to send in mail:
-  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="https://localhost:3000/signup/' + user.validationString + '">Verify Email</a></h4>' + '<h4>-SUMMVS</h4>'
+  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="https://' + req.headers.host + '/signup/' + user.validationString + '">Verify Email</a></h4>' + '<h4>-SUMMVS</h4>'
 
   ses.sendEmail({
     Source: from,
