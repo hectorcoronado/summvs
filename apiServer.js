@@ -11,15 +11,25 @@ var path = require('path')
 var randomstring = require('randomstring')
 var session = require('express-session')
 require('dotenv').config()
+var https = require('https');
+var fs = require('fs');
 
 require('./services/passport')
 var requireAuth = passport.authenticate('jwt', { session: false })
 var requireSignin = passport.authenticate('local', { session: false })
 
+var options = {
+    key: fs.readFileSync('./summvs.key'),
+    cert: fs.readFileSync('./summvs.crt'),
+    requestCert: false,
+    rejectUnauthorized: false
+};
+
 // MongoStore needs to be required *after* session:
 var MongoStore = require('connect-mongo')(session)
 
 var app = express()
+var server = https.createServer(options, app)
 
 app.use(logger('combined'))
 app.use(bodyParser.json({ type: '*/*' }))
@@ -359,7 +369,7 @@ app.get('/images', function (req, res) {
 // --->>> END APIs <<<--- //
 // ////////////////////// //
 
-app.listen(3001, function (err) {
+server.listen(3001, function (err) {
   if (err) {
     return console.log(err)
   }
