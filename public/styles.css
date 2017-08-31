@@ -1,14 +1,18 @@
 /*
-font-family: 'Rubik Mono One', sans-serif;
-font-family: 'Montserrat', sans-serif;
+font-family: 'Cutive Mono', monospace;
 */
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Cutive Mono', monospace;
   margin-bottom: 75px;
   margin-top: 75px;
 }
 
-.header-text {
-  font-family: 'Rubik Mono One', sans-serif;
+.error {
+  color: red
 }
+
+/* logo text: */
+/*.header-text {
+  font-family: 'Cutive Mono', monospace;
+}*/

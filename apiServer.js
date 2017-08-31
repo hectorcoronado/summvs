@@ -1,11 +1,14 @@
+var async = require('async')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
+var crypto = require('crypto')
 var express = require('express')
 var jwt = require('jwt-simple')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 var passport = require('passport')
 var path = require('path')
+var randomstring = require('randomstring')
 var session = require('express-session')
 require('dotenv').config()
 
@@ -100,6 +103,10 @@ app.get('/testauth', requireAuth, function (req, res) {
   res.send({ hi: 'there' })
 })
 
+app.get('/signin', function (req, res, next) {
+  res.send({ hi: 'there' })
+})
+
 app.post('/signin', requireSignin, function (req, res, next) {
   // user has already had email & pw auth'd
   // we just need to give them a token
@@ -109,12 +116,18 @@ app.post('/signin', requireSignin, function (req, res, next) {
 app.post('/signup', function (req, res, next) {
   var firstName = req.body.firstName
   var lastName = req.body.lastName
-  var addresses = req.body.addresses
   var email = req.body.email
   var password = req.body.password
+  var addresses = {
+    street: req.body.address,
+    city: req.body.city,
+    state: req.body.state,
+    zip: req.body.zip,
+    country: req.body.country
+  }
 
   if (!firstName || !lastName || !addresses || !password || !email) {
-    return res.status(422).send({
+    return res.status(412).send({
       error: 'Please provide all required information.'
     })
   }
@@ -125,8 +138,8 @@ app.post('/signup', function (req, res, next) {
 
     // if user w/email does exist, return 'unprocessable entity' err:
     if (existingUser) {
-      return res.status(422).send({
-        error: 'Email is in use.'
+      return res.status(412).send({
+        error: 'This email is already in use!'
       })
     }
 
@@ -136,14 +149,116 @@ app.post('/signup', function (req, res, next) {
       lastName: lastName,
       addresses: addresses,
       password: password,
-      email: email
+      email: email,
+      validationString: randomstring.generate({
+        length: 12,
+        charset: 'alphanumeric',
+        capitalization: 'lowercase'
+      }),
+      verified: false
     })
     // ... & save user
     user.save(function (err) {
       if (err) { return next(err) }
+      user.sendEmail(user.email, function (err) {
+        if (err) { console.log(err) }
+      })
       // res indicating user creation:
       res.json({ token: tokenForUser(user) })
     })
+  })
+})
+
+app.patch('/signup/:_validationString', function (req, res, next) {
+  var validationString = req.params._validationString
+
+  User.findOneAndUpdate(
+    { validationString: validationString },
+    { verified: true },
+    { new: true },
+    function (err, doc) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.send(doc)
+      }
+    }
+  )
+})
+
+app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
+  var resetPasswordToken = req.params._resetPasswordToken
+
+  async.waterfall([
+    function (done) {
+      User.findOne({
+        resetPasswordToken: resetPasswordToken,
+        resetPasswordExpires: { $gt: Date.now() }},
+        function (err, user) {
+          if (!user || err) {
+            res.status(404).send({error: 'Reset Password Token is expired.'})
+          }
+
+          user.password = req.body.resetPassword
+          user.resetPasswordToken = undefined
+          user.resetPasswordExpires = undefined
+
+          user.save(function (err) {
+            if (err) { console.log(err) }
+            user.resetPasswordSuccessEmail(user.email, function (err) {
+              if (err) { console.log(err) }
+            })
+            // res indicating user creation:
+            res.json({ token: tokenForUser(user) })
+          })
+        }
+      )
+    }
+  ],
+  function (err) {
+    if (err) {
+      res.status(404).send({error: 'Reset Password Token is expired or email does not exist.'})
+    }
+  })
+})
+
+app.post('/forgot', function (req, res, next) {
+  var email = req.body.email
+
+  async.waterfall([
+    function (done) {
+      crypto.randomBytes(20, function (err, buf) {
+        var resetPasswordToken = buf.toString('hex')
+        done(err, resetPasswordToken)
+      })
+    },
+
+    function (resetPasswordToken, done) {
+      User.findOne({ email: email }, function (err, user) {
+        if (!user || err) {
+          return res.status(404).send({error: 'Email does not exist.'})
+        }
+
+        var tokenAndExpiration = {
+          resetPasswordToken: resetPasswordToken,
+          resetPasswordExpires: Date.now() + 3600000 // 1 hour expiration
+        }
+
+        user.update(tokenAndExpiration, function (err, user) {
+          if (err) {
+            res.status(404).send({error: 'Email does not exist.'})
+          }
+          res.send(user)
+        })
+
+        user.forgotPasswordEmail(req, email, resetPasswordToken)
+      })
+    }
+  ],
+  function (err) {
+    if (err) {
+      res.status(404).send({error: 'There was an error in attempting to reset your password.'})
+    }
   })
 })
 // --->>> END AUTH API <<<---

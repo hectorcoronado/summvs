@@ -22,6 +22,8 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "async": "^2.5.0",
+    "aws-sdk": "^2.86.0",
     "axios": "^0.16.2",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
@@ -44,12 +46,14 @@
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
+    "randomstring": "^1.1.5",
     "react": "^15.4.2",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.1",
     "react-router": "^3.0.2",
     "redux": "^3.6.0",
+    "redux-form": "^5.3.6",
     "redux-thunk": "^2.2.0",
     "serve-favicon": "~2.4.2",
     "uniqid": "^4.1.1"
