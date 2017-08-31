@@ -10,7 +10,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // PROXY API //
 var apiProxy = httpProxy.createProxyServer({
-  target: 'http://localhost:3001'
+  target: 'https://localhost:3001',
+  secure: false
 })
 
 // --->>> re-route all reqs to apiProxy <<<---
