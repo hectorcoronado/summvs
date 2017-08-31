@@ -53,7 +53,7 @@ export function verifyUserEmail ({validationString}) {
       .then(response => {
         window.setTimeout(() => {
           browserHistory.push('/account')
-        }, 3500)
+        }, 3000)
       })
   }
 }
@@ -61,6 +61,9 @@ export function verifyUserEmail ({validationString}) {
 export function forgotPassword (email) {
   return (dispatch) => {
     axios.post('/api/forgot', email)
+      .catch(error =>
+        dispatch(authError(error.response.data.error))
+      )
   }
 }
 
@@ -70,7 +73,9 @@ export function resetPassword ({ resetPassword, resetPasswordToken }) {
       .then(response => {
         dispatch({ type: AUTH_USER })
         localStorage.setItem('token', response.data.token)
-        browserHistory.push('/cart')
+        window.setTimeout(() => {
+          browserHistory.push('/account')
+        }, 3000)
       })
       .catch(error =>
         dispatch(authError(error.response.data.error)))

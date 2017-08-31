@@ -12,6 +12,12 @@ class ResetPassword extends Component {
   handleFormSubmit (resetPassword) {
     let resetPasswordToken = this.props.params.resetPasswordToken
     this.props.resetPassword({ resetPassword, resetPasswordToken })
+
+    return (
+      <div>
+        Thank you, your password has been reset. You will be redirected to your account page shortly.
+      </div>
+    )
   }
 
   renderAlert () {

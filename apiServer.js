@@ -187,8 +187,6 @@ app.patch('/signup/:_validationString', function (req, res, next) {
 })
 
 app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
-  console.log('This is req.body:')
-  console.log(req.body)
   var resetPasswordToken = req.params._resetPasswordToken
 
   async.waterfall([
@@ -198,7 +196,7 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
         resetPasswordExpires: { $gt: Date.now() }},
         function (err, user) {
           if (!user || err) {
-            console.log(err)
+            res.status(404).send({error: 'Reset Password Token is expired.'})
           }
 
           user.password = req.body.resetPassword
@@ -218,7 +216,9 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
     }
   ],
   function (err) {
-    if (err) { return next(err) }
+    if (err) {
+      res.status(404).send({error: 'Reset Password Token is expired or email does not exist.'})
+    }
   })
 })
 
@@ -236,8 +236,7 @@ app.post('/forgot', function (req, res, next) {
     function (resetPasswordToken, done) {
       User.findOne({ email: email }, function (err, user) {
         if (!user || err) {
-          console.log('Error in /forgot post callback:')
-          console.log(err)
+          return res.status(404).send({error: 'Email does not exist.'})
         }
 
         var tokenAndExpiration = {
@@ -247,8 +246,7 @@ app.post('/forgot', function (req, res, next) {
 
         user.update(tokenAndExpiration, function (err, user) {
           if (err) {
-            console.log('Error in /forgot update:')
-            console.log(err)
+            res.status(404).send({error: 'Email does not exist.'})
           }
           res.send(user)
         })
@@ -258,7 +256,9 @@ app.post('/forgot', function (req, res, next) {
     }
   ],
   function (err) {
-    if (err) { console.log(err) }
+    if (err) {
+      res.status(404).send({error: 'There was an error in attempting to reset your password.'})
+    }
   })
 })
 // --->>> END AUTH API <<<---
