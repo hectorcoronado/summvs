@@ -12,6 +12,10 @@ body {
   color: red
 }
 
+.success {
+  color: green
+}
+
 /* logo text: */
 /*.header-text {
   font-family: 'Cutive Mono', monospace;

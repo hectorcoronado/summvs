@@ -19,7 +19,7 @@ class ForgotPassword extends Component {
 
     if (errorMessage) {
       return (
-        <div className='alert alert-danger'>
+        <div className='error'>
           {errorMessage}
         </div>
       )
@@ -27,7 +27,7 @@ class ForgotPassword extends Component {
 
     if (successMessage) {
       return (
-        <div className='alert alert-success'>
+        <div className='success'>
           {successMessage}
         </div>
       )
