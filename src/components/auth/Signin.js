@@ -17,7 +17,7 @@ class Signin extends Component {
   renderAlert () {
     if (this.props.errorMessage) {
       return (
-        <div className='alert alert-danger'>
+        <div className='error'>
           {this.props.errorMessage}
         </div>
       )

@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router'
 
 import {
   AUTH_ERROR,
+  AUTH_SUCCESS,
   AUTH_USER,
   UNAUTH_USER
 } from './types'
@@ -61,6 +62,9 @@ export function verifyUserEmail ({validationString}) {
 export function forgotPassword (email) {
   return (dispatch) => {
     axios.post('/api/forgot', email)
+      .then(response => {
+        dispatch(authSuccess(response.data.success))
+      })
       .catch(error =>
         dispatch(authError(error.response.data.error))
       )
@@ -71,6 +75,7 @@ export function resetPassword ({ resetPassword, resetPasswordToken }) {
   return (dispatch) => {
     axios.patch(`/api/reset/${resetPasswordToken}`, resetPassword)
       .then(response => {
+        dispatch(authSuccess(response.data.success))
         dispatch({ type: AUTH_USER })
         localStorage.setItem('token', response.data.token)
         window.setTimeout(() => {
@@ -90,6 +95,13 @@ export function authError (error) {
   return {
     type: AUTH_ERROR,
     payload: error
+  }
+}
+
+export function authSuccess (success) {
+  return {
+    type: AUTH_SUCCESS,
+    payload: success
   }
 }
 

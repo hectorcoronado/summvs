@@ -10,14 +10,25 @@ class ForgotPassword extends Component {
   }
 
   handleFormSubmit ({ email }) {
+    this.props.resetErrors()
     this.props.forgotPassword({ email })
   }
 
   renderAlert () {
-    if (this.props.errorMessage) {
+    const { errorMessage, successMessage } = this.props
+
+    if (errorMessage) {
       return (
-        <div className='alert alert-danger'>
-          {this.props.errorMessage}
+        <div className='error'>
+          {errorMessage}
+        </div>
+      )
+    }
+
+    if (successMessage) {
+      return (
+        <div className='success'>
+          {successMessage}
         </div>
       )
     }
@@ -35,8 +46,8 @@ class ForgotPassword extends Component {
               <label>Email:</label>
               <input {...email} className='form-control' />
             </fieldset>
-            {this.renderAlert()}
             <button action='submit' className='btn btn-primary'>Reset Password</button>
+            {this.renderAlert()}
           </form>
         </Panel>
       </Well>
@@ -45,7 +56,10 @@ class ForgotPassword extends Component {
 }
 
 function mapStateToProps (state) {
-  return { errorMessage: state.auth.error }
+  return {
+    errorMessage: state.auth.error,
+    successMessage: state.auth.success
+  }
 }
 
 export default reduxForm({

@@ -10,20 +10,20 @@ var passport = require('passport')
 var path = require('path')
 var randomstring = require('randomstring')
 var session = require('express-session')
+var https = require('https')
+var fs = require('fs')
 require('dotenv').config()
-var https = require('https');
-var fs = require('fs');
 
 require('./services/passport')
 var requireAuth = passport.authenticate('jwt', { session: false })
 var requireSignin = passport.authenticate('local', { session: false })
 
 var options = {
-    key: fs.readFileSync('./summvs.key'),
-    cert: fs.readFileSync('./summvs.crt'),
-    requestCert: false,
-    rejectUnauthorized: false
-};
+  key: fs.readFileSync('./summvs.key'),
+  cert: fs.readFileSync('./summvs.crt'),
+  requestCert: false,
+  rejectUnauthorized: false
+}
 
 // MongoStore needs to be required *after* session:
 var MongoStore = require('connect-mongo')(session)
@@ -170,7 +170,7 @@ app.post('/signup', function (req, res, next) {
     // ... & save user
     user.save(function (err) {
       if (err) { return next(err) }
-      user.sendEmail(user.email, function (err) {
+      user.sendEmail(req, function (err) {
         if (err) { console.log(err) }
       })
       // res indicating user creation:
@@ -219,7 +219,10 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
               if (err) { console.log(err) }
             })
             // res indicating user creation:
-            res.json({ token: tokenForUser(user) })
+            res.status(200).json({
+              token: tokenForUser(user),
+              success: 'Your password has been reset, you will be redirected to your account page shortly.'
+            })
           })
         }
       )
@@ -258,7 +261,7 @@ app.post('/forgot', function (req, res, next) {
           if (err) {
             res.status(404).send({error: 'Email does not exist.'})
           }
-          res.send(user)
+          res.status(200).send({success: 'Thank you, you will receive an email with further instructions briefly.'})
         })
 
         user.forgotPasswordEmail(req, email, resetPasswordToken)
