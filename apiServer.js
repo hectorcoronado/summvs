@@ -1,3 +1,6 @@
+require('dotenv').config()
+require('./services/passport')
+
 var async = require('async')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
@@ -12,9 +15,10 @@ var randomstring = require('randomstring')
 var session = require('express-session')
 var https = require('https')
 var fs = require('fs')
-require('dotenv').config()
 
-require('./services/passport')
+var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
+var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
+
 var requireAuth = passport.authenticate('jwt', { session: false })
 var requireSignin = passport.authenticate('local', { session: false })
 
@@ -276,6 +280,37 @@ app.post('/forgot', function (req, res, next) {
 })
 // --->>> END AUTH API <<<---
 // ==========================
+
+// ========================
+// --->>> STRIPE API <<<---
+app.post('/charge', function (req, res) {
+  console.log('req.body:')
+  console.log(req.body)
+  var amount = 500
+
+  stripe.customers.create({
+    email: req.body.email,
+    card: req.body.id
+  })
+    .then(function (customer) {
+      stripe.charges.create({
+        amount: amount,
+        description: 'sample charge',
+        currency: 'usd',
+        customer: customer.id
+      })
+    })
+    .then(function (charge) {
+      res.send(charge)
+    })
+    .catch(function (err) {
+      console.log('Error:')
+      console.log(err)
+      res.status(500).send({ error: 'Purchase failed' })
+    })
+})
+// --->>> END STRIPE API <<<---
+// ============================
 
 // ==========================
 // --->>> PRODUCTS API <<<---

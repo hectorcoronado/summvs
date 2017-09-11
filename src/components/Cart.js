@@ -4,6 +4,8 @@ import {
   Button, ButtonGroup, Col, Label, Modal, Panel, Row
 } from 'react-bootstrap'
 
+import Checkout from './stripe/Checkout'
+
 import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
 
 class Cart extends Component {
@@ -135,8 +137,7 @@ class Cart extends Component {
             <Modal.Title>Thank You!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h6>Your order has been saved, sorta.</h6>
-            <p>You will receive an email confirmation when our developer gets 'round to implementing that part of this project...</p>
+            <Checkout />
           </Modal.Body>
           <Modal.Footer>
             <Col xs={6}>

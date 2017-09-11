@@ -5,7 +5,6 @@ import { Col, Grid, Row } from 'react-bootstrap'
 import { getProducts } from '../actions/productsActions'
 
 import Cart from './Cart'
-import ProductsForm from './ProductsForm'
 import ProductItem from './ProductItem'
 
 class ProductsList extends Component {
@@ -14,7 +13,6 @@ class ProductsList extends Component {
   }
 
   render () {
-    // NOTE: MVP/POC offers single product, but this allows for extensibility:
     const productsList = this.props.products.map(
       (productsArr) => {
         return (
