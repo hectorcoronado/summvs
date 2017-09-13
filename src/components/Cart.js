@@ -123,13 +123,14 @@ class Cart extends Component {
         <Row>
           <Col xs={12}>
             <h6>Order Total: {this.props.totalAmount}</h6>
-            <Button
+            {/* <Button
               bsStyle='success'
               bsSize='xsmall'
               onClick={this.open.bind(this)}
             >
               Checkout
-            </Button>
+            </Button> */}
+            <Checkout />
           </Col>
         </Row>
         <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
