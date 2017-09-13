@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Button, ButtonGroup, Col, Label, Modal, Panel, Row
+  Button, ButtonGroup, Col, Label, Panel, Row
 } from 'react-bootstrap'
 
 import Checkout from './stripe/Checkout'
@@ -9,28 +9,8 @@ import Checkout from './stripe/Checkout'
 import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
 
 class Cart extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      showModal: false
-    }
-  }
-
   componentDidMount () {
     this.props.getCart()
-  }
-
-  open () {
-    this.setState({
-      showModal: true
-    })
-  }
-
-  close () {
-    this.setState({
-      showModal: false
-    })
   }
 
   renderEmpty () {
@@ -74,10 +54,10 @@ class Cart extends Component {
                 <h6>{cartArr.name}</h6><span />
               </Col>
               <Col xs={12} sm={2}>
-                <h6>USD {cartArr.price}</h6>
+                <h6>usd {cartArr.price}</h6>
               </Col>
               <Col xs={6} sm={2}>
-                <h6>Qty:
+                <h6>qty:
                   <Label
                     bsStyle='success'
                     style={{marginLeft: '4px'}}
@@ -92,6 +72,7 @@ class Cart extends Component {
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onDecrement.bind(this, cartArr._id, cartArr.quantity)}
+                    title='-1'
                   >
                     -
                   </Button>
@@ -99,17 +80,19 @@ class Cart extends Component {
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onIncrement.bind(this, cartArr._id)}
+                    title='+1'
                   >
                     +
                   </Button>
+                  <Button
+                    bsStyle='default'
+                    bsSize='xsmall'
+                    onClick={this.onDelete.bind(this, cartArr._id)}
+                    title='remove all'
+                  >
+                    x
+                  </Button>
                 </ButtonGroup>
-                <Button
-                  bsStyle='link'
-                  bsSize='xsmall'
-                  onClick={this.onDelete.bind(this, cartArr._id)}
-                >
-                  Remove
-                </Button>
               </Col>
             </Row>
           </Panel>
@@ -118,35 +101,14 @@ class Cart extends Component {
     )
 
     return (
-      <Panel header='Cart'>
+      <Panel header='cart'>
         {cartItemsList}
         <Row>
           <Col xs={12}>
-            <h6>Order Total: {this.props.totalAmount}</h6>
-            {/* <Button
-              bsStyle='success'
-              bsSize='xsmall'
-              onClick={this.open.bind(this)}
-            >
-              Checkout
-            </Button> */}
+            <h6>order total: {this.props.totalAmount}</h6>
             <Checkout />
           </Col>
         </Row>
-        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Thank You!</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Checkout />
-          </Modal.Body>
-          <Modal.Footer>
-            <Col xs={6}>
-              <h6>Total $: {this.props.totalAmount}</h6>
-            </Col>
-            <Button onClick={this.close.bind(this)}>Close</Button>
-          </Modal.Footer>
-        </Modal>
       </Panel>
     )
   }

@@ -3,7 +3,7 @@ var bcrypt = require('bcrypt-nodejs')
 var mongoose = require('mongoose')
 require('dotenv').config()
 
-// TODO: add paymentMethod to schema once you figure out how Stripe (or other payment thing) works, and add orderHistory.
+// TODO: add orderHistory.
 
 var UserSchema = mongoose.Schema({
   firstName: String,

@@ -52,6 +52,9 @@ class Checkout extends Component {
           console.log('purchase complete.')
         }
       })
+      .catch(err => {
+        console.log('Purchase failed:', err)
+      })
     }
 
     this.stripeHandler.open({
