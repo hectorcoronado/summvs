@@ -27,6 +27,8 @@ import ResetPassword from './components/auth/ResetPassword'
 import Signin from './components/auth/Signin'
 import Signout from './components/auth/Signout'
 import Signup from './components/auth/Signup'
+// STRIPE COMPONENTS
+import PurchaseComplete from './components/stripe/PurchaseComplete'
 // HOC TO PROTECT ROUTES:
 import RequireAuth from './components/auth/RequireAuth'
 
@@ -57,6 +59,7 @@ const ROUTES = (
         <Route path='/account' component={RequireAuth(Account)} />
         <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
+        <Route path='/complete' component={PurchaseComplete} />
         <Route path='/forgot' component={ForgotPassword} />
         <Route path='/reset/:resetPasswordToken' component={ResetPassword} />
         <Route path='/signin' component={Signin} />

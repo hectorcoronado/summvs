@@ -1,5 +1,6 @@
 import {
   ADD_TO_CART,
+  EMPTY_CART,
   GET_CART,
   UPDATE_CART,
   DELETE_CART_ITEM
@@ -41,6 +42,14 @@ export default function cartReducers (state = INITIAL_STATE, action) {
         cart: action.payload,
         totalAmount: totals(action.payload).amount,
         totalQty: totals(action.payload).qty
+      }
+
+    case EMPTY_CART:
+      return {
+        ...state,
+        cart: [],
+        totalAmount: null,
+        totalQty: null
       }
 
     default:

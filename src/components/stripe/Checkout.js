@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { STRIPE_PUBLIC_KEY } from './stripeConstants'
+import { browserHistory } from 'react-router'
 
 class Checkout extends Component {
   constructor (props) {
@@ -41,15 +42,22 @@ class Checkout extends Component {
 
   onStripeUpdate (e) {
     const fetch = window.fetch
+    const amount = this.props.totalAmount
+    const fromUSDToCent = (amount) => amount * 100
     const handleToken = (token) => {
+      let payload = {
+        token: token,
+        amount: fromUSDToCent(amount)
+      }
+      console.log('handleToken token: ', token)
       fetch('api/charge', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(token)
+        body: JSON.stringify(payload)
       })
       .then(output => {
         if (output.status === 200) {
-          console.log('purchase complete.')
+          browserHistory.push('/complete')
         }
       })
       .catch(err => {
@@ -59,7 +67,8 @@ class Checkout extends Component {
 
     this.stripeHandler.open({
       name: 'summvs',
-      description: 'soap',
+      description: this.props.product.join(', '),
+      amount: fromUSDToCent(amount),
       token: handleToken
     })
 
@@ -73,7 +82,7 @@ class Checkout extends Component {
           bsStyle='success'
           bsSize='xsmall'
           onClick={this.onStripeUpdate}
-          >
+        >
             pay
         </Button>
       </div>

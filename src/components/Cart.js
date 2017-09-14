@@ -106,7 +106,15 @@ class Cart extends Component {
         <Row>
           <Col xs={12}>
             <h6>order total: {this.props.totalAmount}</h6>
-            <Checkout />
+            <Checkout
+              totalAmount={this.props.totalAmount}
+              product={this.props.cart.map(
+                (cartArr) => cartArr.name
+              )}
+              quantity={this.props.cart.map(
+                (cartArr) => cartArr.quantity
+              )}
+            />
           </Col>
         </Row>
       </Panel>

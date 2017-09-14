@@ -286,15 +286,14 @@ app.post('/forgot', function (req, res, next) {
 app.post('/charge', function (req, res) {
   console.log('req.body:')
   console.log(req.body)
-  var amount = 500
 
   stripe.customers.create({
-    email: req.body.email,
-    card: req.body.id
+    email: req.body.token.email,
+    card: req.body.token.id
   })
     .then(function (customer) {
       stripe.charges.create({
-        amount: amount,
+        amount: req.body.amount,
         description: 'sample charge',
         currency: 'usd',
         customer: customer.id
