@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { STRIPE_PUBLIC_KEY } from './stripeConstants'
-import { browserHistory } from 'react-router'
+import { connect } from 'react-redux'
+
+import { emptyCart } from '../../actions/cartActions'
 
 class Checkout extends Component {
   constructor (props) {
@@ -29,7 +31,10 @@ class Checkout extends Component {
     this.loadStripe(() => {
       this.stripeHandler = window.StripeCheckout.configure({
         key: STRIPE_PUBLIC_KEY,
-        locale: 'auto'
+        locale: 'auto',
+        shippingAddress: true,
+        billingAddress: true,
+        zipCode: true
       })
     })
   }
@@ -44,10 +49,13 @@ class Checkout extends Component {
     const fetch = window.fetch
     const amount = this.props.totalAmount
     const fromUSDToCent = (amount) => amount * 100
-    const handleToken = (token) => {
+    const handleToken = (token, args) => {
+      console.log('args stuff:')
+      console.log(args)
       let payload = {
         token: token,
-        amount: fromUSDToCent(amount)
+        amount: fromUSDToCent(amount),
+        address: args
       }
       console.log('handleToken token: ', token)
       fetch('api/charge', {
@@ -57,7 +65,7 @@ class Checkout extends Component {
       })
       .then(output => {
         if (output.status === 200) {
-          browserHistory.push('/complete')
+          this.props.emptyCart()
         }
       })
       .catch(err => {
@@ -90,4 +98,4 @@ class Checkout extends Component {
   }
 }
 
-export default Checkout
+export default connect(null, { emptyCart })(Checkout)

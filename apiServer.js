@@ -289,7 +289,17 @@ app.post('/charge', function (req, res) {
 
   stripe.customers.create({
     email: req.body.token.email,
-    card: req.body.token.id
+    card: req.body.token.id,
+    shipping: {
+      address: {
+        country: req.body.address.shipping_address_country,
+        postal_code: req.body.address.shipping_address_zip,
+        line1: req.body.address.shipping_address_line1,
+        city: req.body.address.shipping_address_city,
+        state: req.body.address.shipping_address_state
+      },
+      name: req.body.address.shipping_name
+    }
   })
     .then(function (customer) {
       stripe.charges.create({

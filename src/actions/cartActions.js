@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { browserHistory } from 'react-router'
 
 import {
   ADD_TO_CART,
@@ -90,6 +91,7 @@ export function emptyCart () {
           type: EMPTY_CART,
           payload: response.data
         })
+        browserHistory.push('/complete')
       })
       .catch((err) => {
         console.log('error emptying cart: ', err)

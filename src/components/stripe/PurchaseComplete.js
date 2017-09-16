@@ -1,12 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-
-import { emptyCart } from '../../actions/cartActions'
 
 class PurchaseComplete extends Component {
-  componentDidMount () {
-    this.props.emptyCart()
-  }
   render () {
     return (
       <div>
@@ -16,4 +10,4 @@ class PurchaseComplete extends Component {
   }
 }
 
-export default connect(null, {emptyCart})(PurchaseComplete)
+export default PurchaseComplete
