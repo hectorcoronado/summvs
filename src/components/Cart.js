@@ -10,6 +10,14 @@ import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
 import { getProducts } from '../actions/productsActions'
 
 class Cart extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      msg: null
+    }
+  }
+
   componentDidMount () {
     this.props.getCart()
     this.props.getProducts()
@@ -39,11 +47,18 @@ class Cart extends Component {
   onIncrement (_id) {
     let { cart, products, updateCart } = this.props
     let inventoryQty = products.find(prod => prod._id === _id).inventory
-    let cartQty = cart.find(prod => prod._id === _id).quantity
+    let productQty = cart.find(prod => prod._id === _id).quantity
+    let productName = cart.find(prod => prod._id === _id).name
 
-    cartQty < inventoryQty
+    productQty < inventoryQty
       ? updateCart(_id, 1, cart)
-      : console.log('no')
+      : this.setState({
+        msg: `Sorry, only ${inventoryQty} ${productName}s are available.`
+      })
+
+    setTimeout(() => {
+      this.setState({msg: ''})
+    }, 2500)
   }
 
   onDecrement (_id, quantity) {
@@ -113,6 +128,9 @@ class Cart extends Component {
         {cartItemsList}
         <Row>
           <Col xs={12}>
+            <h6 className='error'>
+              <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
+            </h6>
             <h6>order total: {this.props.totalAmount}</h6>
             <Checkout
               totalAmount={this.props.totalAmount}
