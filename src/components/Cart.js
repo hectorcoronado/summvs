@@ -7,10 +7,12 @@ import {
 import Checkout from './stripe/Checkout'
 
 import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
+import { getProducts } from '../actions/productsActions'
 
 class Cart extends Component {
   componentDidMount () {
     this.props.getCart()
+    this.props.getProducts()
   }
 
   renderEmpty () {
@@ -35,13 +37,19 @@ class Cart extends Component {
   }
 
   onIncrement (_id) {
-    this.props.updateCart(_id, 1, this.props.cart)
+    let { cart, products, updateCart } = this.props
+    let inventoryQty = products.find(prod => prod._id === _id).inventory
+    let cartQty = cart.find(prod => prod._id === _id).quantity
+
+    cartQty < inventoryQty
+      ? updateCart(_id, 1, cart)
+      : console.log('no')
   }
 
   onDecrement (_id, quantity) {
-    if (quantity > 1) {
-      this.props.updateCart(_id, -1, this.props.cart)
-    }
+    quantity > 1
+      ? this.props.updateCart(_id, -1, this.props.cart)
+      : this.onDelete(_id)
   }
 
   renderCart () {
@@ -51,7 +59,7 @@ class Cart extends Component {
           <Panel key={cartArr._id}>
             <Row>
               <Col xs={12} sm={4}>
-                <h6>{cartArr.name}</h6><span />
+                <h6>{cartArr.name}</h6>
               </Col>
               <Col xs={12} sm={2}>
                 <h6>usd {cartArr.price}</h6>
@@ -133,8 +141,11 @@ class Cart extends Component {
 const mapStateToProps = (state) => {
   return {
     cart: state.cart.cart,
-    totalAmount: state.cart.totalAmount
+    totalAmount: state.cart.totalAmount,
+    products: state.products.products
   }
 }
 
-export default connect(mapStateToProps, { deleteCartItem, getCart, updateCart })(Cart)
+export default connect(mapStateToProps, {
+  deleteCartItem, getCart, getProducts, updateCart
+})(Cart)
