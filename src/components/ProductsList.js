@@ -4,7 +4,6 @@ import { Col, Grid, Row } from 'react-bootstrap'
 
 import { getProducts } from '../actions/productsActions'
 
-import Cart from './Cart'
 import ProductItem from './ProductItem'
 
 class ProductsList extends Component {
@@ -31,9 +30,6 @@ class ProductsList extends Component {
 
     return (
       <Grid>
-        <Row>
-          <Cart />
-        </Row>
         <Row>
           {productsList}
         </Row>
