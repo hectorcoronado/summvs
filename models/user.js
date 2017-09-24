@@ -89,18 +89,16 @@ UserSchema.methods.sendEmail = function (req, callback) {
   })
 }
 
-UserSchema.methods.forgotPasswordEmail = function (req, callback, resetPasswordToken) {
+UserSchema.methods.forgotPasswordEmail = function (req, email, resetPasswordToken) {
   aws.config = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
     region: 'us-west-2'
   })
 
-  var user = this
-
   var ses = new aws.SES({apiVersion: '2010-12-01'})
 
-  var to = [user.email]
+  var to = [email]
 
   var from = 'summvs@summvs.com'
 

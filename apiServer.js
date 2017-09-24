@@ -284,9 +284,6 @@ app.post('/forgot', function (req, res, next) {
 // ========================
 // --->>> STRIPE API <<<---
 app.post('/charge', function (req, res) {
-  console.log('req.body:')
-  console.log(req.body)
-
   stripe.customers.create({
     email: req.body.token.email,
     card: req.body.token.id,
@@ -347,30 +344,25 @@ app.get('/products', function (req, res) {
 })
 
 // --->>> UPDATE PRODUCT <<<---
-app.put('/products/:_id', function (req, res) {
-  var product = req.body
-  var query = req.params._id
-
+app.patch('/products/:_id', function (req, res) {
   var update = {
     '$set': {
-      name: product.name,
-      image: product.image,
-      price: product.price,
-      description: product.description,
-      ingredients: product.ingredients,
-      inventory: product.inventory
+      inventory: req.body.inventory
     }
   }
-
-  // return the updated document:
   var options = { new: true }
-
-  Product.findOneAndUpdate(query, update, options, function (err, products) {
-    if (err) {
-      console.log(`Error UPDATING product: ${err}`)
-    }
-    res.json(products)
-  })
+  var id = req.body._id
+  Product.findOneAndUpdate(
+    {_id: id},
+    update,
+    options,
+    function (err, products) {
+      if (err) {
+        console.log(`Error PUTTING products: ${err}`)
+      } else {
+        res.json(products)
+      }
+    })
 })
 
 // --->>> DELETE PRODUCT <<<---

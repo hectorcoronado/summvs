@@ -4,6 +4,7 @@ import { STRIPE_PUBLIC_KEY } from './stripeConstants'
 import { connect } from 'react-redux'
 
 import { emptyCart } from '../../actions/cartActions'
+import { getProducts, updateProducts } from '../../actions/productsActions'
 
 class Checkout extends Component {
   constructor (props) {
@@ -46,18 +47,24 @@ class Checkout extends Component {
   }
 
   onStripeUpdate (e) {
+    let {
+      emptyCart, productNames, products, productsIDs, quantities, totalAmount, updateProducts } = this.props
+
+    const IDsAndQtys = productsIDs.reduce((obj, val, i) => {
+      obj[val] = quantities[i]
+      return obj
+    }, {})
+
     const fetch = window.fetch
-    const amount = this.props.totalAmount
     const fromUSDToCent = (amount) => amount * 100
-    const handleToken = (token, args) => {
-      console.log('args stuff:')
-      console.log(args)
+    const handleToken = (token, address) => {
       let payload = {
-        token: token,
-        amount: fromUSDToCent(amount),
-        address: args
+        address,
+        IDsAndQtys,
+        token,
+        amount: fromUSDToCent(totalAmount)
       }
-      console.log('handleToken token: ', token)
+
       fetch('api/charge', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -65,7 +72,10 @@ class Checkout extends Component {
       })
       .then(output => {
         if (output.status === 200) {
-          this.props.emptyCart()
+          emptyCart()
+          for (let id in IDsAndQtys) {
+            updateProducts(id, IDsAndQtys[id], products)
+          }
         }
       })
       .catch(err => {
@@ -75,8 +85,8 @@ class Checkout extends Component {
 
     this.stripeHandler.open({
       name: 'summvs',
-      description: this.props.product.join(', '),
-      amount: fromUSDToCent(amount),
+      description: productNames.join(', '),
+      amount: fromUSDToCent(totalAmount),
       token: handleToken
     })
 
@@ -98,4 +108,10 @@ class Checkout extends Component {
   }
 }
 
-export default connect(null, { emptyCart })(Checkout)
+const mapStateToProps = (state) => {
+  return {
+    products: state.products.products
+  }
+}
+
+export default connect(mapStateToProps, { emptyCart, getProducts, updateProducts })(Checkout)

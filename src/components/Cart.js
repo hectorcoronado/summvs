@@ -134,10 +134,13 @@ class Cart extends Component {
             <h6>order total: {this.props.totalAmount}</h6>
             <Checkout
               totalAmount={this.props.totalAmount}
-              product={this.props.cart.map(
+              productNames={this.props.cart.map(
                 (cartArr) => cartArr.name
               )}
-              quantity={this.props.cart.map(
+              productsIDs={this.props.cart.map(
+                (cartArr) => cartArr._id
+              )}
+              quantities={this.props.cart.map(
                 (cartArr) => cartArr.quantity
               )}
             />
