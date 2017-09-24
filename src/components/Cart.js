@@ -58,7 +58,7 @@ class Cart extends Component {
 
     setTimeout(() => {
       this.setState({msg: ''})
-    }, 2500)
+    }, 5000)
   }
 
   onDecrement (_id, quantity) {

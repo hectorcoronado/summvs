@@ -3,17 +3,26 @@ import { Button, Col, Image, Row, Well } from 'react-bootstrap'
 import { connect } from 'react-redux'
 
 import { addToCart, updateCart } from '../actions/cartActions'
+import { getProducts } from '../actions/productsActions'
 
 import IngredientList from './IngredientList'
 
 class ProductItem extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      msg: null
+    }
+  }
+
   handleCart () {
     const {
-      _id, name, image, price, description, ingredients, inventory
+      addToCart, cart, description, _id, image, ingredients, inventory, name, price, products, updateCart
     } = this.props
 
     const product = [
-      ...this.props.cart,
+      ...cart,
       {
         _id,
         name,
@@ -26,23 +35,34 @@ class ProductItem extends Component {
       }
     ]
 
-    // check if cart is empty:
-    if (this.props.cart.length > 0) {
-      // cart is not empty:
-      let cartIndex = this.props.cart.findIndex(
+    // check if cart is empty or not:
+    if (cart.length > 0) {
+      // if cart is not empty:
+      let cartIndex = cart.findIndex(
         (cart) => { return cart._id === _id }
       )
-      // TODO: check against product inventory when adding/updating
       // if cartIndex returns -1, there are no items w/same id:
       if (cartIndex === -1) {
-        this.props.addToCart(product)
+        addToCart(product)
       } else {
-        // otherwise, update quantity:
-        this.props.updateCart(_id, 1, this.props.cart)
+        // otherwise, check inventory & update quantity if available:
+        const inventoryQty = products.find(prod => prod._id === _id).inventory
+        const productQty = cart.find(prod => prod._id === _id).quantity
+        const productName = cart.find(prod => prod._id === _id).name
+
+        productQty < inventoryQty
+          ? updateCart(_id, 1, cart)
+          : this.setState({
+            msg: `Sorry, only ${inventoryQty} ${productName}s are available.`
+          })
+
+        setTimeout(() => {
+          this.setState({msg: ''})
+        }, 5000)
       }
     } else {
-      // cart is empty:
-      this.props.addToCart(product)
+      // and if cart is empty:
+      addToCart(product)
     }
   }
 
@@ -57,12 +77,15 @@ class ProductItem extends Component {
             <h6>{this.props.name}</h6>
             <p>{this.props.description}</p>
             <IngredientList ingredients={this.props.ingredients} />
-            <h6>USD {this.props.price}</h6>
+            <h6>usd {this.props.price}</h6>
+            <h6 className='error'>
+              <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
+            </h6>
             <Button
-              bsStyle='primary'
+              bsStyle='link'
               onClick={this.handleCart.bind(this)}
             >
-              Add To Cart
+              add to cart
             </Button>
           </Col>
         </Row>
@@ -73,8 +96,11 @@ class ProductItem extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    cart: state.cart.cart
+    cart: state.cart.cart,
+    products: state.products.products
   }
 }
 
-export default connect(mapStateToProps, { addToCart, updateCart })(ProductItem)
+export default connect(mapStateToProps, {
+  addToCart, getProducts, updateCart
+})(ProductItem)
