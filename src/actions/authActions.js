@@ -35,9 +35,9 @@ export function signoutUser () {
   return { type: UNAUTH_USER }
 }
 
-export function signupUser ({firstName, lastName, password, email, address, city, state, zip, country}) {
+export function signupUser ({ email, password }) {
   return (dispatch) => {
-    axios.post('/api/signup', {firstName, lastName, password, email, address, city, state, zip, country})
+    axios.post('/api/signup', { email, password })
       .then(response => {
         dispatch({ type: AUTH_USER })
         localStorage.setItem('token', response.data.token)

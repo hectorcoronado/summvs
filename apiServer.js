@@ -117,10 +117,6 @@ app.get('/testauth', requireAuth, function (req, res) {
   res.send({ hi: 'there' })
 })
 
-app.get('/signin', function (req, res, next) {
-  res.send({ hi: 'there' })
-})
-
 app.post('/signin', requireSignin, function (req, res, next) {
   // user has already had email & pw auth'd
   // we just need to give them a token
@@ -128,21 +124,12 @@ app.post('/signin', requireSignin, function (req, res, next) {
 })
 
 app.post('/signup', function (req, res, next) {
-  var firstName = req.body.firstName
-  var lastName = req.body.lastName
   var email = req.body.email
   var password = req.body.password
-  var addresses = {
-    street: req.body.address,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
-    country: req.body.country
-  }
 
-  if (!firstName || !lastName || !addresses || !password || !email) {
+  if (!email || !password) {
     return res.status(412).send({
-      error: 'Please provide all required information.'
+      error: 'please provide all required information.'
     })
   }
 
@@ -153,15 +140,12 @@ app.post('/signup', function (req, res, next) {
     // if user w/email does exist, return 'unprocessable entity' err:
     if (existingUser) {
       return res.status(412).send({
-        error: 'This email is already in use!'
+        error: 'this email is already in use!'
       })
     }
 
     // if NO user w/email exists, create user:
     var user = new User({
-      firstName: firstName,
-      lastName: lastName,
-      addresses: addresses,
       password: password,
       email: email,
       validationString: randomstring.generate({

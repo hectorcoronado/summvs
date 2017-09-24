@@ -3,19 +3,7 @@ var bcrypt = require('bcrypt-nodejs')
 var mongoose = require('mongoose')
 require('dotenv').config()
 
-// TODO: add orderHistory.
-
 var UserSchema = mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  addresses: [{
-    street: String,
-    city: String,
-    state: String,
-    zip: String,
-    country: String
-    // default: String
-  }],
   email: {
     type: String,
     unique: true,
