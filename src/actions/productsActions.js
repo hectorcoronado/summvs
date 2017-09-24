@@ -5,7 +5,7 @@ import {
   POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
   GET_PRODUCTS_REJECTED,
-  UPDATE_PRODUCT,
+  UPDATE_PRODUCTS,
   DELETE_PRODUCT,
   DELETE_PRODUCT_REJECTED,
   RESET_BUTTON
@@ -62,7 +62,7 @@ export function updateProducts (_id, quantity, products) {
     return axios.patch(`/api/products/${_id}`, updatedProduct)
       .then((response) => {
         dispatch({
-          type: UPDATE_PRODUCT,
+          type: UPDATE_PRODUCTS,
           payload: response
         })
       })
