@@ -1,3 +1,6 @@
+require('dotenv').config()
+require('./services/passport')
+
 var async = require('async')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
@@ -12,9 +15,10 @@ var randomstring = require('randomstring')
 var session = require('express-session')
 var https = require('https')
 var fs = require('fs')
-require('dotenv').config()
 
-require('./services/passport')
+var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
+var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
+
 var requireAuth = passport.authenticate('jwt', { session: false })
 var requireSignin = passport.authenticate('local', { session: false })
 
@@ -277,6 +281,43 @@ app.post('/forgot', function (req, res, next) {
 // --->>> END AUTH API <<<---
 // ==========================
 
+// ========================
+// --->>> STRIPE API <<<---
+app.post('/charge', function (req, res) {
+  stripe.customers.create({
+    email: req.body.token.email,
+    card: req.body.token.id,
+    shipping: {
+      address: {
+        country: req.body.address.shipping_address_country,
+        postal_code: req.body.address.shipping_address_zip,
+        line1: req.body.address.shipping_address_line1,
+        city: req.body.address.shipping_address_city,
+        state: req.body.address.shipping_address_state
+      },
+      name: req.body.address.shipping_name
+    }
+  })
+    .then(function (customer) {
+      stripe.charges.create({
+        amount: req.body.amount,
+        description: 'sample charge',
+        currency: 'usd',
+        customer: customer.id
+      })
+    })
+    .then(function (charge) {
+      res.send(charge)
+    })
+    .catch(function (err) {
+      console.log('Error:')
+      console.log(err)
+      res.status(500).send({ error: 'Purchase failed' })
+    })
+})
+// --->>> END STRIPE API <<<---
+// ============================
+
 // ==========================
 // --->>> PRODUCTS API <<<---
 
@@ -303,30 +344,25 @@ app.get('/products', function (req, res) {
 })
 
 // --->>> UPDATE PRODUCT <<<---
-app.put('/products/:_id', function (req, res) {
-  var product = req.body
-  var query = req.params._id
-
+app.patch('/products/:_id', function (req, res) {
   var update = {
     '$set': {
-      name: product.name,
-      image: product.image,
-      price: product.price,
-      description: product.description,
-      ingredients: product.ingredients,
-      inventory: product.inventory
+      inventory: req.body.inventory
     }
   }
-
-  // return the updated document:
   var options = { new: true }
-
-  Product.findOneAndUpdate(query, update, options, function (err, products) {
-    if (err) {
-      console.log(`Error UPDATING product: ${err}`)
-    }
-    res.json(products)
-  })
+  var id = req.body._id
+  Product.findOneAndUpdate(
+    {_id: id},
+    update,
+    options,
+    function (err, products) {
+      if (err) {
+        console.log(`Error PUTTING products: ${err}`)
+      } else {
+        res.json(products)
+      }
+    })
 })
 
 // --->>> DELETE PRODUCT <<<---

@@ -6,6 +6,7 @@ export const UNAUTH_USER = 'UNAUTH_USER'
 
 // CART TYPES:
 export const ADD_TO_CART = 'ADD_TO_CART'
+export const EMPTY_CART = 'EMPTY_CART'
 export const GET_CART = 'GET_CART'
 export const GET_CART_REJECTED = 'GET_CART_REJECTED'
 export const UPDATE_CART = 'UPDATE_CART'

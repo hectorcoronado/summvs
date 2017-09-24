@@ -2,7 +2,7 @@ import {
   POST_PRODUCT,
   POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
-  UPDATE_PRODUCT,
+  UPDATE_PRODUCTS,
   DELETE_PRODUCT,
   RESET_BUTTON
 } from '../actions/types'
@@ -31,13 +31,13 @@ export default function productsReducers (state = INITIAL_STATE, action) {
     case GET_PRODUCTS:
       return { ...state, products: [...action.payload] }
 
-    case UPDATE_PRODUCT:
-      const currentProductToUpdate = [...state.products]
+    case UPDATE_PRODUCTS:
+      const currentProductToUpdate = [...state.products, ...action.payload]
       const indexToUpdate = currentProductToUpdate.findIndex(
         (product) => { return product._id === action.payload._id })
       const updatedProduct = {
         ...currentProductToUpdate[indexToUpdate],
-        name: action.payload.name
+        inventory: action.payload.inventory
       }
       return {
         products: [

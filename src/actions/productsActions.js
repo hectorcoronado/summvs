@@ -6,7 +6,6 @@ import {
   GET_PRODUCTS,
   GET_PRODUCTS_REJECTED,
   UPDATE_PRODUCT,
-  UPDATE_PRODUCT_REJECTED,
   DELETE_PRODUCT,
   DELETE_PRODUCT_REJECTED,
   RESET_BUTTON
@@ -48,10 +47,29 @@ export function getProducts () {
   }
 }
 
-export function updateProduct (product) {
-  return {
-    type: UPDATE_PRODUCT,
-    payload: product
+export function updateProducts (_id, quantity, products) {
+  const currentProductToUpdate = products
+
+  const indexToUpdate = currentProductToUpdate.findIndex(
+    (product) => { return product._id === _id })
+
+  const updatedProduct = {
+    ...currentProductToUpdate[indexToUpdate],
+    inventory: currentProductToUpdate[indexToUpdate].inventory - quantity
+  }
+
+  return (dispatch) => {
+    return axios.patch(`/api/products/${_id}`, updatedProduct)
+      .then((response) => {
+        dispatch({
+          type: UPDATE_PRODUCT,
+          payload: response
+        })
+      })
+      .catch((err) => {
+        console.log('Errors:')
+        console.log(err)
+      })
   }
 }
 
