@@ -53,7 +53,7 @@ class ProductItem extends Component {
         productQty < inventoryQty
           ? updateCart(_id, 1, cart)
           : this.setState({
-            msg: `Sorry, only ${inventoryQty} ${productName}s are available.`
+            msg: `sorry, only ${inventoryQty} ${productName}s are available.`
           })
 
         setTimeout(() => {

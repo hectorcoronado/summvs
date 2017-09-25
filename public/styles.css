@@ -17,3 +17,7 @@ body {
 .success {
   color: rgb(7, 229, 148)
 }
+
+.align-left {
+  padding: 6px 0px
+}

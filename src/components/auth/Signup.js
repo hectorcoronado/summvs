@@ -29,8 +29,8 @@ class Signup extends Component {
 
     return (
       <div className='container'>
-        <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-          <div className='col-sm-4'>
+        <div className='col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4'>
+          <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
             <fieldset className='form-group'>
               <label>email:</label>
               <input className='form-control' type='email' {...email} />
@@ -43,13 +43,13 @@ class Signup extends Component {
               <label>confirm password:</label>
               <input className='form-control' type='password' {...passwordConfirm} />
             </fieldset>
-            <button action='submit' className='btn btn-link'>sign up</button>
+            <button action='submit' className='btn btn-link align-left'>sign up</button>
             {email.touched && email.error && <div className='error'>{email.error}</div>}
             {password.touched && password.error && <div className='error'>{password.error}</div>}
             {passwordConfirm.touched && passwordConfirm.error && <div className='error'>{passwordConfirm.error}</div>}
             {this.renderAlert()}
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     )
   }
