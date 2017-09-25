@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Badge, Nav, Navbar, NavItem } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
 
 class Header extends Component {
   renderLinks () {
@@ -41,13 +42,19 @@ class Header extends Component {
           <Navbar.Collapse>
             <Nav pullRight>
               {this.renderLinks()}
-              <NavItem eventKey={2} href='/about'>about</NavItem>
-              <NavItem eventKey={3} href='/cart'>
-              cart
-              {
-                (this.props.cartItemsNumber > 0) ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>) : ('')
-              }
-              </NavItem>
+              <LinkContainer to='/about'>
+                <NavItem eventKey={2}>about</NavItem>
+              </LinkContainer>
+              <LinkContainer to='/cart'>
+                <NavItem eventKey={3}>
+                  cart
+                  {
+                    (this.props.cartItemsNumber > 0)
+                    ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>)
+                    : ('')
+                  }
+                </NavItem>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

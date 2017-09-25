@@ -33,17 +33,17 @@ class Signin extends Component {
         <Panel>
           <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
             <fieldset className='form-group'>
-              <label>Email:</label>
+              <label>email:</label>
               <input {...email} className='form-control' />
             </fieldset>
             <fieldset className='form-group'>
-              <label>Password:</label>
+              <label>password:</label>
               <input {...password} type='password' className='form-control' />
             </fieldset>
             {this.renderAlert()}
-            <button action='submit' className='btn btn-primary'>Sign In</button>
+            <button action='submit' className='btn btn-link'>sign in</button>
           </form>
-          <Link to='/forgot'>Forgot Password...?</Link>
+          <Link to='/forgot'>forgot password...?</Link>
         </Panel>
       </Well>
     )

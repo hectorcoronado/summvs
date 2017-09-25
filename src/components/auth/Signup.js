@@ -24,8 +24,7 @@ class Signup extends Component {
 
   render () {
     const {
-      handleSubmit,
-      fields: { email, password, passwordConfirm }
+      handleSubmit, fields: { email, password, passwordConfirm }
     } = this.props
 
     return (

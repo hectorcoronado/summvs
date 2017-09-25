@@ -6,7 +6,7 @@ class Footer extends Component {
     return (
       <Navbar fixedBottom>
         <Nav>
-          <NavItem>Made by Hector Coronado</NavItem>
+          <NavItem>made by Hector Coronado</NavItem>
         </Nav>
       </Navbar>
     )

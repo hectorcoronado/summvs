@@ -10,7 +10,7 @@ class Account extends Component {
 
   render () {
     return (
-      <h6>This is the account page...</h6>
+      <h6>this is the account page...</h6>
     )
   }
 }

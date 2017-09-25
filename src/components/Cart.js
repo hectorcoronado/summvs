@@ -26,7 +26,7 @@ class Cart extends Component {
   renderEmpty () {
     return (
       <div>
-        Your cart is empty.
+        your cart is empty.
       </div>
     )
   }
