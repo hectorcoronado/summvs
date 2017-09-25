@@ -34,8 +34,10 @@ class Header extends Component {
       <div>
         <Navbar fixedTop>
           <Navbar.Header>
-            <Navbar.Brand className='header-text'>
-              <a href='/'>s u m m v s</a>
+            <Navbar.Brand>
+              <LinkContainer to='/'>
+                <a>s u m m v s</a>
+              </LinkContainer>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
