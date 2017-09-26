@@ -105,7 +105,6 @@ app.put('/cart', function (req, res) {
 // --->>> AUTH API <<<---
 function tokenForUser (user) {
   var timestamp = new Date().getTime()
-
   // when we create a user, they'll always have same id, we can use it to encode. sub = subject (who this JWT belongs to), iat = issued at time.
   return jwt.encode({
     sub: user.id,
@@ -118,9 +117,10 @@ app.get('/testauth', requireAuth, function (req, res) {
 })
 
 app.post('/signin', requireSignin, function (req, res, next) {
-  // user has already had email & pw auth'd
-  // we just need to give them a token
-  res.send({ token: tokenForUser(req.user) })
+  res.send({
+    token: tokenForUser(req.user),
+    email: req.body.email
+  })
 })
 
 app.post('/signup', function (req, res, next) {
@@ -162,7 +162,10 @@ app.post('/signup', function (req, res, next) {
         if (err) { console.log(err) }
       })
       // res indicating user creation:
-      res.json({ token: tokenForUser(user) })
+      res.json({
+        token: tokenForUser(user),
+        email: email
+      })
     })
   })
 })
@@ -209,6 +212,7 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
             // res indicating user creation:
             res.status(200).json({
               token: tokenForUser(user),
+              email: user.email,
               success: 'your password has been reset, you will be redirected to your account page shortly.'
             })
           })

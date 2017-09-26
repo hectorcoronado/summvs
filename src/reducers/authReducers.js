@@ -18,10 +18,19 @@ export default function authReducers (state = INITIAL_STATE, action) {
       return { ...state, success: action.payload }
 
     case AUTH_USER:
-      return { ...state, error: '', authenticated: true }
+      return {
+        ...state,
+        authenticated: true,
+        email: action.payload,
+        error: null
+      }
 
     case UNAUTH_USER:
-      return { ...state, authenticated: false }
+      return {
+        ...state,
+        authenticated: false,
+        email: null
+      }
 
     default:
       return state
