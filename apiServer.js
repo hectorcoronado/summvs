@@ -41,6 +41,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 // MODELS //
+var Order = require('./models/order')
 var Product = require('./models/product')
 var User = require('./models/user')
 
@@ -119,7 +120,8 @@ app.get('/testauth', requireAuth, function (req, res) {
 app.post('/signin', requireSignin, function (req, res, next) {
   res.send({
     token: tokenForUser(req.user),
-    email: req.body.email
+    email: req.body.email,
+    _id: req.user._id
   })
 })
 
@@ -304,6 +306,43 @@ app.post('/charge', function (req, res) {
     })
 })
 // --->>> END STRIPE API <<<---
+// ============================
+
+// ========================
+// --->>> ORDERS API <<<---
+app.post('/orders', function (req, res) {
+  console.log(req.body.cart)
+  var items = req.body.cart.map(function (item) {
+    return {
+      quantity: item.quantity,
+      price: item.price,
+      product: item._id
+    }
+  })
+  var order = {
+    email: req.body.token.email,
+    items: items,
+    user: req.body._id,
+    shipping: {
+      name: req.body.token.card.name,
+      address: {
+        street: req.body.token.card.address_line1,
+        city: req.body.token.card.address_city,
+        country: req.body.token.card.address_country,
+        postalCode: req.body.token.card.address_zip
+      }
+    }
+  }
+
+  Order.create(order, function (err, orders) {
+    if (err) {
+      console.log('error posting order:')
+      console.log(err)
+    }
+    res.json(orders)
+  })
+})
+// --->>> END ORDERS API <<<---
 // ============================
 
 // ==========================

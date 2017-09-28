@@ -4,7 +4,7 @@ class PurchaseComplete extends Component {
   render () {
     return (
       <div>
-        Thanks for your purchase.
+        thanks for your purchase.
       </div>
     )
   }

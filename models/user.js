@@ -9,15 +9,14 @@ var UserSchema = mongoose.Schema({
     unique: true,
     lowercase: true
   },
-  verified: Boolean,
   password: String,
   validationString: String,
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  verified: Boolean,
+  resetPasswordExpires: Date,
+  resetPasswordToken: String
 })
 
 // HELPER METHODS:
-
 // On save hook, encrypt password:
 UserSchema.pre('save', function (next) {
   // context here is user model ('user' is an instance of user model):

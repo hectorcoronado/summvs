@@ -53,7 +53,7 @@ class ProductItem extends Component {
         productQty < inventoryQty
           ? updateCart(_id, 1, cart)
           : this.setState({
-            msg: `sorry, only ${inventoryQty} ${productName}s are available.`
+            msg: `sorry, there are no more ${productName}s available.`
           })
 
         setTimeout(() => {
@@ -82,7 +82,7 @@ class ProductItem extends Component {
               <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
             </h6>
             <Button
-              bsStyle='link'
+              bsStyle='link align-left'
               onClick={this.handleCart.bind(this)}
             >
               add to cart

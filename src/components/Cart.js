@@ -53,7 +53,7 @@ class Cart extends Component {
     productQty < inventoryQty
       ? updateCart(_id, 1, cart)
       : this.setState({
-        msg: `Sorry, only ${inventoryQty} ${productName}s are available.`
+        msg: `sorry, there are no more ${productName}s available.`
       })
 
     setTimeout(() => {
@@ -82,7 +82,7 @@ class Cart extends Component {
               <Col xs={6} sm={2}>
                 <h6>qty:
                   <Label
-                    bsStyle='success'
+                    bsStyle='default'
                     style={{marginLeft: '4px'}}
                   >
                     {cartArr.quantity}

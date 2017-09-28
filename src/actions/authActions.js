@@ -19,7 +19,7 @@ export function signinUser ({ email, password }) {
         // - update state:
         dispatch({
           type: AUTH_USER,
-          payload: response.data.email
+          payload: response.data
         })
         // - save jwt:
         localStorage.setItem('token', response.data.token)
