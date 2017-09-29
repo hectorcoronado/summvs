@@ -23,6 +23,12 @@ class Cart extends Component {
     this.props.getProducts()
   }
 
+  componentWillUnmount () {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
+  }
+
   renderEmpty () {
     return (
       <div>
@@ -56,9 +62,11 @@ class Cart extends Component {
         msg: `sorry, there are no more ${productName}s available.`
       })
 
-    setTimeout(() => {
-      this.setState({msg: ''})
-    }, 5000)
+    if (this.state.msg !== null) {
+      this.timeout = setTimeout(() => {
+        this.setState({msg: ''})
+      }, 5000)
+    }
   }
 
   onDecrement (_id, quantity) {

@@ -16,6 +16,12 @@ class ProductItem extends Component {
     }
   }
 
+  componentWillUnmount () {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
+  }
+
   handleCart () {
     const {
       addToCart, cart, description, _id, image, ingredients, inventory, name, price, products, updateCart
@@ -56,9 +62,11 @@ class ProductItem extends Component {
             msg: `sorry, there are no more ${productName}s available.`
           })
 
-        setTimeout(() => {
-          this.setState({msg: ''})
-        }, 5000)
+        if (this.state.msg !== null) {
+          this.timeout = setTimeout(() => {
+            this.setState({msg: ''})
+          }, 5000)
+        }
       }
     } else {
       // and if cart is empty:
