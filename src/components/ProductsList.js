@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Col, Grid, Row } from 'react-bootstrap'
+import uniqid from 'uniqid'
 
 import { getProducts } from '../actions/productsActions'
 
@@ -15,7 +16,7 @@ class ProductsList extends Component {
     const productsList = this.props.products.map(
       (productsArr) => {
         return (
-          <Col xs={12} sm={6} md={4} key={productsArr._id}>
+          <Col xs={12} sm={6} md={4} key={uniqid()}>
             <ProductItem
               _id={productsArr._id}
               name={productsArr.name}

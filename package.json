@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/hectorcoronado/summvs#readme",
   "devDependencies": {
+    "eslint-plugin-node": "^5.2.0",
     "nodemon": "^1.11.0",
     "redux-logger": "^3.0.6",
     "standard": "^10.0.2",
