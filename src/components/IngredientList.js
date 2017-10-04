@@ -6,16 +6,20 @@ const IngredientList = (props) => {
   const listItems = (ingredients) => {
     if (ingredients) {
       return ingredients.map((ingredient) =>
-        <li key={uniqid()}>{ingredient}</li>
+        <li style={liStyle} key={uniqid()}>{ingredient}</li>
       )
     }
   }
   return (
     <div>
       <h6>ingredients:</h6>
-      <ul>{listItems(ingredients)}</ul>
+      <ul><h6>{listItems(ingredients)}</h6></ul>
     </div>
   )
+}
+
+const liStyle = {
+  marginTop: '.1em'
 }
 
 export default IngredientList

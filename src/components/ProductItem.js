@@ -78,19 +78,20 @@ class ProductItem extends Component {
     return (
       <Well>
         <Row>
-          <Col xs={12} sm={4}>
+          <Col xs={4}>
             <Image src={this.props.image} responsive />
           </Col>
           <Col xs={6} sm={8}>
             <h6>{this.props.name}</h6>
-            <p>{this.props.description}</p>
+            <h6>{this.props.description}</h6>
             <IngredientList ingredients={this.props.ingredients} />
             <h6>usd {this.props.price}</h6>
             <h6 className='error'>
               <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
             </h6>
             <Button
-              bsStyle='link align-left'
+              bsStyle='link'
+              className='align-left'
               onClick={this.handleCart.bind(this)}
             >
               add to cart

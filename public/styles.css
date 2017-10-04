@@ -9,6 +9,12 @@ body {
   margin-top: 75px;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: .3em
+}
+
 .error {
   color: rgb(230, 66, 77)
 

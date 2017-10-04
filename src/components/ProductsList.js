@@ -16,7 +16,7 @@ class ProductsList extends Component {
     const productsList = this.props.products.map(
       (productsArr) => {
         return (
-          <Col xs={12} sm={6} md={4} key={uniqid()}>
+          <Col xs={10} xsOffset={1} sm={6} smOffset={3} key={uniqid()}>
             <ProductItem
               _id={productsArr._id}
               name={productsArr.name}
