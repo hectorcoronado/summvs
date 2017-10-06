@@ -10,9 +10,11 @@ class Signout extends Component {
   }
   render () {
     return (
-      <h6>
-        return to <Link className='nav-link' to='/'>s u m m v s</Link>, get more soap.
-      </h6>
+      <div className='row'>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          return to <Link className='nav-link' to='/'>s u m m v s</Link>, get more soap.
+        </h6>
+      </div>
     )
   }
 }
