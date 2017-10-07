@@ -5,6 +5,7 @@ import uniqid from 'uniqid'
 
 import { getProducts } from '../actions/productsActions'
 
+import HeroImage from './HeroImage'
 import ProductItem from './ProductItem'
 
 class ProductsList extends Component {
@@ -30,11 +31,14 @@ class ProductsList extends Component {
       })
 
     return (
-      <Grid>
-        <Row>
-          {productsList}
-        </Row>
-      </Grid>
+      <div>
+        <HeroImage />
+        <Grid>
+          <Row>
+            {productsList}
+          </Row>
+        </Grid>
+      </div>
     )
   }
 }

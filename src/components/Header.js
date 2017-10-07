@@ -31,36 +31,34 @@ class Header extends Component {
 
   render () {
     return (
-      <div>
-        <Navbar fixedTop>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <LinkContainer to='/'>
-                <a>s u m m v s</a>
-              </LinkContainer>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {this.renderLinks()}
-              <LinkContainer to='/about'>
-                <NavItem eventKey={2}>about</NavItem>
-              </LinkContainer>
-              <LinkContainer to='/cart'>
-                <NavItem eventKey={3}>
-                  cart
-                  {
-                    (this.props.cartItemsNumber > 0)
-                    ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>)
-                    : ('')
-                  }
-                </NavItem>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-      </div>
+      <Navbar fixedTop>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <LinkContainer to='/'>
+              <a>s u m m v s</a>
+            </LinkContainer>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav pullRight>
+            {this.renderLinks()}
+            <LinkContainer to='/about'>
+              <NavItem eventKey={2}>about</NavItem>
+            </LinkContainer>
+            <LinkContainer to='/cart'>
+              <NavItem eventKey={3}>
+                cart
+                {
+                  (this.props.cartItemsNumber > 0)
+                  ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>)
+                  : ('')
+                }
+              </NavItem>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 }
