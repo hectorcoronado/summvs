@@ -1,40 +1,40 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Button, ButtonGroup, Col, Label, Modal, Panel, Row
+  Button, ButtonGroup, Col, Label, Panel, Row
 } from 'react-bootstrap'
 
+import Checkout from './stripe/Checkout'
+
 import { deleteCartItem, getCart, updateCart } from '../actions/cartActions'
+import { getProducts } from '../actions/productsActions'
 
 class Cart extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      showModal: false
+      msg: null
     }
   }
 
   componentDidMount () {
     this.props.getCart()
+    this.props.getProducts()
   }
 
-  open () {
-    this.setState({
-      showModal: true
-    })
-  }
-
-  close () {
-    this.setState({
-      showModal: false
-    })
+  componentWillUnmount () {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
   }
 
   renderEmpty () {
     return (
-      <div>
-        Your cart is empty.
+      <div className='row'>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          your cart is empty.
+        </h6>
       </div>
     )
   }
@@ -53,13 +53,28 @@ class Cart extends Component {
   }
 
   onIncrement (_id) {
-    this.props.updateCart(_id, 1, this.props.cart)
+    let { cart, products, updateCart } = this.props
+    let inventoryQty = products.find(prod => prod._id === _id).inventory
+    let productQty = cart.find(prod => prod._id === _id).quantity
+    let productName = cart.find(prod => prod._id === _id).name
+
+    productQty < inventoryQty
+      ? updateCart(_id, 1, cart)
+      : this.setState({
+        msg: `sorry, there are no more ${productName}s available.`
+      })
+
+    if (this.state.msg !== null) {
+      this.timeout = setTimeout(() => {
+        this.setState({msg: ''})
+      }, 5000)
+    }
   }
 
   onDecrement (_id, quantity) {
-    if (quantity > 1) {
-      this.props.updateCart(_id, -1, this.props.cart)
-    }
+    quantity > 1
+      ? this.props.updateCart(_id, -1, this.props.cart)
+      : this.onDelete(_id)
   }
 
   renderCart () {
@@ -68,16 +83,16 @@ class Cart extends Component {
         return (
           <Panel key={cartArr._id}>
             <Row>
-              <Col xs={12} sm={4}>
-                <h6>{cartArr.name}</h6><span />
-              </Col>
-              <Col xs={12} sm={2}>
-                <h6>USD {cartArr.price}</h6>
+              <Col xs={6} sm={4}>
+                <h6>{cartArr.name}</h6>
               </Col>
               <Col xs={6} sm={2}>
-                <h6>Qty:
+                <h6>usd {cartArr.price}</h6>
+              </Col>
+              <Col xs={6} sm={2}>
+                <h6>qty:
                   <Label
-                    bsStyle='success'
+                    bsStyle='default'
                     style={{marginLeft: '4px'}}
                   >
                     {cartArr.quantity}
@@ -87,27 +102,33 @@ class Cart extends Component {
               <Col xs={6} sm={2}>
                 <ButtonGroup style={{minWidth: '300px'}}>
                   <Button
+                    style={buttonStyle}
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onDecrement.bind(this, cartArr._id, cartArr.quantity)}
+                    title='-1'
                   >
                     -
                   </Button>
                   <Button
+                    style={buttonStyle}
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onIncrement.bind(this, cartArr._id)}
+                    title='+1'
                   >
                     +
                   </Button>
+                  <Button
+                    style={buttonStyle}
+                    bsStyle='default'
+                    bsSize='xsmall'
+                    onClick={this.onDelete.bind(this, cartArr._id)}
+                    title='remove all'
+                  >
+                    x
+                  </Button>
                 </ButtonGroup>
-                <Button
-                  bsStyle='link'
-                  bsSize='xsmall'
-                  onClick={this.onDelete.bind(this, cartArr._id)}
-                >
-                  Remove
-                </Button>
               </Col>
             </Row>
           </Panel>
@@ -116,36 +137,33 @@ class Cart extends Component {
     )
 
     return (
-      <Panel header='Cart'>
-        {cartItemsList}
-        <Row>
-          <Col xs={12}>
-            <h6>Order Total: {this.props.totalAmount}</h6>
-            <Button
-              bsStyle='success'
-              bsSize='xsmall'
-              onClick={this.open.bind(this)}
-            >
-              Checkout
-            </Button>
-          </Col>
-        </Row>
-        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Thank You!</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h6>Your order has been saved, sorta.</h6>
-            <p>You will receive an email confirmation when our developer gets 'round to implementing that part of this project...</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Col xs={6}>
-              <h6>Total $: {this.props.totalAmount}</h6>
-            </Col>
-            <Button onClick={this.close.bind(this)}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      </Panel>
+      <div className='container'>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3}>
+          <Panel header='cart'>
+            {cartItemsList}
+            <Row>
+              <Col xs={12}>
+                <h6 className='error'>
+                  <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
+                </h6>
+                <h6>order total: {this.props.totalAmount}</h6>
+                <Checkout
+                  totalAmount={this.props.totalAmount}
+                  productNames={this.props.cart.map(
+                    (cartArr) => cartArr.name
+                  )}
+                  productsIDs={this.props.cart.map(
+                    (cartArr) => cartArr._id
+                  )}
+                  quantities={this.props.cart.map(
+                    (cartArr) => cartArr.quantity
+                  )}
+                />
+              </Col>
+            </Row>
+          </Panel>
+        </Col>
+      </div>
     )
   }
 
@@ -158,11 +176,19 @@ class Cart extends Component {
   }
 }
 
+const buttonStyle = {
+  marginTop: '6.5px',
+  marginBottom: '6.5px'
+}
+
 const mapStateToProps = (state) => {
   return {
     cart: state.cart.cart,
-    totalAmount: state.cart.totalAmount
+    totalAmount: state.cart.totalAmount,
+    products: state.products.products
   }
 }
 
-export default connect(mapStateToProps, { deleteCartItem, getCart, updateCart })(Cart)
+export default connect(mapStateToProps, {
+  deleteCartItem, getCart, getProducts, updateCart
+})(Cart)

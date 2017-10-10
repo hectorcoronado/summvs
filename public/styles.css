@@ -1,14 +1,29 @@
 /*
-font-family: 'Rubik Mono One', sans-serif;
-font-family: 'Montserrat', sans-serif;
+font-family: 'Cutive Mono', monospace;
 */
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  background-color: rgb(244, 244, 242);
+  font-family: 'Cutive Mono', monospace;
   margin-bottom: 75px;
   margin-top: 75px;
 }
 
-.header-text {
-  font-family: 'Rubik Mono One', sans-serif;
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: .3em
+}
+
+.error {
+  color: rgb(230, 66, 77)
+
+}
+
+.success {
+  color: rgb(7, 229, 148)
+}
+
+.align-left {
+  padding: 6px 0px
 }

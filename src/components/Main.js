@@ -4,16 +4,17 @@ import { connect } from 'react-redux'
 import { getCart } from '../actions/cartActions'
 
 import Footer from './Footer'
-import Menu from './Menu'
+import Header from './Header'
 
 class Main extends Component {
   componentDidMount () {
     this.props.getCart()
   }
+
   render () {
     return (
       <div>
-        <Menu cartItemsNumber={this.props.totalQty} />
+        <Header cartItemsNumber={this.props.totalQty} />
         {this.props.children}
         <Footer />
       </div>
@@ -23,6 +24,7 @@ class Main extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    authenticated: state.auth.authenticated,
     totalQty: state.cart.totalQty
   }
 }

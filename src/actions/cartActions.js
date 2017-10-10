@@ -1,8 +1,10 @@
 import axios from 'axios'
+import { browserHistory } from 'react-router'
 
 import {
   ADD_TO_CART,
   ADD_TO_CART_REJECTED,
+  EMPTY_CART,
   GET_CART,
   GET_CART_REJECTED,
   UPDATE_CART,
@@ -77,6 +79,22 @@ export function updateCart (_id, unit, cart) {
           type: UPDATE_CART_REJECTED,
           msg: `Error UPDATING cart: ${err}`
         })
+      })
+  }
+}
+
+export function emptyCart () {
+  return (dispatch) => {
+    axios.post('/api/cart')
+      .then((response) => {
+        dispatch({
+          type: EMPTY_CART,
+          payload: response.data
+        })
+        browserHistory.push('/complete')
+      })
+      .catch((err) => {
+        console.log('error emptying cart: ', err)
       })
   }
 }

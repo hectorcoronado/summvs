@@ -2,7 +2,7 @@ import {
   POST_PRODUCT,
   POST_PRODUCT_REJECTED,
   GET_PRODUCTS,
-  UPDATE_PRODUCT,
+  UPDATE_PRODUCTS,
   DELETE_PRODUCT,
   RESET_BUTTON
 } from '../actions/types'
@@ -20,7 +20,6 @@ export default function productsReducers (state = INITIAL_STATE, action) {
         msg: 'Saved! Click to continue.',
         style: 'success'
       }
-      break
 
     case POST_PRODUCT_REJECTED:
       return {
@@ -28,19 +27,17 @@ export default function productsReducers (state = INITIAL_STATE, action) {
         msg: 'Please try again',
         style: 'danger'
       }
-      break
 
     case GET_PRODUCTS:
       return { ...state, products: [...action.payload] }
-      break
 
-    case UPDATE_PRODUCT:
-      const currentProductToUpdate = [...state.products]
+    case UPDATE_PRODUCTS:
+      const currentProductToUpdate = [...state.products, ...action.payload]
       const indexToUpdate = currentProductToUpdate.findIndex(
         (product) => { return product._id === action.payload._id })
       const updatedProduct = {
         ...currentProductToUpdate[indexToUpdate],
-        name: action.payload.name
+        inventory: action.payload.inventory
       }
       return {
         products: [
@@ -49,7 +46,6 @@ export default function productsReducers (state = INITIAL_STATE, action) {
           ...currentProductToUpdate.slice(indexToUpdate + 1)
         ]
       }
-      break
 
     case DELETE_PRODUCT:
       const currentProductToDelete = [...state.products]
@@ -60,11 +56,9 @@ export default function productsReducers (state = INITIAL_STATE, action) {
           ...currentProductToDelete.slice(0, indexToDelete), ...currentProductToDelete.slice(indexToDelete + 1)
         ]
       }
-      break
 
     case RESET_BUTTON:
       return { ...state, msg: null, style: 'primary' }
-      break
 
     default:
       return state
