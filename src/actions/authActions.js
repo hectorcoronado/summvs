@@ -17,7 +17,10 @@ export function signinUser ({ email, password }) {
       .then(response => {
         // req ok?
         // - update state:
-        dispatch({ type: AUTH_USER })
+        dispatch({
+          type: AUTH_USER,
+          payload: response.data
+        })
         // - save jwt:
         localStorage.setItem('token', response.data.token)
         // - redirect:
@@ -25,7 +28,7 @@ export function signinUser ({ email, password }) {
       })
       .catch(() => {
         // req bad? show error:
-        dispatch(authError('Incorrect email or password'))
+        dispatch(authError('incorrect email or password.'))
       })
   }
 }
@@ -35,11 +38,14 @@ export function signoutUser () {
   return { type: UNAUTH_USER }
 }
 
-export function signupUser ({firstName, lastName, password, email, address, city, state, zip, country}) {
+export function signupUser ({ email, password }) {
   return (dispatch) => {
-    axios.post('/api/signup', {firstName, lastName, password, email, address, city, state, zip, country})
+    axios.post('/api/signup', { email, password })
       .then(response => {
-        dispatch({ type: AUTH_USER })
+        dispatch({
+          type: AUTH_USER,
+          payload: response.data.email
+        })
         localStorage.setItem('token', response.data.token)
         browserHistory.push('/cart')
       })
@@ -76,7 +82,10 @@ export function resetPassword ({ resetPassword, resetPasswordToken }) {
     axios.patch(`/api/reset/${resetPasswordToken}`, resetPassword)
       .then(response => {
         dispatch(authSuccess(response.data.success))
-        dispatch({ type: AUTH_USER })
+        dispatch({
+          type: AUTH_USER,
+          payload: response.data.email
+        })
         localStorage.setItem('token', response.data.token)
         window.setTimeout(() => {
           browserHistory.push('/account')

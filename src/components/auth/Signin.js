@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Panel, Well } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Link } from 'react-router'
 
@@ -29,23 +28,23 @@ class Signin extends Component {
     const { handleSubmit, fields: { email, password } } = this.props
 
     return (
-      <Well>
-        <Panel>
+      <div className='container'>
+        <div className='col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4'>
           <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
             <fieldset className='form-group'>
-              <label>Email:</label>
+              <label>email:</label>
               <input {...email} className='form-control' />
             </fieldset>
             <fieldset className='form-group'>
-              <label>Password:</label>
+              <label>password:</label>
               <input {...password} type='password' className='form-control' />
             </fieldset>
             {this.renderAlert()}
-            <button action='submit' className='btn btn-primary'>Sign In</button>
+            <button action='submit' className='btn btn-link align-left'>sign in</button>
           </form>
-          <Link to='/forgot'>Forgot Password...?</Link>
-        </Panel>
-      </Well>
+          <Link to='/forgot'>forgot password...?</Link>
+        </div>
+      </div>
     )
   }
 }

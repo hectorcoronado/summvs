@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Badge, Nav, Navbar, NavItem } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
+
+import NavBrandSvg from '../svg/NavBrandSvg'
 
 class Header extends Component {
   renderLinks () {
@@ -30,28 +33,34 @@ class Header extends Component {
 
   render () {
     return (
-      <div>
-        <Navbar fixedTop>
-          <Navbar.Header>
-            <Navbar.Brand className='header-text'>
-              <a href='/'>s u m m v s</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {this.renderLinks()}
-              <NavItem eventKey={2} href='/about'>about</NavItem>
-              <NavItem eventKey={3} href='/cart'>
-              cart
-              {
-                (this.props.cartItemsNumber > 0) ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>) : ('')
-              }
+      <Navbar fixedTop>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <LinkContainer to='/'>
+              <a><NavBrandSvg /></a>
+            </LinkContainer>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav pullRight>
+            {this.renderLinks()}
+            <LinkContainer to='/about'>
+              <NavItem eventKey={2}>about</NavItem>
+            </LinkContainer>
+            <LinkContainer to='/cart'>
+              <NavItem eventKey={3}>
+                cart
+                {
+                  (this.props.cartItemsNumber > 0)
+                  ? (<Badge className='badge'> {this.props.cartItemsNumber}</Badge>)
+                  : ('')
+                }
               </NavItem>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-      </div>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 }

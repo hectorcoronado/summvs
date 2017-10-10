@@ -23,10 +23,18 @@ class Cart extends Component {
     this.props.getProducts()
   }
 
+  componentWillUnmount () {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
+  }
+
   renderEmpty () {
     return (
-      <div>
-        Your cart is empty.
+      <div className='row'>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          your cart is empty.
+        </h6>
       </div>
     )
   }
@@ -53,12 +61,14 @@ class Cart extends Component {
     productQty < inventoryQty
       ? updateCart(_id, 1, cart)
       : this.setState({
-        msg: `Sorry, only ${inventoryQty} ${productName}s are available.`
+        msg: `sorry, there are no more ${productName}s available.`
       })
 
-    setTimeout(() => {
-      this.setState({msg: ''})
-    }, 2500)
+    if (this.state.msg !== null) {
+      this.timeout = setTimeout(() => {
+        this.setState({msg: ''})
+      }, 5000)
+    }
   }
 
   onDecrement (_id, quantity) {
@@ -73,16 +83,16 @@ class Cart extends Component {
         return (
           <Panel key={cartArr._id}>
             <Row>
-              <Col xs={12} sm={4}>
+              <Col xs={6} sm={4}>
                 <h6>{cartArr.name}</h6>
               </Col>
-              <Col xs={12} sm={2}>
+              <Col xs={6} sm={2}>
                 <h6>usd {cartArr.price}</h6>
               </Col>
               <Col xs={6} sm={2}>
                 <h6>qty:
                   <Label
-                    bsStyle='success'
+                    bsStyle='default'
                     style={{marginLeft: '4px'}}
                   >
                     {cartArr.quantity}
@@ -92,6 +102,7 @@ class Cart extends Component {
               <Col xs={6} sm={2}>
                 <ButtonGroup style={{minWidth: '300px'}}>
                   <Button
+                    style={buttonStyle}
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onDecrement.bind(this, cartArr._id, cartArr.quantity)}
@@ -100,6 +111,7 @@ class Cart extends Component {
                     -
                   </Button>
                   <Button
+                    style={buttonStyle}
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onIncrement.bind(this, cartArr._id)}
@@ -108,6 +120,7 @@ class Cart extends Component {
                     +
                   </Button>
                   <Button
+                    style={buttonStyle}
                     bsStyle='default'
                     bsSize='xsmall'
                     onClick={this.onDelete.bind(this, cartArr._id)}
@@ -124,29 +137,33 @@ class Cart extends Component {
     )
 
     return (
-      <Panel header='cart'>
-        {cartItemsList}
-        <Row>
-          <Col xs={12}>
-            <h6 className='error'>
-              <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
-            </h6>
-            <h6>order total: {this.props.totalAmount}</h6>
-            <Checkout
-              totalAmount={this.props.totalAmount}
-              productNames={this.props.cart.map(
-                (cartArr) => cartArr.name
-              )}
-              productsIDs={this.props.cart.map(
-                (cartArr) => cartArr._id
-              )}
-              quantities={this.props.cart.map(
-                (cartArr) => cartArr.quantity
-              )}
-            />
-          </Col>
-        </Row>
-      </Panel>
+      <div className='container'>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3}>
+          <Panel header='cart'>
+            {cartItemsList}
+            <Row>
+              <Col xs={12}>
+                <h6 className='error'>
+                  <strong>{(!this.state.msg) ? ('') : (this.state.msg)}</strong>
+                </h6>
+                <h6>order total: {this.props.totalAmount}</h6>
+                <Checkout
+                  totalAmount={this.props.totalAmount}
+                  productNames={this.props.cart.map(
+                    (cartArr) => cartArr.name
+                  )}
+                  productsIDs={this.props.cart.map(
+                    (cartArr) => cartArr._id
+                  )}
+                  quantities={this.props.cart.map(
+                    (cartArr) => cartArr.quantity
+                  )}
+                />
+              </Col>
+            </Row>
+          </Panel>
+        </Col>
+      </div>
     )
   }
 
@@ -157,6 +174,11 @@ class Cart extends Component {
       return this.renderEmpty()
     }
   }
+}
+
+const buttonStyle = {
+  marginTop: '6.5px',
+  marginBottom: '6.5px'
 }
 
 const mapStateToProps = (state) => {

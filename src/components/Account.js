@@ -10,7 +10,11 @@ class Account extends Component {
 
   render () {
     return (
-      <h6>This is the account page...</h6>
+      <div className='row'>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          this is the account page...
+        </h6>
+      </div>
     )
   }
 }

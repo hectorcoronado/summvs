@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Panel, Well } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
 import { resetErrors, resetPassword } from '../../actions/authActions'
@@ -40,25 +39,25 @@ class ResetPassword extends Component {
     const { handleSubmit, fields: { resetPassword, confirmPassword } } = this.props
 
     return (
-      <Well>
-        <Panel>
+      <div className='container'>
+        <div className='col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4'>
           <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
             <fieldset className='form-group'>
-              <label>New Password:</label>
+              <label>new password:</label>
               <input {...resetPassword} className='form-control' />
             </fieldset>
             <fieldset className='form-group'>
-              <label>Confirm Password:</label>
+              <label>confirm password:</label>
               <input {...confirmPassword} className='form-control' />
             </fieldset>
             <div>
-              <button action='submit' className='btn btn-primary'>Update Password</button>
+              <button action='submit' className='btn btn-link align-left'>update password</button>
               {confirmPassword.touched && confirmPassword.error && <div className='error'>{confirmPassword.error}</div>}
               {this.renderAlert()}
             </div>
           </form>
-        </Panel>
-      </Well>
+        </div>
+      </div>
     )
   }
 }
@@ -68,7 +67,7 @@ function validate (formProps) {
   const errors = {}
 
   if (formProps.resetPassword !== formProps.confirmPassword) {
-    errors.confirmPassword = 'New Password and Confirm Password fields must match.'
+    errors.confirmPassword = 'new password & confirm password fields must match.'
   }
   return errors
 }

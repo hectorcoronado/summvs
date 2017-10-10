@@ -41,13 +41,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 // MODELS //
+var Order = require('./models/order')
 var Product = require('./models/product')
 var User = require('./models/user')
 
 // ////////////////// //
 // --->>> APIs <<<--- //
 // ////////////////// //
-mongoose.connect('mongodb://localhost:27017/summvs')
+mongoose.connect(
+  'mongodb://localhost:27017/summvs',
+  { useMongoClient: true }
+)
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
 
@@ -105,7 +109,6 @@ app.put('/cart', function (req, res) {
 // --->>> AUTH API <<<---
 function tokenForUser (user) {
   var timestamp = new Date().getTime()
-
   // when we create a user, they'll always have same id, we can use it to encode. sub = subject (who this JWT belongs to), iat = issued at time.
   return jwt.encode({
     sub: user.id,
@@ -117,32 +120,21 @@ app.get('/testauth', requireAuth, function (req, res) {
   res.send({ hi: 'there' })
 })
 
-app.get('/signin', function (req, res, next) {
-  res.send({ hi: 'there' })
-})
-
 app.post('/signin', requireSignin, function (req, res, next) {
-  // user has already had email & pw auth'd
-  // we just need to give them a token
-  res.send({ token: tokenForUser(req.user) })
+  res.send({
+    token: tokenForUser(req.user),
+    email: req.body.email,
+    _id: req.user._id
+  })
 })
 
 app.post('/signup', function (req, res, next) {
-  var firstName = req.body.firstName
-  var lastName = req.body.lastName
   var email = req.body.email
   var password = req.body.password
-  var addresses = {
-    street: req.body.address,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
-    country: req.body.country
-  }
 
-  if (!firstName || !lastName || !addresses || !password || !email) {
+  if (!email || !password) {
     return res.status(412).send({
-      error: 'Please provide all required information.'
+      error: 'please provide all required information.'
     })
   }
 
@@ -153,15 +145,12 @@ app.post('/signup', function (req, res, next) {
     // if user w/email does exist, return 'unprocessable entity' err:
     if (existingUser) {
       return res.status(412).send({
-        error: 'This email is already in use!'
+        error: 'this email is already in use.'
       })
     }
 
     // if NO user w/email exists, create user:
     var user = new User({
-      firstName: firstName,
-      lastName: lastName,
-      addresses: addresses,
       password: password,
       email: email,
       validationString: randomstring.generate({
@@ -178,7 +167,10 @@ app.post('/signup', function (req, res, next) {
         if (err) { console.log(err) }
       })
       // res indicating user creation:
-      res.json({ token: tokenForUser(user) })
+      res.json({
+        token: tokenForUser(user),
+        email: email
+      })
     })
   })
 })
@@ -210,7 +202,7 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
         resetPasswordExpires: { $gt: Date.now() }},
         function (err, user) {
           if (!user || err) {
-            res.status(404).send({error: 'Reset Password Token is expired.'})
+            res.status(404).send({error: 'reset password token is expired.'})
           }
 
           user.password = req.body.resetPassword
@@ -225,7 +217,8 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
             // res indicating user creation:
             res.status(200).json({
               token: tokenForUser(user),
-              success: 'Your password has been reset, you will be redirected to your account page shortly.'
+              email: user.email,
+              success: 'your password has been reset, you will be redirected to your account page shortly.'
             })
           })
         }
@@ -234,7 +227,7 @@ app.patch('/reset/:_resetPasswordToken', function (req, res, next) {
   ],
   function (err) {
     if (err) {
-      res.status(404).send({error: 'Reset Password Token is expired or email does not exist.'})
+      res.status(404).send({error: 'reset password token is expired or email does not exist.'})
     }
   })
 })
@@ -253,7 +246,7 @@ app.post('/forgot', function (req, res, next) {
     function (resetPasswordToken, done) {
       User.findOne({ email: email }, function (err, user) {
         if (!user || err) {
-          return res.status(404).send({error: 'Email does not exist.'})
+          return res.status(404).send({error: 'email does not exist.'})
         }
 
         var tokenAndExpiration = {
@@ -263,9 +256,9 @@ app.post('/forgot', function (req, res, next) {
 
         user.update(tokenAndExpiration, function (err, user) {
           if (err) {
-            res.status(404).send({error: 'Email does not exist.'})
+            res.status(404).send({error: 'email does not exist.'})
           }
-          res.status(200).send({success: 'Thank you, you will receive an email with further instructions briefly.'})
+          res.status(200).send({success: 'thank you, you will receive an email with further instructions briefly.'})
         })
 
         user.forgotPasswordEmail(req, email, resetPasswordToken)
@@ -274,7 +267,7 @@ app.post('/forgot', function (req, res, next) {
   ],
   function (err) {
     if (err) {
-      res.status(404).send({error: 'There was an error in attempting to reset your password.'})
+      res.status(404).send({error: 'there was an error in attempting to reset your password.'})
     }
   })
 })
@@ -312,10 +305,47 @@ app.post('/charge', function (req, res) {
     .catch(function (err) {
       console.log('Error:')
       console.log(err)
-      res.status(500).send({ error: 'Purchase failed' })
+      res.status(500).send({ error: 'purchase failed' })
     })
 })
 // --->>> END STRIPE API <<<---
+// ============================
+
+// ========================
+// --->>> ORDERS API <<<---
+app.post('/orders', function (req, res) {
+  console.log(req.body.cart)
+  var items = req.body.cart.map(function (item) {
+    return {
+      quantity: item.quantity,
+      price: item.price,
+      product: item._id
+    }
+  })
+  var order = {
+    email: req.body.token.email,
+    items: items,
+    user: req.body._id,
+    shipping: {
+      name: req.body.token.card.name,
+      address: {
+        street: req.body.token.card.address_line1,
+        city: req.body.token.card.address_city,
+        country: req.body.token.card.address_country,
+        postalCode: req.body.token.card.address_zip
+      }
+    }
+  }
+
+  Order.create(order, function (err, orders) {
+    if (err) {
+      console.log('error posting order:')
+      console.log(err)
+    }
+    res.json(orders)
+  })
+})
+// --->>> END ORDERS API <<<---
 // ============================
 
 // ==========================

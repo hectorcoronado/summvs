@@ -3,20 +3,27 @@ font-family: 'Cutive Mono', monospace;
 */
 
 body {
+  background-color: rgb(244, 244, 242);
   font-family: 'Cutive Mono', monospace;
   margin-bottom: 75px;
   margin-top: 75px;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: .3em
+}
+
 .error {
-  color: red
+  color: rgb(230, 66, 77)
+
 }
 
 .success {
-  color: green
+  color: rgb(7, 229, 148)
 }
 
-/* logo text: */
-/*.header-text {
-  font-family: 'Cutive Mono', monospace;
-}*/
+.align-left {
+  padding: 6px 0px
+}

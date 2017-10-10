@@ -4,6 +4,7 @@ import { STRIPE_PUBLIC_KEY } from './stripeConstants'
 import { connect } from 'react-redux'
 
 import { emptyCart } from '../../actions/cartActions'
+import { postOrder } from '../../actions/ordersActions'
 import { getProducts, updateProducts } from '../../actions/productsActions'
 
 class Checkout extends Component {
@@ -48,7 +49,7 @@ class Checkout extends Component {
 
   onStripeUpdate (e) {
     let {
-      emptyCart, productNames, products, productsIDs, quantities, totalAmount, updateProducts } = this.props
+      auth, cart, emptyCart, productNames, postOrder, products, productsIDs, quantities, totalAmount, updateProducts } = this.props
 
     const IDsAndQtys = productsIDs.reduce((obj, val, i) => {
       obj[val] = quantities[i]
@@ -60,9 +61,11 @@ class Checkout extends Component {
     const handleToken = (token, address) => {
       let payload = {
         address,
+        cart,
         IDsAndQtys,
         token,
-        amount: fromUSDToCent(totalAmount)
+        amount: fromUSDToCent(totalAmount),
+        _id: auth._id
       }
 
       fetch('api/charge', {
@@ -72,6 +75,7 @@ class Checkout extends Component {
       })
       .then(output => {
         if (output.status === 200) {
+          postOrder(payload)
           emptyCart()
           for (let id in IDsAndQtys) {
             updateProducts(id, IDsAndQtys[id], products)
@@ -97,11 +101,11 @@ class Checkout extends Component {
     return (
       <div>
         <Button
-          bsStyle='success'
+          bsStyle='light'
           bsSize='xsmall'
           onClick={this.onStripeUpdate}
         >
-            pay
+          pay
         </Button>
       </div>
     )
@@ -110,8 +114,13 @@ class Checkout extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    auth: state.auth,
+    cart: state.cart.cart,
     products: state.products.products
   }
 }
 
-export default connect(mapStateToProps, { emptyCart, getProducts, updateProducts })(Checkout)
+export default connect(
+  mapStateToProps,
+  {emptyCart, getProducts, postOrder, updateProducts}
+)(Checkout)

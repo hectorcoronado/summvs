@@ -11,9 +11,13 @@ class EmailVerify extends Component {
 
   render () {
     return (
-      <div>
-        <h5>Thank you, your email is now verified.</h5>
-        <h6>You will automatically be taken to your Account page very briefly...</h6>
+      <div className='row'>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          Thank you, your email is now verified.
+        </h6>
+        <h6 className='col-xs-4 col-xs-offset-4 text-center'>
+          You will automatically be taken to your Account page very briefly...
+        </h6>
       </div>
     )
   }
