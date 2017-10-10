@@ -23,7 +23,7 @@ class About extends Component {
           <br />
           <br />
           <br />
-          other things I've built can be found <a
+          other things i've built can be found <a
             href='http://www.hectorcoronado.codes'
             rel='noopener noreferrer'
             target='_blank'
