@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NavBrandImage = (props) => {
+const NavBrandSvg = (props) => {
   return (
     <svg width='141px' height='22px' viewBox='0 0 141 22' version='1.1'>
       <desc>Created with Sketch.</desc>
@@ -44,4 +44,4 @@ const NavBrandImage = (props) => {
   )
 }
 
-export default NavBrandImage
+export default NavBrandSvg

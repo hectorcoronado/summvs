@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 
+import NavBrandSvg from '../svg/NavBrandSvg'
+
 class Header extends Component {
   renderLinks () {
     if (this.props.authenticated) {
@@ -35,7 +37,7 @@ class Header extends Component {
         <Navbar.Header>
           <Navbar.Brand>
             <LinkContainer to='/'>
-              <a>s u m m v s</a>
+              <a><NavBrandSvg /></a>
             </LinkContainer>
           </Navbar.Brand>
           <Navbar.Toggle />
