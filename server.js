@@ -48,10 +48,20 @@ var User = require('./models/user')
 // ////////////////// //
 // --->>> APIs <<<--- //
 // ////////////////// //
-mongoose.connect(
-  'mongodb://localhost:27017/summvs',
-  { useMongoClient: true }
-)
+var env = process.env.NODE_ENV || 'development'
+
+if (env === 'development') {
+  mongoose.connect(
+    'mongodb://localhost:27017/summvs',
+    { useMongoClient: true }
+  )
+} else {
+  mongoose.connect(
+    `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@ds117995-a0.mlab.com:17995,ds117995-a1.mlab.com:17995/summvs?replicaSet=rs-ds117995`,
+    { useMongoClient: true }
+  )
+}
+
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
 
