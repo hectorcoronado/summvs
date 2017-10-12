@@ -63,5 +63,8 @@
     "serve-favicon": "~2.4.2",
     "stripe": "^5.0.0",
     "uniqid": "^4.1.1"
-  }
+  },
+  "engines": {
+    "node": "7.9.0"
+  },
 }
