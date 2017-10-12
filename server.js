@@ -57,7 +57,8 @@ if (env === 'development') {
   )
 } else {
   mongoose.connect(
-    `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@ds117995-a0.mlab.com:17995,ds117995-a1.mlab.com:17995/summvs?replicaSet=rs-ds117995`
+    `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@ds117995-a0.mlab.com:17995,ds117995-a1.mlab.com:17995/summvs?replicaSet=rs-ds117995`,
+    { useMongoClient: true }
   )
 }
 
