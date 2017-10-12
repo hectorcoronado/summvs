@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "summvs",
   "scripts": {
-    "start": "node ./bin/www"
+    "prestart": "webpack",
+    "start": "node ./bin/www & node server.js"
   },
   "repository": {
     "type": "git",
