@@ -4,7 +4,7 @@
   "description": "summvs",
   "scripts": {
     "prestart": "webpack",
-    "start": "node ./bin/www & node server.js"
+    "start": "bin/hectors-smart-start"
   },
   "repository": {
     "type": "git",

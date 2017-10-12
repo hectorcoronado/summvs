@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# in the environmenbt where heroku config:set WHICH_END=back
+if [ $WHICH_END == 'back' ]
+then
+  node server.js
+else
+  ./bin/www
+fi
