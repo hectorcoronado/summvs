@@ -9,8 +9,15 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // PROXY API //
+var env = process.env.NODE_ENV || 'development'
+var target
+
+env === 'development'
+  ? target = 'https://localhost:3001'
+  : target = 'https://morning-shore-28165.herokuapp.com'
+
 var apiProxy = httpProxy.createProxyServer({
-  target: 'https://localhost:3001',
+  target: target,
   secure: false
 })
 
