@@ -1,4 +1,12 @@
 var path = require('path')
+var env = process.env.NODE_ENV || 'development'
+
+const watch = (env) => {
+  if (env === 'development') {
+    return true
+  }
+  return false
+}
 
 module.exports = {
   entry: './src/Client.js',
@@ -6,7 +14,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public')
   },
-  watch: true,
+  watch: watch(env),
   module: {
     loaders: [
       {
