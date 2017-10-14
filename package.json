@@ -20,8 +20,7 @@
     "eslint-plugin-node": "^5.2.0",
     "nodemon": "^1.11.0",
     "redux-logger": "^3.0.6",
-    "standard": "^10.0.2",
-    "webpack": "^2.2.1"
+    "standard": "^10.0.2"
   },
   "dependencies": {
     "async": "^2.5.0",
@@ -63,7 +62,8 @@
     "redux-thunk": "^2.2.0",
     "serve-favicon": "~2.4.2",
     "stripe": "^5.0.0",
-    "uniqid": "^4.1.1"
+    "uniqid": "^4.1.1",
+    "webpack": "^2.2.1"
   },
   "engines": {
     "node": "7.9.0"
