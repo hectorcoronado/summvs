@@ -4,7 +4,7 @@
   "description": "summvs",
   "scripts": {
     "prestart": "webpack --config webpack.config.dev.js --watch",
-    "start": "node ./bin/www & node server.js"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
