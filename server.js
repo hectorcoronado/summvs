@@ -448,9 +448,10 @@ app.get('/images', function (req, res) {
 // --->>> END APIs <<<--- //
 // ////////////////////// //
 
-server.listen(3001, function (err) {
+var port = process.env.PORT || 3001
+server.listen(port, function (err) {
   if (err) {
     return console.log(err)
   }
-  console.log('API Server is listening on http://localhost:3001')
+  console.log(`API Server is listening on ${port}`)
 })
