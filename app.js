@@ -14,7 +14,7 @@ var env = process.env.NODE_ENV || 'development'
 if (env === 'development') {
   var target = 'https://localhost:3001'
 } else {
-  target = 'https://morning-shore-28165.herokuapp.com'
+  target = 'https://summvsserver.herokuapp.com'
 }
 
 var apiProxy = httpProxy.createProxyServer({
@@ -28,7 +28,7 @@ app.use('/api', function (req, res) {
 })
 // END PROXY //
 
-app.get('*', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
