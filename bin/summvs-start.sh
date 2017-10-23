@@ -4,6 +4,7 @@
 if [ $BACK_END == true ]
 then
   node server.js
+  process.env.PORT == $PORT
 else
   ./bin/www
 fi
