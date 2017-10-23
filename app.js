@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 var env = process.env.NODE_ENV || 'development'
 
 if (env === 'development') {
-  var target = 'https://localhost:3001'
+  var target = 'https://localhost:5100'
 } else {
   target = 'https://summvsserver.herokuapp.com'
 }
@@ -28,7 +28,7 @@ app.use('/api', function (req, res) {
 })
 // END PROXY //
 
-app.get('/*', function (req, res) {
+app.get('*', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
