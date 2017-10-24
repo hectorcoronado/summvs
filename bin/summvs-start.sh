@@ -16,7 +16,7 @@ config=""
 
 while read line; do
   config="$config $line"
-done  <(heroku config --app "$sourceApp" --shell)
+done  < <(heroku config --app "$sourceApp" --shell)
 
 eval "heroku run bash"
 eval "heroku config:set $config --app $targetApp"
