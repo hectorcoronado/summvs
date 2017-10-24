@@ -7,7 +7,7 @@ then
   echo "front end"
   ./bin/www
   echo "Setting process.env.PORT=$PORT"
-  heroku config:set "PORT=$PORT" --app "summvsserver"
+  heroku config:set PORT=$PORT --app summvsserver
 else
   echo "back end"
   node server.js
