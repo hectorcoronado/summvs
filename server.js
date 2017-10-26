@@ -448,7 +448,8 @@ app.get('/images', function (req, res) {
 // --->>> END APIs <<<--- //
 // ////////////////////// //
 
-var port = process.env.PORT || 3001
+//var port = process.env.PORT || 3001
+var port = 3001
 server.listen(port, function (err) {
   if (err) {
     return console.log(err)
