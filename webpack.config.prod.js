@@ -10,7 +10,6 @@ module.exports = {
   },
   watch: false,
   plugins: [
-    new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
@@ -18,6 +17,7 @@ module.exports = {
     }),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
+      sourceMap: true,
       compress: {
         warnings: false
       }
