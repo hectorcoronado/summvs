@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "summvs",
   "scripts": {
-    "prestart": "bin/webpack.sh"
+    "prestart": "webpack --config webpack.config.dev.js --watch",
+    "heroku-postbuild": "webpack -p --config ./webpack.config.prod.js --progress"
   },
   "repository": {
     "type": "git",
