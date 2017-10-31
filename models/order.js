@@ -48,7 +48,7 @@ OrderSchema.methods.purchaseCompleteEmail = function (order) {
     Destination: { ToAddresses: to },
     Message: {
       Subject: {
-        Data: 'thank you for your s u m m v s order'
+        Data: 's u m m v s - order confirmation'
       },
       Body: {
         Html: {
