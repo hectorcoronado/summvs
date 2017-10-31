@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "summvs",
   "scripts": {
-    "prestart": "webpack --config webpack.config.dev.js --watch"
+    "prestart": "bin/webpack.sh"
   },
   "repository": {
     "type": "git",
