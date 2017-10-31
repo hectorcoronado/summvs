@@ -24,8 +24,7 @@ const HeroSvg = (props) => {
               <polygon id='Red-2' fill='#E6424D' points='0 125.56 242.821493 125.56 242.821493 135.682912 106.410879 135.682912 0 135.682912' />
             </g>
             <text id='summvs' fontFamily='CutiveMono-Regular, Cutive Mono' fontSize='27' fontWeight='normal' letterSpacing='7' fill='#383838'>
-              <tspan x='116.457031' y='135'>summv</tspan>
-              <tspan x='233.195312' y='135'>s</tspan>
+              <tspan x='116.457031' y='135'>summvs</tspan>
             </text>
           </g>
         </g>
