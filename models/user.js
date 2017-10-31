@@ -16,7 +16,7 @@ var UserSchema = mongoose.Schema({
   resetPasswordToken: String
 })
 
-// HELPER METHODS:
+// ENCRYPTION METHODS:
 // On save hook, encrypt password:
 UserSchema.pre('save', function (next) {
   // context here is user model ('user' is an instance of user model):
@@ -37,45 +37,18 @@ UserSchema.pre('save', function (next) {
   })
 })
 
-UserSchema.methods.sendEmail = function (req, callback) {
-  aws.config = new aws.Config({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-    region: 'us-west-2'
-  })
-
+UserSchema.methods.comparePassword = function (candidatePassword, callback) {
   var user = this
-  // load AWS SES
-  var ses = new aws.SES({apiVersion: '2010-12-01'})
 
-  // send to list
-  var to = [user.email]
+  // user.password is the hashed + salted password; bcrypt will internally salt/hash candidatePassword & compare for us (if they're equal, isMatch === true):
+  bcrypt.compare(candidatePassword, user.password, function (err, isMatch) {
+    if (err) { return callback(err) }
 
-  // this must relate to a verified SES account
-  var from = 'summvs@summvs.com'
-
-  // create html string to send in mail:
-  var htmlData = '<h3>Thank you.</h3><h4>To verify your email address, please click below.</h4><h4><a href="https://' + req.headers.host + '/signup/' + user.validationString + '">Verify Email</a></h4>' + '<h4>-SUMMVS</h4>'
-
-  ses.sendEmail({
-    Source: from,
-    Destination: { ToAddresses: to },
-    Message: {
-      Subject: {
-        Data: 'WELCOME TO SUMMVS'
-      },
-      Body: {
-        Html: {
-          Data: htmlData
-        }
-      }
-    }
-  },
-  function (err, data) {
-    if (err) { console.log(err) }
+    callback(null, isMatch)
   })
 }
 
+// EMAIL/AWS-SES METHODS (in alphabetical order):
 UserSchema.methods.forgotPasswordEmail = function (req, email, resetPasswordToken) {
   aws.config = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -89,14 +62,14 @@ UserSchema.methods.forgotPasswordEmail = function (req, email, resetPasswordToke
 
   var from = 'summvs@summvs.com'
 
-  var htmlData = "<h4>You are receiving this because you have requested to reset your account's password.<h4>" + '<h4>Please click on the following link, or paste this into your browser to complete the process:<h4>' + 'https://' + req.headers.host + '/reset/' + resetPasswordToken + '<h4>If you did not request this, please ignore this email and your password will remain unchanged.</h4>' + '<h4>-SUMMVS</h4>'
+  var htmlData = "<h4>you are receiving this because you have requested to reset your account's password.<h4>" + '<h4>please click on the following link, or paste this into your browser to complete the process:<h4>' + 'https://' + req.headers.host + '/reset/' + resetPasswordToken + '<h4>if you did not request this, please ignore this email and your password will remain unchanged.</h4>' + '<h4>-s u m m v s</h4>'
 
   ses.sendEmail({
     Source: from,
     Destination: { ToAddresses: to },
     Message: {
       Subject: {
-        Data: 'SUMMVS Password Reset'
+        Data: 's u m m v s - password reset'
       },
       Body: {
         Html: {
@@ -125,14 +98,14 @@ UserSchema.methods.resetPasswordSuccessEmail = function (req, callback) {
 
   var from = 'summvs@summvs.com'
 
-  var htmlData = '<h4>Hello,<h4>' + '<h4>This is a confirmation that the password for your account ' + user.email + ' has just been changed.</h4>' + '<h4>-SUMMVS</h4>'
+  var htmlData = '<h4>hello,<h4>' + '<h4>this is confirmation that the password for your account ' + user.email + ' has been changed.</h4>' + '<h4>-s u m m v s</h4>'
 
   ses.sendEmail({
     Source: from,
     Destination: { ToAddresses: to },
     Message: {
       Subject: {
-        Data: 'Your SUMMVS password has been changed.'
+        Data: 's u m m v s - password changed.'
       },
       Body: {
         Html: {
@@ -146,14 +119,42 @@ UserSchema.methods.resetPasswordSuccessEmail = function (req, callback) {
   })
 }
 
-UserSchema.methods.comparePassword = function (candidatePassword, callback) {
+UserSchema.methods.sendEmail = function (req, callback) {
+  aws.config = new aws.Config({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+    region: 'us-west-2'
+  })
+
   var user = this
+  // load AWS SES
+  var ses = new aws.SES({apiVersion: '2010-12-01'})
 
-  // user.password is the hashed + salted password; bcrypt will internally salt/hash candidatePassword & compare for us (if they're equal, isMatch === true):
-  bcrypt.compare(candidatePassword, user.password, function (err, isMatch) {
-    if (err) { return callback(err) }
+  // send to list
+  var to = [user.email]
 
-    callback(null, isMatch)
+  // this must relate to a verified SES account
+  var from = 'summvs@summvs.com'
+
+  // create html string to send in mail:
+  var htmlData = '<h3>thank you.</h3><h4>to verify your email address, please click below.</h4><h4><a href="https://' + req.headers.host + '/signup/' + user.validationString + '">verify email</a></h4>' + '<h4>-s u m m v s</h4>'
+
+  ses.sendEmail({
+    Source: from,
+    Destination: { ToAddresses: to },
+    Message: {
+      Subject: {
+        Data: 's u m m v s - welcome'
+      },
+      Body: {
+        Html: {
+          Data: htmlData
+        }
+      }
+    }
+  },
+  function (err, data) {
+    if (err) { console.log(err) }
   })
 }
 
