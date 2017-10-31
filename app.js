@@ -321,12 +321,12 @@ app.post('/api/charge', function (req, res) {
 // ========================
 // --->>> ORDERS API <<<---
 app.post('/api/orders', function (req, res) {
-  console.log(req.body.cart)
   var items = req.body.cart.map(function (item) {
     return {
-      quantity: item.quantity,
+      name: item.name,
       price: item.price,
-      product: item._id
+      product: item._id,
+      quantity: item.quantity
     }
   })
   var order = {
@@ -349,6 +349,7 @@ app.post('/api/orders', function (req, res) {
       console.log('error posting order:')
       console.log(err)
     }
+    orders.purchaseCompleteEmail(order)
     res.json(orders)
   })
 })
