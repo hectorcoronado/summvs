@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 
-import { resetErrors, signupUser } from '../../actions/authActions'
+import { getAuth, resetErrors, signupUser } from '../../actions/authActions'
 
 class Signup extends Component {
   componentWillMount () {
     this.props.resetErrors()
+  }
+
+  componentWillUnmount () {
+    this.props.getAuth()
   }
 
   handleFormSubmit (formProps) {
@@ -83,4 +87,4 @@ export default reduxForm({
     'passwordConfirm'
   ],
   validate
-}, mapStateToProps, { resetErrors, signupUser })(Signup)
+}, mapStateToProps, { getAuth, resetErrors, signupUser })(Signup)

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { fetchMessage } from '../actions/authActions'
+import { getOrders } from '../actions/ordersActions'
 
 class Account extends Component {
   componentWillMount () {
-    this.props.fetchMessage()
+    this.props.getOrders()
   }
 
   render () {
@@ -19,4 +19,4 @@ class Account extends Component {
   }
 }
 
-export default connect(null, { fetchMessage })(Account)
+export default connect(null, { getOrders })(Account)

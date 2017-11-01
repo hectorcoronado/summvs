@@ -123,15 +123,27 @@ function tokenForUser (user) {
     process.env.SECRET_STRING)
 }
 
-app.get('/api/testauth', requireAuth, function (req, res) {
-  res.send({ hi: 'there' })
+app.get('/api/signin', function (req, res) {
+  if (typeof req.session._id !== 'undefined') {
+    res.json(req.session._id)
+  }
 })
 
 app.post('/api/signin', requireSignin, function (req, res, next) {
+  var _id = req.user._id
+
+  // store _id data in session:
+  req.session._id = _id
+  req.session.save(function (err) {
+    if (err) {
+      console.log(`Error POSTING to signin: ${err}`)
+    }
+  })
+
   res.send({
     token: tokenForUser(req.user),
     email: req.body.email,
-    _id: req.user._id
+    _id: req.session._id
   })
 })
 
@@ -173,10 +185,21 @@ app.post('/api/signup', function (req, res, next) {
       user.sendEmail(req, function (err) {
         if (err) { console.log(err) }
       })
-    // res indicating user creation:
+      var _id = user._id
+
+      // store _id data in session:
+      req.session._id = _id
+      req.session.save(function (err) {
+        if (err) {
+          console.log(`Error POSTING to signin: ${err}`)
+        }
+      })
+
+      // res indicating user creation:
       res.json({
         token: tokenForUser(user),
-        email: email
+        email: email,
+        _id: req.session._id
       })
     })
   })
@@ -320,6 +343,15 @@ app.post('/api/charge', function (req, res) {
 
 // ========================
 // --->>> ORDERS API <<<---
+app.get('/api/orders', requireAuth, function (req, res) {
+  Order.find(function (err, orders) {
+    if (err) {
+      console.log(`Error GETTING orders: ${err}`)
+    }
+    res.json(orders)
+  })
+})
+
 app.post('/api/orders', function (req, res) {
   var items = req.body.cart.map(function (item) {
     return {
@@ -343,6 +375,8 @@ app.post('/api/orders', function (req, res) {
       }
     }
   }
+  console.log('order.user:')
+  console.log(order.user)
 
   Order.create(order, function (err, orders) {
     if (err) {

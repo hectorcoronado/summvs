@@ -2,6 +2,8 @@
 export const AUTH_ERROR = 'AUTH_ERROR'
 export const AUTH_USER = 'AUTH_USER'
 export const AUTH_SUCCESS = 'AUTH_SUCCESS'
+export const GET_AUTH = 'GET_AUTH'
+export const GET_AUTH_REJECTED = 'GET_AUTH_REJECTED'
 export const UNAUTH_USER = 'UNAUTH_USER'
 
 // CART TYPES:

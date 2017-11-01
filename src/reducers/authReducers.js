@@ -2,6 +2,7 @@ import {
   AUTH_ERROR,
   AUTH_SUCCESS,
   AUTH_USER,
+  GET_AUTH,
   UNAUTH_USER
 } from '../actions/types'
 
@@ -34,11 +35,18 @@ export default function authReducers (state = INITIAL_STATE, action) {
         }
       }
 
+    case GET_AUTH:
+      return {
+        ...state,
+        _id: action.payload
+      }
+
     case UNAUTH_USER:
       return {
         ...state,
         authenticated: false,
-        email: null
+        email: null,
+        _id: null
       }
 
     default:
