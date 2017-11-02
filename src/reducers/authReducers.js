@@ -25,6 +25,7 @@ export default function authReducers (state = INITIAL_STATE, action) {
           authenticated: true,
           email: action.payload.email,
           _id: action.payload._id,
+          isAdmin: action.payload.isAdmin,
           error: null
         }
       } else {
@@ -38,7 +39,8 @@ export default function authReducers (state = INITIAL_STATE, action) {
     case GET_AUTH:
       return {
         ...state,
-        _id: action.payload
+        _id: action.payload._id,
+        isAdmin: action.payload.isAdmin
       }
 
     case UNAUTH_USER:
@@ -46,7 +48,8 @@ export default function authReducers (state = INITIAL_STATE, action) {
         ...state,
         authenticated: false,
         email: null,
-        _id: null
+        _id: null,
+        isAdmin: null
       }
 
     default:

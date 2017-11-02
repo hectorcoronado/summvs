@@ -124,16 +124,28 @@ function tokenForUser (user) {
 }
 
 app.get('/api/signin', function (req, res) {
-  if (typeof req.session._id !== 'undefined') {
-    res.json(req.session._id)
+  if (
+    typeof req.session._id !== 'undefined' &&
+    req.session.isAdmin === true) {
+    res.json({
+      _id: req.session._id,
+      isAdmin: req.session.isAdmin
+    })
+  } else if (
+    typeof req.session._id !== 'undefined') {
+    res.json({
+      _id: req.session._id
+    })
   }
 })
 
 app.post('/api/signin', requireSignin, function (req, res, next) {
   var _id = req.user._id
+  var isAdmin = req.user.isAdmin
 
-  // store _id data in session:
+  // store _id && isAdmin  in session:
   req.session._id = _id
+  req.session.isAdmin = isAdmin
   req.session.save(function (err) {
     if (err) {
       console.log(`Error POSTING to signin: ${err}`)
@@ -143,7 +155,8 @@ app.post('/api/signin', requireSignin, function (req, res, next) {
   res.send({
     token: tokenForUser(req.user),
     email: req.body.email,
-    _id: req.session._id
+    _id: req.session._id,
+    isAdmin: req.session.isAdmin
   })
 })
 
@@ -177,7 +190,8 @@ app.post('/api/signup', function (req, res, next) {
         charset: 'alphanumeric',
         capitalization: 'lowercase'
       }),
-      verified: false
+      verified: false,
+      isAdmin: false
     })
     // ... & save user
     user.save(function (err) {
@@ -186,9 +200,11 @@ app.post('/api/signup', function (req, res, next) {
         if (err) { console.log(err) }
       })
       var _id = user._id
+      var isAdmin = user.isAdmin
 
       // store _id data in session:
       req.session._id = _id
+      req.session.isAdmin = isAdmin
       req.session.save(function (err) {
         if (err) {
           console.log(`Error POSTING to signin: ${err}`)
@@ -199,7 +215,8 @@ app.post('/api/signup', function (req, res, next) {
       res.json({
         token: tokenForUser(user),
         email: email,
-        _id: req.session._id
+        _id: req.session._id,
+        isAdmin: req.session.isAdmin
       })
     })
   })

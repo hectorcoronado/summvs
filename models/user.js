@@ -9,6 +9,7 @@ var UserSchema = mongoose.Schema({
     unique: true,
     lowercase: true
   },
+  isAdmin: false,
   password: String,
   validationString: String,
   verified: Boolean,

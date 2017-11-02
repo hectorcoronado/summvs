@@ -6,7 +6,6 @@ import {
   AUTH_SUCCESS,
   AUTH_USER,
   GET_AUTH,
-  GET_AUTH_REJECTED,
   UNAUTH_USER
 } from './types'
 
@@ -22,10 +21,7 @@ export function getAuth () {
         })
       })
       .catch((err) => {
-        dispatch({
-          type: GET_AUTH_REJECTED,
-          msg: `Error GETTING cart from session: ${err}`
-        })
+        console.log(`Error getting /api/signin ${err}`)
       })
   }
 }
@@ -62,9 +58,10 @@ export function signupUser ({ email, password }) {
   return (dispatch) => {
     axios.post('/api/signup', { email, password })
       .then(response => {
+        console.log(response.data)
         dispatch({
           type: AUTH_USER,
-          payload: response.data.email
+          payload: response.data
         })
         localStorage.setItem('token', response.data.token)
         browserHistory.push('/cart')
