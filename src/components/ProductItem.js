@@ -92,6 +92,7 @@ class ProductItem extends Component {
             <Button
               bsStyle='link'
               className='align-left'
+              style={buttonStyle}
               onClick={this.handleCart.bind(this)}
             >
               add to cart
@@ -101,6 +102,12 @@ class ProductItem extends Component {
       </Well>
     )
   }
+}
+
+const buttonStyle = {
+  background: 'mintcream',
+  color: 'black',
+  borderColor: 'currentColor'
 }
 
 const mapStateToProps = (state) => {
