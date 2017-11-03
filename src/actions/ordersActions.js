@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+import {
+  GET_ORDERS
+} from './types'
+
 const localStorage = window.localStorage
 
 export function postOrder (order) {
@@ -22,7 +26,13 @@ export function getOrders () {
       headers: { authorization: localStorage.getItem('token') }
     })
       .then(response => {
-        console.log(response)
+        dispatch({
+          type: GET_ORDERS,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        console.log(`Error GETTING orders: ${err}`)
       })
   }
 }
