@@ -1,50 +1,42 @@
 require('dotenv').config()
 require('./services/passport')
 
-var express = require('express')
-var favicon = require('serve-favicon')
-var path = require('path')
 var async = require('async')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var crypto = require('crypto')
-// var express = require('express')
+var express = require('express')
+var favicon = require('serve-favicon')
 var jwt = require('jwt-simple')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 var passport = require('passport')
+var path = require('path')
 var randomstring = require('randomstring')
+var RateLimit = require('express-rate-limit')
 var session = require('express-session')
-// var https = require('https')
-// var fs = require('fs')
 
+// app:
 var app = express()
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
-
-var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
-var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
-
-var requireAuth = passport.authenticate('jwt', { session: false })
-var requireSignin = passport.authenticate('local', { session: false })
-
-// MongoStore needs to be required *after* session:
-var MongoStore = require('connect-mongo')(session)
-
 app.use(logger('combined'))
 app.use(bodyParser.json({ type: '*/*' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.enable('trust proxy')
 
-// MODELS //
-var Order = require('./models/order')
-var Product = require('./models/product')
-var User = require('./models/user')
+// stripe:
+var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
+var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
 
-// ////////////////// //
-// --->>> APIs <<<--- //
-// ////////////////// //
+// passport:
+var requireAuth = passport.authenticate('jwt', { session: false })
+var requireSignin = passport.authenticate('local', { session: false })
+
+// mongodb/mongoose:
+var MongoStore = require('connect-mongo')(session)
 var env = process.env.NODE_ENV || 'development'
 
 if (env === 'development') {
@@ -61,6 +53,15 @@ if (env === 'development') {
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
+
+// models:
+var Order = require('./models/order')
+var Product = require('./models/product')
+var User = require('./models/user')
+
+// ////////////////// //
+// --->>> APIs <<<--- //
+// ////////////////// //
 
 // ==========================
 // --->>> SESSIONS API <<<---
@@ -123,7 +124,22 @@ function tokenForUser (user) {
     process.env.SECRET_STRING)
 }
 
-app.get('/api/signin', function (req, res) {
+var signinLimiter = new RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  delayAfter: 1, // delay response after 1 request
+  delayMs: 1000, // delay response for 1 second
+  max: 10 // block requests after 10th try
+})
+
+var createAccountLimiter = new RateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  delayAfter: 1, // begin slowing down responses after the first request
+  delayMs: 3 * 1000, // slow down subsequent responses by 3 seconds per request
+  max: 5, // start blocking after 5 requests
+  message: 'Too many accounts created from this IP, please try again after 1 hour'
+})
+
+app.get('/api/signin', signinLimiter, function (req, res) {
   if (
     typeof req.session._id !== 'undefined' &&
     req.session.isAdmin === true) {
@@ -160,7 +176,7 @@ app.post('/api/signin', requireSignin, function (req, res, next) {
   })
 })
 
-app.post('/api/signup', function (req, res, next) {
+app.post('/api/signup', createAccountLimiter, function (req, res, next) {
   var email = req.body.email
   var password = req.body.password
 
