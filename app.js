@@ -394,6 +394,7 @@ app.post('/api/orders', function (req, res) {
       quantity: item.quantity
     }
   })
+
   var order = {
     email: req.body.token.email,
     items: items,
@@ -408,8 +409,6 @@ app.post('/api/orders', function (req, res) {
       }
     }
   }
-  console.log('order.user:')
-  console.log(order.user)
 
   Order.create(order, function (err, orders) {
     if (err) {
