@@ -407,7 +407,8 @@ app.post('/api/orders', function (req, res) {
         country: req.body.token.card.address_country,
         postalCode: req.body.token.card.address_zip
       }
-    }
+    },
+    createdOn: Date.now()
   }
 
   Order.create(order, function (err, orders) {

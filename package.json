@@ -45,6 +45,7 @@
     "jade": "~1.11.0",
     "jwt-simple": "^0.5.1",
     "letsencrypt-express": "^2.0.6",
+    "moment": "^2.19.1",
     "mongoose": "^4.10.4",
     "morgan": "~1.8.1",
     "passport": "^0.3.2",

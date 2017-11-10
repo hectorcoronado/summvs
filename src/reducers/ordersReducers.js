@@ -21,13 +21,6 @@ export default function cartReducers (state = INITIAL_STATE, action) {
 
 // add only orders with a user:
 export function filterOrders (payloadArr) {
-  /*
-  for (var i = 0; i < payloadArr.length; i++) {
-    if (payloadArr[i].user) {
-      return (payloadArr[i].user)
-    }
-  }
-  */
   return payloadArr.filter((el) => {
     return el.user
   })
