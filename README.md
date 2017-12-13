@@ -16,9 +16,9 @@
 ##### this project combines two things i like very much: making tangible objects and coding.
 
 to-do:
-- [ ] rate limiting signup/signin
+- [x] rate limiting signup/signin
 - [ ] enable https on custom domain
 - [ ] enable & secure admin route w/session
-- [ ] populate account page if user has made purchase
+- [x] populate account page if user has made purchase
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)

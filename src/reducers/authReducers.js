@@ -2,6 +2,7 @@ import {
   AUTH_ERROR,
   AUTH_SUCCESS,
   AUTH_USER,
+  GET_AUTH,
   UNAUTH_USER
 } from '../actions/types'
 
@@ -24,6 +25,7 @@ export default function authReducers (state = INITIAL_STATE, action) {
           authenticated: true,
           email: action.payload.email,
           _id: action.payload._id,
+          isAdmin: action.payload.isAdmin,
           error: null
         }
       } else {
@@ -34,11 +36,20 @@ export default function authReducers (state = INITIAL_STATE, action) {
         }
       }
 
+    case GET_AUTH:
+      return {
+        ...state,
+        _id: action.payload._id,
+        isAdmin: action.payload.isAdmin
+      }
+
     case UNAUTH_USER:
       return {
         ...state,
         authenticated: false,
-        email: null
+        email: null,
+        _id: null,
+        isAdmin: null
       }
 
     default:

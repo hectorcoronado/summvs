@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { getAuth } from '../actions/authActions'
 import { getCart } from '../actions/cartActions'
 
 import Footer from './Footer'
@@ -8,6 +9,7 @@ import Header from './Header'
 
 class Main extends Component {
   componentDidMount () {
+    this.props.getAuth()
     this.props.getCart()
   }
 
@@ -29,4 +31,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { getCart })(Main)
+export default connect(mapStateToProps, { getAuth, getCart })(Main)

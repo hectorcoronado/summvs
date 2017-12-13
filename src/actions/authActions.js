@@ -5,10 +5,26 @@ import {
   AUTH_ERROR,
   AUTH_SUCCESS,
   AUTH_USER,
+  GET_AUTH,
   UNAUTH_USER
 } from './types'
 
 const localStorage = window.localStorage
+
+export function getAuth () {
+  return (dispatch) => {
+    axios.get('/api/signin')
+      .then((response) => {
+        dispatch({
+          type: GET_AUTH,
+          payload: response.data
+        })
+      })
+      .catch((err) => {
+        console.log(`Error getting /api/signin ${err}`)
+      })
+  }
+}
 
 export function signinUser ({ email, password }) {
   return (dispatch) => {
@@ -42,9 +58,10 @@ export function signupUser ({ email, password }) {
   return (dispatch) => {
     axios.post('/api/signup', { email, password })
       .then(response => {
+        console.log(response.data)
         dispatch({
           type: AUTH_USER,
-          payload: response.data.email
+          payload: response.data
         })
         localStorage.setItem('token', response.data.token)
         browserHistory.push('/cart')
@@ -111,17 +128,5 @@ export function authSuccess (success) {
   return {
     type: AUTH_SUCCESS,
     payload: success
-  }
-}
-
-// trivial ex to use backend auth:
-export function fetchMessage () {
-  return (dispatch) => {
-    axios.get('/api/testauth', {
-      headers: { authorization: localStorage.getItem('token') }
-    })
-      .then(response => {
-        console.log(response)
-      })
   }
 }

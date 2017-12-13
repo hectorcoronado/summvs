@@ -7,6 +7,7 @@ var OrderSchema = mongoose.Schema({
   email: String,
   user: {type: Schema.Types.ObjectId, ref: 'User'},
   items: [{
+    name: String,
     product: {type: Schema.Types.ObjectId, ref: 'Product'},
     price: Number,
     quantity: Number
@@ -19,7 +20,8 @@ var OrderSchema = mongoose.Schema({
       country: String,
       postalCode: String
     }
-  }
+  },
+  createdOn: Date
 })
 
 // purchaseComplete HELPER METHOD:

@@ -1,50 +1,42 @@
 require('dotenv').config()
 require('./services/passport')
 
-var express = require('express')
-var favicon = require('serve-favicon')
-var path = require('path')
 var async = require('async')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var crypto = require('crypto')
-// var express = require('express')
+var express = require('express')
+var favicon = require('serve-favicon')
 var jwt = require('jwt-simple')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 var passport = require('passport')
+var path = require('path')
 var randomstring = require('randomstring')
+var RateLimit = require('express-rate-limit')
 var session = require('express-session')
-// var https = require('https')
-// var fs = require('fs')
 
+// app:
 var app = express()
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
-
-var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
-var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
-
-var requireAuth = passport.authenticate('jwt', { session: false })
-var requireSignin = passport.authenticate('local', { session: false })
-
-// MongoStore needs to be required *after* session:
-var MongoStore = require('connect-mongo')(session)
-
 app.use(logger('combined'))
 app.use(bodyParser.json({ type: '*/*' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.enable('trust proxy')
 
-// MODELS //
-var Order = require('./models/order')
-var Product = require('./models/product')
-var User = require('./models/user')
+// stripe:
+var STRIPE_TEST_SECRET_KEY = process.env.STRIPE_TEST_SECRET_KEY
+var stripe = require('stripe')(STRIPE_TEST_SECRET_KEY)
 
-// ////////////////// //
-// --->>> APIs <<<--- //
-// ////////////////// //
+// passport:
+var requireAuth = passport.authenticate('jwt', { session: false })
+var requireSignin = passport.authenticate('local', { session: false })
+
+// mongodb/mongoose:
+var MongoStore = require('connect-mongo')(session)
 var env = process.env.NODE_ENV || 'development'
 
 if (env === 'development') {
@@ -61,6 +53,15 @@ if (env === 'development') {
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
+
+// models:
+var Order = require('./models/order')
+var Product = require('./models/product')
+var User = require('./models/user')
+
+// ////////////////// //
+// --->>> APIs <<<--- //
+// ////////////////// //
 
 // ==========================
 // --->>> SESSIONS API <<<---
@@ -123,19 +124,59 @@ function tokenForUser (user) {
     process.env.SECRET_STRING)
 }
 
-app.get('/api/testauth', requireAuth, function (req, res) {
-  res.send({ hi: 'there' })
+var signinLimiter = new RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  delayAfter: 1, // delay response after 1 request
+  delayMs: 1000, // delay response for 1 second
+  max: 10 // block requests after 10th try
+})
+
+var createAccountLimiter = new RateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  delayAfter: 1, // begin slowing down responses after the first request
+  delayMs: 3 * 1000, // slow down subsequent responses by 3 seconds per request
+  max: 5, // start blocking after 5 requests
+  message: 'Too many accounts created from this IP, please try again after 1 hour'
+})
+
+app.get('/api/signin', signinLimiter, function (req, res) {
+  if (
+    typeof req.session._id !== 'undefined' &&
+    req.session.isAdmin === true) {
+    res.json({
+      _id: req.session._id,
+      isAdmin: req.session.isAdmin
+    })
+  } else if (
+    typeof req.session._id !== 'undefined') {
+    res.json({
+      _id: req.session._id
+    })
+  }
 })
 
 app.post('/api/signin', requireSignin, function (req, res, next) {
+  var _id = req.user._id
+  var isAdmin = req.user.isAdmin
+
+  // store _id && isAdmin  in session:
+  req.session._id = _id
+  req.session.isAdmin = isAdmin
+  req.session.save(function (err) {
+    if (err) {
+      console.log(`Error POSTING to signin: ${err}`)
+    }
+  })
+
   res.send({
     token: tokenForUser(req.user),
     email: req.body.email,
-    _id: req.user._id
+    _id: req.session._id,
+    isAdmin: req.session.isAdmin
   })
 })
 
-app.post('/api/signup', function (req, res, next) {
+app.post('/api/signup', createAccountLimiter, function (req, res, next) {
   var email = req.body.email
   var password = req.body.password
 
@@ -165,7 +206,8 @@ app.post('/api/signup', function (req, res, next) {
         charset: 'alphanumeric',
         capitalization: 'lowercase'
       }),
-      verified: false
+      verified: false,
+      isAdmin: false
     })
     // ... & save user
     user.save(function (err) {
@@ -173,10 +215,24 @@ app.post('/api/signup', function (req, res, next) {
       user.sendEmail(req, function (err) {
         if (err) { console.log(err) }
       })
-    // res indicating user creation:
+      var _id = user._id
+      var isAdmin = user.isAdmin
+
+      // store _id data in session:
+      req.session._id = _id
+      req.session.isAdmin = isAdmin
+      req.session.save(function (err) {
+        if (err) {
+          console.log(`Error POSTING to signin: ${err}`)
+        }
+      })
+
+      // res indicating user creation:
       res.json({
         token: tokenForUser(user),
-        email: email
+        email: email,
+        _id: req.session._id,
+        isAdmin: req.session.isAdmin
       })
     })
   })
@@ -320,6 +376,15 @@ app.post('/api/charge', function (req, res) {
 
 // ========================
 // --->>> ORDERS API <<<---
+app.get('/api/orders', requireAuth, function (req, res) {
+  Order.find(function (err, orders) {
+    if (err) {
+      console.log(`Error GETTING orders: ${err}`)
+    }
+    res.json(orders)
+  })
+})
+
 app.post('/api/orders', function (req, res) {
   var items = req.body.cart.map(function (item) {
     return {
@@ -329,6 +394,7 @@ app.post('/api/orders', function (req, res) {
       quantity: item.quantity
     }
   })
+
   var order = {
     email: req.body.token.email,
     items: items,
@@ -341,7 +407,8 @@ app.post('/api/orders', function (req, res) {
         country: req.body.token.card.address_country,
         postalCode: req.body.token.card.address_zip
       }
-    }
+    },
+    createdOn: Date.now()
   }
 
   Order.create(order, function (err, orders) {
