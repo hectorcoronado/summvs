@@ -101,8 +101,9 @@ class Checkout extends Component {
     return (
       <div>
         <Button
-          bsStyle='light'
-          bsSize='xsmall'
+          bsStyle='link'
+          // bsSize='xsmall'
+          style={buttonStyle}
           onClick={this.onStripeUpdate}
         >
           pay
@@ -110,6 +111,12 @@ class Checkout extends Component {
       </div>
     )
   }
+}
+
+const buttonStyle = {
+  background: 'mintcream',
+  color: 'black',
+  borderColor: 'currentColor'
 }
 
 const mapStateToProps = (state) => {
