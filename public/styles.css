@@ -29,13 +29,6 @@ ul {
 }
 
 .jumbotron {
-  background-image:
-    linear-gradient(
-      to right,
-        rgba(47, 194, 255, 0.4),
-        rgba(18, 46, 78, 0.8),
-        rgba(221, 42, 60, 0.4),
-        rgba(188, 0, 25, 0.6),
-        rgba(255, 246, 213, 0.4)
-    )
+  background-color: rgba(242, 255, 249, 0.7);
+  border: 3px solid rgba(237, 250, 244, 1.0);
 }
