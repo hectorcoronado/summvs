@@ -46,11 +46,11 @@ if (env === 'development') {
   )
 } else {
   mongoose.connect(
-    `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@ds229648.mlab.com:29648/summvsdatabase`,
+    `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASS}@ds023213.mlab.com:23213/summvs`,
     { useMongoClient: true }
   )
 }
-
+mongodb://<dbuser>:<dbpassword>@ds023213.mlab.com:23213/summvs
 var db = mongoose.connection
 db.on('error', console.error.bind(console, `# MongoDB - connection error: `))
 

@@ -58,7 +58,7 @@ const ROUTES = (
         <IndexRoute component={ProductsList} />
         <Route path='/about' component={About} />
         <Route path='/account' component={RequireAuth(Account)} />
-        {/* <Route path='/admin' component={ProductsForm} /> */}
+        <Route path='/admin' component={ProductsForm} />
         <Route path='/cart' component={Cart} />
         <Route path='/complete' component={PurchaseComplete} />
         <Route path='/forgot' component={ForgotPassword} />
