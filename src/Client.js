@@ -30,7 +30,7 @@ import Signup from './components/auth/Signup'
 // STRIPE COMPONENTS
 import PurchaseComplete from './components/stripe/PurchaseComplete'
 // HOC TO PROTECT ROUTES:
-import RequireAdmin from './components/auth/RequireAdmin'
+// import RequireAdmin from './components/auth/RequireAdmin'
 import RequireAuth from './components/auth/RequireAuth'
 
 // CREATE REDUX STORE:
@@ -58,7 +58,7 @@ const ROUTES = (
         <IndexRoute component={ProductsList} />
         <Route path='/about' component={About} />
         <Route path='/account' component={RequireAuth(Account)} />
-        {/* <Route path='/admin' component={RequireAdmin(ProductsForm)} /> */}
+        {/* <Route path='/admin' component={ProductsForm} /> */}
         <Route path='/cart' component={Cart} />
         <Route path='/complete' component={PurchaseComplete} />
         <Route path='/forgot' component={ForgotPassword} />
