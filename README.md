@@ -1,10 +1,8 @@
 # s u m m v s
 
-### <https://summvsclient.herokuapp.com/>
-
 ##### built in summer 2017.
 
-##### e-comm app built made with:
+##### e-comm app i built made with:
 - node.js
 - mongodb/mongoose
 - express
@@ -15,13 +13,6 @@
 
 ##### this project combines two things i like very much: making tangible objects and coding.
 
-
-to-do:
-- [x] rate limiting signup/signin
-- [ ] enable https on custom domain
-- [ ] enable & secure admin route w/session
-- [x] populate account page if user has made purchase
-
 [![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-##### landing page canvas element is drawn from Evan You's work.
+
